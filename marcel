@@ -1,0 +1,35 @@
+#!/usr/bin/python
+
+import csv
+import numpy
+from optparse import OptionParser
+
+def get_options():
+    def build_help_message(c, w):
+        if c == 'use':
+            prefix = 'Use '
+            suffix = ' (default)'
+        else:
+            prefix = "Don't use "
+            suffix = ''
+        return prefix + what + suffix
+
+    parser = OptionParser()
+    parser.add_option('-y', '--year', dest='year', help='Which year to generate Marcels', type='int')
+    parser.add_option('-a', '--aging', default=29, dest='age', help='Peak age', type='int')
+    parser.add_option('-r', '--regress', default=1200, dest='regression', help='Number of league average PAs', metavar='PAs')
+    parser.add_option('-w', '--weights', default='5,4,3', dest='weights', help='Set weighting for the years')
+    parser.add_option('--age-adjustment', default=29, dest='ageadj', help='Age adjustment')
+    parser.add_option('--years', default=3, dest='years', help='How many years to use', type='int')
+    for what in ['aging', 'regression', 'weighting']:
+        for choice in ['use', 'skip']:
+            action = 'store_true' if choice == 'use' else 'store_false'
+            parser.add_option('--' + choice + '-' + what,
+                              action=action,
+                              dest=what,
+                              help=build_help_message(choice, what))
+    (options, args) = parser.parse_args()
+
+
+if __name__ == '__main__':
+    get_options()
