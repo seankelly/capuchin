@@ -50,6 +50,7 @@ def get_options():
                               dest=what,
                               help=build_help_message(choice, what))
     (options, args) = parser.parse_args()
+    return options
 
 
 if __name__ == '__main__':
