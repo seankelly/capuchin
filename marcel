@@ -54,4 +54,5 @@ def get_options():
 
 
 if __name__ == '__main__':
-    get_options()
+    options = get_options()
+    marcels = Marcel(options.bdb)
