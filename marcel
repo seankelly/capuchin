@@ -6,27 +6,15 @@ from optparse import OptionParser
 
 
 class Marcel(object):
-    def __init__(self, bdb_directory, options):
-        pass
-
-    # Default options for Marcel.
-    @staticmethod
-    def default_options():
-        marcel_options = {
-            'age_adjustment': (0.003, 0.006),
-            'pa_base': 200,
-            'pa_weights': (0.5, 0.1),
-            'peak_age': 29,
-            'regress': 1200,
-            'seasons': 3,
-            'weights': (5, 4, 3),
-            'use': {
-                'regression': True,
-                'weighting': True,
-                'age': True
-            }
-        }
-        return marcel_options
+    def __init__(self, bdb_directory, **kwargs):
+        self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
+        self.pa_base = kwargs.get('pa_base', 200)
+        self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
+        self.peak_age = kwargs.get('peak_age', 29)
+        self.regress = kwargs.get('regress', 1200)
+        self.seasons = kwargs.get('seasons', 3)
+        self.weights = kwargs.get('weights', (5, 4, 3))
+        self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
 
 
 def get_options():
