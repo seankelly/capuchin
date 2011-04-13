@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from optparse import OptionParser
-from Marcel import Marcel
+from marcel import Marcel
 
 
 def get_options():
