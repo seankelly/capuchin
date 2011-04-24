@@ -1,11 +1,13 @@
 import csv
 import numpy
+import os.path
 
 
 class Marcel(object):
     def __init__(self, bdb_directory, **kwargs):
         from datetime import date
 
+        self.bdb_directory = bdb_directory
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
         self.pa_base = kwargs.get('pa_base', 200)
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
@@ -17,6 +19,7 @@ class Marcel(object):
         self.year = kwargs.get('year', date.today().year)
 
         self._normalize_options()
+        self.load_marcels()
 
     def _normalize_options(self):
         """Normalize options to ensure they are as expected."""
@@ -30,3 +33,9 @@ class Marcel(object):
         total_weight = sum(decimal_weights)
         # Then make self.weights be weights/total_weight.
         self.weights = map(lambda x: float(x/total_weight), decimal_weights)
+
+    def load_marcels(self):
+        # Load the past self.seasons worth of data.
+        earliest_year = self.year - self.seasons
+        batting_file = open(os.path.join(self.bdb_directory, 'Batting.txt'), 'r')
+        pitching_file = open(os.path.join(self.bdb_directory, 'Pitching.txt'), 'r')
