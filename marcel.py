@@ -36,4 +36,5 @@ def get_options():
 
 if __name__ == '__main__':
     options = get_options()
-    marcels = Marcel(options.bdb)
+    marcel_options = vars(options)
+    marcels = Marcel(options.bdb, **marcel_options)
