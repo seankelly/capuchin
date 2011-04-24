@@ -1,5 +1,5 @@
-import csv
+from player import PlayerList
 
-class Batting(object):
-    def __init__(self, batting_file, start_year):
+class Batting(PlayerList):
+    def read_file(self, csv_file):
         pass
