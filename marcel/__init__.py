@@ -4,6 +4,8 @@ import numpy
 
 class Marcel(object):
     def __init__(self, bdb_directory, **kwargs):
+        from datetime import date
+
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
         self.pa_base = kwargs.get('pa_base', 200)
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
@@ -12,6 +14,7 @@ class Marcel(object):
         self.seasons = kwargs.get('seasons', 3)
         self.weights = kwargs.get('weights', (5, 4, 3))
         self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
+        self.year = kwargs.get('year', date.today().year)
 
         self._normalize_options()
 

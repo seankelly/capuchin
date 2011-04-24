@@ -5,6 +5,8 @@ from marcel import Marcel
 
 
 def get_options():
+    from datetime import date
+
     def build_help_message(c, w):
         if c == 'use':
             prefix = 'Use '
@@ -16,7 +18,7 @@ def get_options():
 
     parser = OptionParser()
     parser.add_option('--bdb', default='adminDB', dest='bdb', help='BDB directory')
-    parser.add_option('-y', '--year', dest='year', help='For which year to generate Marcels', type='int')
+    parser.add_option('-y', '--year', default=date.today().year, dest='year', help='For which year to generate Marcels', type='int')
     parser.add_option('-a', '--aging', default=29, dest='age', help='Peak age', type='int')
     parser.add_option('-r', '--regress', default=1200, dest='regression', help='Number of league average PAs', metavar='PAs', type='int')
     parser.add_option('-w', '--weights', default='5,4,3', dest='weights', help='Set weights for the seasons')
