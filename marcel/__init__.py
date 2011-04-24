@@ -17,4 +17,13 @@ class Marcel(object):
 
     def _normalize_options(self):
         """Normalize options to ensure they are as expected."""
-        pass
+        from decimal import Decimal
+        if type(self.weights) == str:
+            weights = self.weights.split(',')
+        else:
+            weights = self.weights
+        # Calculate the total weight.
+        decimal_weights = map(lambda x: Decimal(x), weights)
+        total_weight = sum(decimal_weights)
+        # Then make self.weights be weights/total_weight.
+        self.weights = map(lambda x: float(x/total_weight), decimal_weights)
