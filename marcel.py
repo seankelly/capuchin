@@ -18,7 +18,7 @@ def get_options():
     parser.add_option('--bdb', default='adminDB', dest='bdb', help='BDB directory')
     parser.add_option('-y', '--year', dest='year', help='For which year to generate Marcels', type='int')
     parser.add_option('-a', '--aging', default=29, dest='age', help='Peak age', type='int')
-    parser.add_option('-r', '--regress', default=1200, dest='regression', help='Number of league average PAs', metavar='PAs')
+    parser.add_option('-r', '--regress', default=1200, dest='regression', help='Number of league average PAs', metavar='PAs', type='int')
     parser.add_option('-w', '--weights', default='5,4,3', dest='weights', help='Set weights for the seasons')
     parser.add_option('--age-adjustment', default=0.003, dest='ageadj', help='Age adjustment', type='float')
     parser.add_option('--seasons', default=3, dest='seasons', help='How many seasons to use', type='int')
