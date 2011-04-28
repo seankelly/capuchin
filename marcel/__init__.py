@@ -1,3 +1,5 @@
+from batting import Batting
+from pitching import Pitching
 import csv
 import numpy
 import os.path
@@ -21,6 +23,21 @@ class Marcel(object):
         self._normalize_options()
         self.load_marcels()
 
+    def create(self, years):
+        if type(years) == int:
+            marcel_years = tuple(years)
+        elif type(years) == tuple or type(years) == list:
+            marcel_years = tuple(filter(lambda x: return type(x) == int, years))
+
+    def load(self):
+        # Load the past self.seasons worth of data.
+        earliest_year = self.year - self.seasons
+        batting_file = os.path.join(self.bdb_directory, 'Batting.txt')
+        self.batters = Batting(batting_file, earliest_year)
+        pitching_file = os.path.join(self.bdb_directory, 'Pitching.txt')
+        self.pitchers = Pitching(pitching_file, earliest_year)
+
+
     def _normalize_options(self):
         """Normalize options to ensure they are as expected."""
         from decimal import Decimal
@@ -33,9 +50,3 @@ class Marcel(object):
         total_weight = sum(decimal_weights)
         # Then make self.weights be weights/total_weight.
         self.weights = map(lambda x: float(x/total_weight), decimal_weights)
-
-    def load_marcels(self):
-        # Load the past self.seasons worth of data.
-        earliest_year = self.year - self.seasons
-        batting_file = open(os.path.join(self.bdb_directory, 'Batting.txt'), 'r')
-        pitching_file = open(os.path.join(self.bdb_directory, 'Pitching.txt'), 'r')
