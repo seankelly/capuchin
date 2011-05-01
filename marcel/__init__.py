@@ -24,19 +24,24 @@ class Marcel(object):
         self.load_marcels()
 
     def create(self, years):
-        if type(years) == int:
-            marcel_years = tuple(years)
-        elif type(years) == tuple or type(years) == list:
-            marcel_years = tuple(filter(lambda x: return type(x) == int, years))
+        marcel_years = self._validate_years(years)
 
-    def load(self):
+
+    def _load(self, years):
         # Load the past self.seasons worth of data.
-        earliest_year = self.year - self.seasons
         batting_file = os.path.join(self.bdb_directory, 'Batting.txt')
         self.batters = Batting(batting_file, earliest_year)
         pitching_file = os.path.join(self.bdb_directory, 'Pitching.txt')
         self.pitchers = Pitching(pitching_file, earliest_year)
 
+    def _validate_years(self, years):
+        if type(years) == int:
+            marcel_years = tuple(years)
+        elif type(years) == tuple or type(years) == list:
+            marcel_years = tuple(filter(lambda x: return type(x) == int, years))
+        else:
+            raise ValueError, "'years' is not an int or tuple or list"
+        return marcel_years
 
     def _normalize_options(self):
         """Normalize options to ensure they are as expected."""
