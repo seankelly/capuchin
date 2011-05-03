@@ -20,8 +20,7 @@ class Marcel(object):
         self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
         self.year = kwargs.get('year', date.today().year)
 
-        self._normalize_options()
-        self.load_marcels()
+        self._validate_options()
 
     def create(self, years):
         marcel_years = self._validate_years(years)
@@ -43,7 +42,7 @@ class Marcel(object):
             raise ValueError, "'years' is not an int or tuple or list"
         return marcel_years
 
-    def _normalize_options(self):
+    def _validate_options(self):
         """Normalize options to ensure they are as expected."""
         from decimal import Decimal
         if type(self.weights) == str:
