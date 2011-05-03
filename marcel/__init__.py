@@ -45,10 +45,11 @@ class Marcel(object):
     def _validate_options(self):
         """Normalize options to ensure they are as expected."""
         from decimal import Decimal
-        if type(self.weights) == str:
-            weights = self.weights.split(',')
-        else:
-            weights = self.weights
+
+        # Validate the weights option.
+        # Say want a tuple, but also support lists.
+        if type(self.weights) != tuple and type(self.weights) != list:
+            raise ValueError, "weights must be a tuple"
         # Calculate the total weight.
         decimal_weights = map(lambda x: Decimal(x), weights)
         total_weight = sum(decimal_weights)
