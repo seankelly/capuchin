@@ -1,7 +1,5 @@
 from batting import Batting
 from pitching import Pitching
-import csv
-import numpy
 import os.path
 
 
