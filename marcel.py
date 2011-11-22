@@ -48,7 +48,6 @@ class Marcel(object):
         self.weights = kwargs.get('weights', (5, 4, 3))
         self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
         self.year = kwargs.get('year', date.today().year)
-
         self._validate_options()
 
     def create(self, years):
@@ -95,13 +94,21 @@ def get_options():
             suffix = ''
         return prefix + what + suffix
     parser = OptionParser()
-    parser.add_option('--bdb', default='adminDB', dest='bdb', help='BDB directory')
-    parser.add_option('-y', '--year', default=date.today().year, dest='year', help='For which year to generate Marcels', type='int')
-    parser.add_option('-a', '--aging', default=29, dest='age', help='Peak age', type='int')
-    parser.add_option('-r', '--regress', default=1200, dest='regression', help='Number of league average PAs', metavar='PAs', type='int')
-    parser.add_option('-w', '--weights', default='5,4,3', dest='weights', help='Set weights for the seasons')
-    parser.add_option('--age-adjustment', default=0.003, dest='ageadj', help='Age adjustment', type='float')
-    parser.add_option('--seasons', default=3, dest='seasons', help='How many seasons to use', type='int')
+    parser.add_option('--bdb', default='adminDB', dest='bdb',
+                      help='BDB directory')
+    parser.add_option('-y', '--year', default=date.today().year, dest='year',
+                      help='For which year to generate Marcels', type='int')
+    parser.add_option('-a', '--aging', default=29, dest='age',
+                      help='Peak age', type='int')
+    parser.add_option('-r', '--regress', default=1200, dest='regression',
+                      help='Number of league average PAs', metavar='PAs',
+                      type='int')
+    parser.add_option('-w', '--weights', default='5,4,3', dest='weights',
+                      help='Set weights for the seasons')
+    parser.add_option('--age-adjustment', default=0.003, dest='ageadj',
+                      help='Age adjustment', type='float')
+    parser.add_option('--seasons', default=3, dest='seasons',
+                      help='How many seasons to use', type='int')
     # Add the --use-foo and --skip-foo options.
     for what in ['aging', 'regression', 'weighting']:
         for choice in ['use', 'skip']:
