@@ -29,11 +29,13 @@ class PlayerList(object):
 
 
 class Pitching(PlayerList):
-    pass
+    def __init__(self, file, start_year):
+        pass
 
 
 class Batting(PlayerList):
-    pass
+    def __init__(self, file, start_year):
+        pass
 
 
 class Marcel(object):
