@@ -28,16 +28,6 @@ class PlayerList(object):
         self.player_list = player_list
 
 
-class Pitching(PlayerList):
-    def __init__(self, file, start_year):
-        pass
-
-
-class Batting(PlayerList):
-    def __init__(self, file, start_year):
-        pass
-
-
 class Marcel(object):
     def __init__(self, bdb_directory, **kwargs):
         self.bdb_directory = bdb_directory
