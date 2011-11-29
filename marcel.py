@@ -57,7 +57,7 @@ class Marcel(object):
         if type(years) == int:
             marcel_years = tuple(years)
         elif type(years) == tuple or type(years) == list:
-            marcel_years = tuple(filter(lambda x: return type(x) == int, years))
+            marcel_years = tuple(filter(lambda x: type(x) == int, years))
         else:
             raise ValueError, "'years' is not an int or tuple or list"
         return marcel_years
