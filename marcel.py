@@ -116,3 +116,4 @@ if __name__ == '__main__':
     options = get_options()
     marcel_options = vars(options)
     marcels = Marcel(options.bdb, **marcel_options)
+    marcels.create(date.today().year)
