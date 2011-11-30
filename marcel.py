@@ -89,26 +89,24 @@ def get_options():
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
     parser.add_argument('--bdb', default='adminDB', dest='bdb',
                         help='BDB directory')
-    parser.add_argument('-y', '--year', dest='year',
-                        help='For which year to generate Marcels', type=int)
-    parser.add_argument('-a', '--aging', dest='age',
-                        help='Peak age', type=int)
-    parser.add_argument('-r', '--regress', dest='regression',
-                        help='Number of league average PAs', metavar='PAs',
-                        type=int)
+    parser.add_argument('-y', '--year', dest='year', type=int,
+                        help='For which year to generate Marcels')
+    parser.add_argument('-a', '--aging', dest='age', type=int,
+                        help='Peak age')
+    parser.add_argument('-r', '--regress', dest='regression', type=int,
+                        help='Number of league average PAs', metavar='PAs')
     parser.add_argument('-w', '--weights', dest='weights',
                         help='Set weights for the seasons')
-    parser.add_argument('--age-adjustment', dest='ageadj',
-                        help='Age adjustment', type=float)
-    parser.add_argument('--seasons', dest='seasons',
-                        help='How many seasons to use', type=int)
+    parser.add_argument('--age-adjustment', dest='ageadj', type=float,
+                        help='Age adjustment')
+    parser.add_argument('--seasons', dest='seasons', type=int,
+                        help='How many seasons to use')
     # Add the --use-foo and --skip-foo options.
     for what in ['aging', 'regression', 'weighting']:
         for choice in ['use', 'skip']:
             action = 'store_true' if choice == 'use' else 'store_false'
             parser.add_argument('--' + choice + '-' + what,
-                                action=action,
-                                dest=what,
+                                action=action, dest=what,
                                 help=build_help_message(choice, what))
     args = parser.parse_args()
     return args
