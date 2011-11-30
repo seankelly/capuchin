@@ -71,7 +71,7 @@ class Marcel(object):
         if not isinstance(self.weights, (tuple, list)):
             raise ValueError, "weights must be a tuple"
         # Calculate the total weight.
-        decimal_weights = map(lambda x: Decimal(x), weights)
+        decimal_weights = map(lambda x: Decimal(x), self.weights)
         total_weight = sum(decimal_weights)
         # Then make self.weights be weights/total_weight.
         self.weights = map(lambda x: float(x/total_weight), decimal_weights)
