@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from datetime import date
-from optparse import OptionParser
+import argparse
 import csv
 import os.path
 
@@ -86,32 +86,32 @@ def get_options():
             prefix = "Don't use "
             suffix = ''
         return prefix + what + suffix
-    parser = OptionParser()
-    parser.add_option('--bdb', default='adminDB', dest='bdb',
-                      help='BDB directory')
-    parser.add_option('-y', '--year', default=date.today().year, dest='year',
-                      help='For which year to generate Marcels', type='int')
-    parser.add_option('-a', '--aging', default=29, dest='age',
-                      help='Peak age', type='int')
-    parser.add_option('-r', '--regress', default=1200, dest='regression',
-                      help='Number of league average PAs', metavar='PAs',
-                      type='int')
-    parser.add_option('-w', '--weights', default='5,4,3', dest='weights',
-                      help='Set weights for the seasons')
-    parser.add_option('--age-adjustment', default=0.003, dest='ageadj',
-                      help='Age adjustment', type='float')
-    parser.add_option('--seasons', default=3, dest='seasons',
-                      help='How many seasons to use', type='int')
+    parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+    parser.add_argument('--bdb', default='adminDB', dest='bdb',
+                        help='BDB directory')
+    parser.add_argument('-y', '--year', dest='year',
+                        help='For which year to generate Marcels', type=int)
+    parser.add_argument('-a', '--aging', dest='age',
+                        help='Peak age', type=int)
+    parser.add_argument('-r', '--regress', dest='regression',
+                        help='Number of league average PAs', metavar='PAs',
+                        type=int)
+    parser.add_argument('-w', '--weights', dest='weights',
+                        help='Set weights for the seasons')
+    parser.add_argument('--age-adjustment', dest='ageadj',
+                        help='Age adjustment', type=float)
+    parser.add_argument('--seasons', dest='seasons',
+                        help='How many seasons to use', type=int)
     # Add the --use-foo and --skip-foo options.
     for what in ['aging', 'regression', 'weighting']:
         for choice in ['use', 'skip']:
             action = 'store_true' if choice == 'use' else 'store_false'
-            parser.add_option('--' + choice + '-' + what,
-                              action=action,
-                              dest=what,
-                              help=build_help_message(choice, what))
-    (options, args) = parser.parse_args()
-    return options
+            parser.add_argument('--' + choice + '-' + what,
+                                action=action,
+                                dest=what,
+                                help=build_help_message(choice, what))
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == '__main__':
