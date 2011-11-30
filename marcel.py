@@ -45,6 +45,7 @@ class Marcel(object):
 
     def create(self, years):
         marcel_years = self._validate_years(years)
+        self.load_players()
 
     def _load(self, years):
         # Load the past self.seasons worth of data.
