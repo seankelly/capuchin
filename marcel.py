@@ -41,18 +41,17 @@ class Marcel(object):
         self.weights = kwargs.get('weights', (5, 4, 3))
         self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
         self.year = kwargs.get('year', date.today().year)
+        self.player_list = None
         self._validate_options()
 
     def create(self, years):
         marcel_years = self._validate_years(years)
         self.load_players()
 
-    def _load(self, years):
-        # Load the past self.seasons worth of data.
-        batting_file = os.path.join(self.bdb_directory, 'Batting.txt')
-        self.batters = Batting(batting_file, earliest_year)
-        pitching_file = os.path.join(self.bdb_directory, 'Pitching.txt')
-        self.pitchers = Pitching(pitching_file, earliest_year)
+    def load_players(self):
+        if self.player_list is not None:
+            return
+        self.player_list = PlayerList(self.bdb_directory)
 
     def _validate_years(self, years):
         if type(years) == int:
