@@ -55,7 +55,7 @@ class Marcel(object):
 
     def _validate_years(self, years):
         if type(years) == int:
-            marcel_years = tuple(years)
+            marcel_years = [years]
         elif type(years) == tuple or type(years) == list:
             marcel_years = tuple(filter(lambda x: type(x) == int, years))
         else:
