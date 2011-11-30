@@ -19,14 +19,14 @@ class PlayerList(object):
 
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())
-        player_list = self.player_list
+        player_list = self.players
         for player_season in csv_file:
             playerid = player_season[0]
             if playerid in player_list:
                 player_list[playerid][section].append(player_season)
             else:
                 player_list[playerid] = { section: [ player_season ] }
-        self.player_list = player_list
+        self.players = player_list
 
 
 class Marcel(object):
