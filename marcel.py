@@ -68,7 +68,7 @@ class Marcel(object):
 
         # Validate the weights option.
         # Say want a tuple, but also support lists.
-        if type(self.weights) != tuple and type(self.weights) != list:
+        if not isinstance(self.weights, (tuple, list)):
             raise ValueError, "weights must be a tuple"
         # Calculate the total weight.
         decimal_weights = map(lambda x: Decimal(x), weights)
