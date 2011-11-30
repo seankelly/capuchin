@@ -13,7 +13,7 @@ class PlayerList(object):
 
     def load_players(self):
         for which_file in ('Batting.txt', 'Pitching.txt'):
-            file = os.patch.join(self.bdb_directory, which_file)
+            file = os.path.join(self.bdb_directory, which_file)
             csv_file = csv.reader(open(file, 'rb'), delimiter=',')
             self.read_csv_file(which_file, csv_file)
 
