@@ -102,8 +102,8 @@ def get_options():
     parser.add_argument('--seasons', dest='seasons', type=int,
                         help='How many seasons to use')
     # Add the --use-foo and --skip-foo options.
-    for what in ['aging', 'regression', 'weighting']:
-        for choice in ['use', 'skip']:
+    for what in ('aging', 'regression', 'weighting'):
+        for choice in ('use', 'skip'):
             action = 'store_true' if choice == 'use' else 'store_false'
             parser.add_argument('--' + choice + '-' + what,
                                 action=action, dest=what,
