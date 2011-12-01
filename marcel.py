@@ -18,7 +18,7 @@ class PlayerList(object):
             self.read_csv_file(which_file, csv_file)
 
     def read_csv_file(self, which_file, csv_file):
-        section = os.path.splitext(which_file.lower())
+        section = os.path.splitext(which_file.lower())[0]
         player_list = self.players
         for player_season in csv_file:
             playerid = player_season[0]
