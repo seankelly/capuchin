@@ -38,12 +38,12 @@ class Marcel(object):
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
         self.peak_age = kwargs.get('peak_age', 29)
         self.regress = kwargs.get('regress', 1200)
-        self.seasons = kwargs.get('seasons', 3)
         self.weights = kwargs.get('weights', (5, 4, 3))
         self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
         self.year = kwargs.get('year', date.today().year)
         self.player_list = None
         self._validate_options()
+        self.seasons = len(self.weights)
 
     def create(self, years):
         marcel_years = self._validate_years(years)
@@ -100,8 +100,6 @@ def get_options():
                         help='Set weights for the seasons')
     parser.add_argument('--age-adjustment', dest='ageadj', type=float,
                         help='Age adjustment')
-    parser.add_argument('--seasons', dest='seasons', type=int,
-                        help='How many seasons to use')
     # Add the --use-foo and --skip-foo options.
     for what in ('aging', 'regression', 'weighting'):
         for choice in ('use', 'skip'):
