@@ -25,7 +25,8 @@ class PlayerList(object):
             if playerid in player_list:
                 player_list[playerid][section].append(player_season)
             else:
-                player_list[playerid] = { section: [ player_season ] }
+                player_list[playerid] = { 'batting': [], 'pitching': [] }
+                player_list[playerid][section] = [ player_season ]
         self.players = player_list
 
 
