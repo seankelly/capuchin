@@ -20,13 +20,15 @@ class PlayerList(object):
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())[0]
         player_list = self.players
+        column_order = ['playerid', 'year', None, 'team', 'league', 'games', 'games_batting', 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
         for player_season in csv_file:
-            playerid = player_season[0]
-            if playerid in player_list:
-                player_list[playerid][section].append(player_season)
-            else:
-                player_list[playerid] = { 'batting': [], 'pitching': [] }
-                player_list[playerid][section] = [ player_season ]
+            playerid, year = player_season[0:2]
+            if playerid not in player_list:
+                player_list[playerid] = { 'batting': {}, 'pitching': {} }
+            season_stats = {}
+            for i, column in enumerate(column_order):
+                season_stats[column] = player_season[i]
+            player_list[playerid][section][year] = season_stats
         self.players = player_list
 
 
