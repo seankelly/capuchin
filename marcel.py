@@ -7,7 +7,9 @@ import os.path
 
 class PlayerList(object):
     def __init__(self, bdb_directory):
-        self.players = { 'batting': {}, 'pitching': {} }
+        from collections import defaultdict
+        def autovivify(): return defaultdict(autovivify)
+        self.players = autovivify()
         self.bdb_directory = bdb_directory
         self.load_players()
 
@@ -26,8 +28,6 @@ class PlayerList(object):
             column_order = ['playerid', 'year', None, 'team', 'league', 'w', 'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr', 'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk', 'bfp', 'gf', 'r']
         for player_season in csv_file:
             playerid, year = player_season[0:2]
-            if playerid not in player_list:
-                player_list[playerid] = { }
             season_stats = {}
             for i, column in enumerate(column_order):
                 if column is None:
