@@ -20,7 +20,10 @@ class PlayerList(object):
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())[0]
         player_list = self.players[section]
-        column_order = ['playerid', 'year', None, 'team', 'league', 'games', 'games_batting', 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
+        if section == 'batting':
+            column_order = ['playerid', 'year', None, 'team', 'league', 'games', 'games_batting', 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
+        elif section == 'pitching':
+            column_order = ['playerid', 'year', None, 'team', 'league', 'w', 'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr', 'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk', 'bfp', 'gf', 'r']
         for player_season in csv_file:
             playerid, year = player_season[0:2]
             if playerid not in player_list:
