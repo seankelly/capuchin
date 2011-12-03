@@ -21,7 +21,7 @@ class PlayerList(object):
 
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())[0]
-        player_list = self.players[section]
+        player_list = self.players
         if section == 'batting':
             column_order = ['playerid', 'year', None, 'team', 'league', 'g', None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
         elif section == 'pitching':
@@ -33,8 +33,8 @@ class PlayerList(object):
                 if column is None:
                     continue
                 season_stats[column] = player_season[i]
-            player_list[playerid][year] = season_stats
-        self.players[section] = player_list
+            player_list[playerid][section][year] = season_stats
+        self.players = player_list
 
 
 class Marcel(object):
