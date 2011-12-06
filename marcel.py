@@ -24,6 +24,7 @@ class PlayerList(object):
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())[0]
         player_list = self.players
+        mapping = { 'year': int, 'w': int, 'l': int, 'g': int, 'gs': int, 'cg': int, 'sho': int, 'sv': int, 'outs': int, 'h': int, 'er': int, 'hr': int, 'bb': int, 'so': int, 'baopp': float, 'era': float, 'ibb': int, 'wp': int, 'hbp': int, 'bk': int, 'bfp': int, 'gf': int, 'r': int, 'ab': int, '2b': int, '3b': int, 'rbi': int, 'sb': int, 'cs': int, 'sh': int, 'sf': int, 'gidp': int }
         if section == 'batting':
             column_order = ['playerid', 'year', None, 'team', 'league', 'g', None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
         elif section == 'pitching':
@@ -34,7 +35,14 @@ class PlayerList(object):
             for i, column in enumerate(column_order):
                 if column is None:
                     continue
-                season_stats[column] = player_season[i]
+                f = mapping.get(column)
+                if f:
+                    if player_season[i]:
+                        season_stats[column] = f(player_season[i])
+                    else:
+                        season_stats[column] = 0
+                else:
+                    season_stats[column] = player_season[i]
             player_list[playerid][section][year] = season_stats
         self.players = player_list
 
