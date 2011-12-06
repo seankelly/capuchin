@@ -46,6 +46,14 @@ class PlayerList(object):
             player_list[playerid][section][year] = season_stats
         self.players = player_list
 
+    # Map years into an iterable for the set() function.
+    def make_set(self, years):
+        try:
+            years = set(years)
+        except TypeError:
+            years = set([years])
+        return years
+
 
 class Marcel(object):
     def __init__(self, bdb_directory, **kwargs):
