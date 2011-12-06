@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
+from collections import defaultdict
 from datetime import date
 import argparse
 import csv
 import os.path
 
+def autovivify():
+    return defaultdict(autovivify)
+
 class PlayerList(object):
     def __init__(self, bdb_directory):
-        from collections import defaultdict
-        def autovivify(): return defaultdict(autovivify)
         self.players = autovivify()
         self.bdb_directory = bdb_directory
         self.load_players()
