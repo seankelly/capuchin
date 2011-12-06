@@ -30,7 +30,7 @@ class PlayerList(object):
         elif section == 'pitching':
             column_order = ['playerid', 'year', None, 'team', 'league', 'w', 'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr', 'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk', 'bfp', 'gf', 'r']
         for player_season in csv_file:
-            playerid, year = player_season[0:2]
+            playerid, year = player_season[0], int(player_season[1])
             season_stats = {}
             for i, column in enumerate(column_order):
                 if column is None:
