@@ -54,6 +54,21 @@ class PlayerList(object):
             years = set([years])
         return years
 
+    def get_players(self, years):
+        player_list = self.players
+        matched_players = autovivify()
+        years = self.make_set(years)
+        for playerid in player_list:
+            for section in player_list[playerid]:
+                section_years = set(player_list[playerid][section])
+                player_years = years & section_years
+                if player_years:
+                    matched_players[playerid][section] = self.get_player_years(playerid, section, player_years)
+
+    def get_player_years(self, playerid, section, years):
+        years = self.make_set(years)
+        return { k:v.copy() for k, v in self.players[playerid][section].iteritems() if k in years }
+
 
 class Marcel(object):
     def __init__(self, bdb_directory, **kwargs):
