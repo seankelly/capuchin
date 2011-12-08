@@ -64,6 +64,7 @@ class PlayerList(object):
                 player_years = years & section_years
                 if player_years:
                     matched_players[playerid][section] = self.get_player_years(playerid, section, player_years)
+        return matched_players
 
     def get_player_years(self, playerid, section, years):
         years = self.make_set(years)
