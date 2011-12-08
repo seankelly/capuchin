@@ -88,6 +88,12 @@ class Marcel(object):
     def create(self, years):
         marcel_years = self._validate_years(years)
         self.load_players()
+        # Find all players that played in the last self.seasons seasons.
+        fetch_years = set()
+        for year in marcel_years:
+            for delta in range(self.seasons):
+                fetch_years.add(year - (delta + 1))
+        players = self.player_list.get_players(fetch_years)
 
     def load_players(self):
         if self.player_list is not None:
