@@ -94,6 +94,23 @@ class Marcel(object):
             for delta in range(self.seasons):
                 fetch_years.add(year - (delta + 1))
         players = self.player_list.get_players(fetch_years)
+        batters, pitchers = self.classify_players(players)
+
+    def classify_players(self, players):
+        batters = autovivify()
+        pitchers = autovivify()
+        # Check each season for a player and classify the season as pitching or
+        # batting.
+        for playerid in players:
+            # The majority of players only ever bat or pitch, so quickly check
+            # if the player has only a single type and move on.
+            if not players[playerid].get('pitching'):
+                batters[playerid] = players[playerid]
+                continue
+            elif not players[playerid].get('batting'):
+                pitchers[playerid] = players[playerid]
+                continue
+        return batters, pitchers
 
     def load_players(self):
         if self.player_list is not None:
