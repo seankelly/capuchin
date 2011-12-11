@@ -110,6 +110,11 @@ class Marcel(object):
             elif not players[playerid].get('batting'):
                 pitchers[playerid] = players[playerid]
                 continue
+            outs, pas = 0, 0
+            for year in players[playerid]['pitching']:
+                outs += players[playerid]['pitching'][year]['outs']
+            for year in players[playerid]['batting']:
+                pas += players[playerid]['batting'][year]['ab']
         return batters, pitchers
 
     def load_players(self):
