@@ -105,16 +105,22 @@ class Marcel(object):
             # The majority of players only ever bat or pitch, so quickly check
             # if the player has only a single type and move on.
             if not players[playerid].get('pitching'):
-                batters[playerid] = players[playerid]
+                batters[playerid] = players[playerid]['batting']
                 continue
             elif not players[playerid].get('batting'):
-                pitchers[playerid] = players[playerid]
+                pitchers[playerid] = players[playerid]['pitching']
                 continue
-            outs, pas = 0, 0
-            for year in players[playerid]['pitching']:
-                outs += players[playerid]['pitching'][year]['outs']
-            for year in players[playerid]['batting']:
-                pas += players[playerid]['batting'][year]['ab']
+            years = set(players[playerid]['pitching']) | set(players[playerid]['batting'])
+            for year in years:
+                outs, pas = 0, 0
+                if year in players[playerid]['pitching']:
+                    outs = players[playerid]['pitching'][year]['outs']
+                if year in players[playerid]['batting']:
+                    pas = players[playerid]['batting'][year]['ab']
+                if outs > pas:
+                    pitchers[playerid][year] = players[playerid]['pitching'][year]
+                else:
+                    batters[playerid][year] = players[playerid]['batting'][year]
         return batters, pitchers
 
     def load_players(self):
