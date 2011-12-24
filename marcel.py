@@ -85,7 +85,7 @@ class Marcel(object):
         self._validate_options()
         self.seasons = len(self.weights)
 
-    def create(self, years):
+    def create(self, years, batters=True, pitchers=True):
         marcel_years = self._validate_years(years)
         self.load_players()
         # Find all players that played in the last self.seasons seasons.
@@ -94,7 +94,13 @@ class Marcel(object):
             for delta in range(self.seasons):
                 fetch_years.add(year - (delta + 1))
         players = self.player_list.get_players(fetch_years)
+        # TODO: Rename batters and pitchers variables.
         batters, pitchers = self.classify_players(players)
+        batter_projections = {}
+        pitcher_projections = {}
+        # Finally! Start generating projections.
+        for year in marcel_years:
+            pass
 
     def classify_players(self, players):
         batters = autovivify()
