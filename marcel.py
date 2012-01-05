@@ -68,6 +68,7 @@ class PlayerList(object):
 
     def get_player_years(self, playerid, section, years):
         years = self.make_set(years)
+        # Return copies so things can be manipulated later.
         return { k:v.copy() for k, v in self.players[playerid][section].iteritems() if k in years }
 
 
