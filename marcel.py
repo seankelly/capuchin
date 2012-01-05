@@ -123,7 +123,7 @@ class Marcel(object):
                 if year in players[playerid]['pitching']:
                     outs = players[playerid]['pitching'][year]['outs']
                 if year in players[playerid]['batting']:
-                    pas = players[playerid]['batting'][year]['ab']
+                    pas = players[playerid]['batting'][year]['ab'] + players[playerid]['batting'][year]['bb'] + players[playerid]['batting'][year]['ibb']
                 if outs > pas:
                     pitchers[playerid][year] = players[playerid]['pitching'][year]
                 else:
