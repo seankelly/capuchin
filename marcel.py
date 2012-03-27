@@ -24,11 +24,22 @@ class PlayerList(object):
     def read_csv_file(self, which_file, csv_file):
         section = os.path.splitext(which_file.lower())[0]
         player_list = self.players
-        mapping = { 'year': int, 'w': int, 'l': int, 'g': int, 'gs': int, 'cg': int, 'sho': int, 'sv': int, 'outs': int, 'h': int, 'er': int, 'hr': int, 'bb': int, 'so': int, 'baopp': float, 'era': float, 'ibb': int, 'wp': int, 'hbp': int, 'bk': int, 'bfp': int, 'gf': int, 'r': int, 'ab': int, '2b': int, '3b': int, 'rbi': int, 'sb': int, 'cs': int, 'sh': int, 'sf': int, 'gidp': int }
+        mapping = {'year': int, 'w': int, 'l': int, 'g': int, 'gs': int,
+                   'cg': int, 'sho': int, 'sv': int, 'outs': int, 'h': int,
+                   'er': int, 'hr': int, 'bb': int, 'so': int, 'baopp': float,
+                   'era': float, 'ibb': int, 'wp': int, 'hbp': int, 'bk': int,
+                   'bfp': int, 'gf': int, 'r': int, 'ab': int, '2b': int,
+                   '3b': int, 'rbi': int, 'sb': int, 'cs': int, 'sh': int,
+                   'sf': int, 'gidp': int}
         if section == 'batting':
-            column_order = ['playerid', 'year', None, 'team', 'league', 'g', None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
+            column_order = ['playerid', 'year', None, 'team', 'league', 'g',
+                    None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs',
+                    'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
         elif section == 'pitching':
-            column_order = ['playerid', 'year', None, 'team', 'league', 'w', 'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr', 'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk', 'bfp', 'gf', 'r']
+            column_order = ['playerid', 'year', None, 'team', 'league', 'w',
+                    'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr',
+                    'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk',
+                    'bfp', 'gf', 'r']
         for player_season in csv_file:
             playerid, year = player_season[0], int(player_season[1])
             season_stats = {}
@@ -81,7 +92,7 @@ class Marcel(object):
         self.peak_age = kwargs.get('peak_age', 29)
         self.regress = kwargs.get('regress', 1200)
         self.weights = kwargs.get('weights', (5, 4, 3))
-        self.use = kwargs.get('use', { 'regression': True, 'weighting': True, 'age': True })
+        self.use = kwargs.get('use', {'regression': True, 'weighting': True, 'age': True})
         self.player_list = None
         self._validate_options()
         self.seasons = len(self.weights)
@@ -123,7 +134,9 @@ class Marcel(object):
                 if year in players[playerid]['pitching']:
                     outs = players[playerid]['pitching'][year]['outs']
                 if year in players[playerid]['batting']:
-                    pas = players[playerid]['batting'][year]['ab'] + players[playerid]['batting'][year]['bb'] + players[playerid]['batting'][year]['ibb']
+                    pas = (players[playerid]['batting'][year]['ab'] +
+                           players[playerid]['batting'][year]['bb'] +
+                           players[playerid]['batting'][year]['ibb'])
                 if outs > pas:
                     pitchers[playerid][year] = players[playerid]['pitching'][year]
                 else:
