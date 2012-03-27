@@ -151,20 +151,14 @@ class Marcel(object):
     def _validate_years(self, years):
         if type(years) == int:
             marcel_years = [years]
-        elif type(years) == tuple or type(years) == list:
-            marcel_years = tuple(filter(lambda x: type(x) == int, years))
         else:
-            raise ValueError, "'years' is not an int or tuple or list"
+            marcel_years = years
         return marcel_years
 
     def _validate_options(self):
         """Normalize options to ensure they are as expected."""
         from decimal import Decimal
 
-        # Validate the weights option.
-        # Say want a tuple, but also support lists.
-        if not isinstance(self.weights, (tuple, list)):
-            raise ValueError, "weights must be a tuple"
         # Calculate the total weight.
         decimal_weights = map(lambda x: Decimal(x), self.weights)
         total_weight = sum(decimal_weights)
