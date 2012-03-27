@@ -92,7 +92,8 @@ class Marcel(object):
         self.peak_age = kwargs.get('peak_age', 29)
         self.regress = kwargs.get('regress', 1200)
         self.weights = kwargs.get('weights', (5, 4, 3))
-        self.use = kwargs.get('use', {'regression': True, 'weighting': True, 'age': True})
+        self.use = kwargs.get('use', {'regression': True, 'weighting': True,
+                                      'age': True})
         self.player_list = None
         self._validate_options()
         self.seasons = len(self.weights)
