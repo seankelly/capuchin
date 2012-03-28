@@ -129,7 +129,8 @@ class Marcel(object):
             elif not players[playerid].get('batting'):
                 pitchers[playerid] = players[playerid]['pitching']
                 continue
-            years = set(players[playerid]['pitching']) | set(players[playerid]['batting'])
+            years = (set(players[playerid]['pitching']) |
+                     set(players[playerid]['batting']))
             for year in years:
                 outs, pas = 0, 0
                 if year in players[playerid]['pitching']:
