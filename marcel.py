@@ -65,7 +65,7 @@ class PlayerList(object):
             years = set([years])
         return years
 
-    def get_players(self, years):
+    def get_players(self, years, batters=True, pitchers=True):
         player_list = self.players
         matched_players = autovivify()
         years = self.make_set(years)
