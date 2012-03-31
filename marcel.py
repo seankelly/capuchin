@@ -31,15 +31,16 @@ class PlayerList(object):
                    'bfp': int, 'gf': int, 'r': int, 'ab': int, '2b': int,
                    '3b': int, 'rbi': int, 'sb': int, 'cs': int, 'sh': int,
                    'sf': int, 'gidp': int}
-        if section == 'batting':
-            column_order = ['playerid', 'year', None, 'team', 'league', 'g',
-                    None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb', 'cs',
-                    'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp']
-        elif section == 'pitching':
-            column_order = ['playerid', 'year', None, 'team', 'league', 'w',
-                    'l', 'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr',
-                    'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk',
-                    'bfp', 'gf', 'r']
+        columns = {
+            'batting': ['playerid', 'year', None, 'team', 'league', 'g',
+                        None, 'ab', 'r', 'h', '2b', '3b', 'hr', 'rbi', 'sb',
+                        'cs', 'bb', 'so', 'ibb', 'hbp', 'sh', 'sf', 'gidp'],
+            'pitching': ['playerid', 'year', None, 'team', 'league', 'w', 'l',
+                         'g', 'gs', 'cg', 'sho', 'sv', 'outs', 'h', 'er', 'hr',
+                         'bb', 'so', 'baopp', 'era', 'ibb', 'wp', 'hbp', 'bk',
+                         'bfp', 'gf', 'r'],
+        }
+        column_order = columns[section]
         for player_season in csv_file:
             playerid, year = player_season[0], int(player_season[1])
             season_stats = {}
