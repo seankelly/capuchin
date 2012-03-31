@@ -45,15 +45,13 @@ class PlayerList(object):
             playerid, year = player_season[0], int(player_season[1])
             season_stats = {}
             for i, column in enumerate(column_order):
-                if column is None:
-                    continue
-                f = mapping.get(column)
-                if f:
+                if column in mapping:
                     if player_season[i]:
+                        f = mapping[column]
                         season_stats[column] = f(player_season[i])
                     else:
                         season_stats[column] = 0
-                else:
+                elif column:
                     season_stats[column] = player_season[i]
             player_list[playerid][section][year] = season_stats
         self.players = player_list
