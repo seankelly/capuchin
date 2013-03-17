@@ -5,7 +5,7 @@ import os.path
 def autovivify():
     return defaultdict(autovivify)
 
-class PlayerList(object):
+class PlayerList():
     def __init__(self, bdb_directory):
         self.players = autovivify()
         self.bdb_directory = bdb_directory
