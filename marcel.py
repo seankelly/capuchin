@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-from collections import defaultdict
 from datetime import date
 import argparse
-import csv
-import os.path
 
 
 def get_options():

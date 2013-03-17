@@ -1,4 +1,6 @@
 from collections import defaultdict
+import csv
+import os.path
 
 def autovivify():
     return defaultdict(autovivify)
