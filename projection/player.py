@@ -7,6 +7,12 @@ def autovivify():
 
 
 class Player():
+    def __init__(self):
+        pass
+
+    def load_data(self, stats):
+        pass
+
     def project(self):
         raise NotImplementedError('Need to know how to project the player!')
 
