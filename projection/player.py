@@ -5,6 +5,12 @@ import os.path
 def autovivify():
     return defaultdict(autovivify)
 
+
+class Player():
+    def project(self):
+        raise NotImplementedError('Need to know how to project the player!')
+
+
 class PlayerList():
     def __init__(self, bdb_directory):
         self.players = autovivify()
