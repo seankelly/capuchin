@@ -1,7 +1,14 @@
 from collections import defaultdict
+from projection.player import Player
 
 def autovivify():
     return defaultdict(autovivify)
+
+class CapuchinBatter(Player):
+    pass
+
+class CapuchinPitcher(Player):
+    pass
 
 class Capuchin():
     def __init__(self, bdb_directory, **kwargs):
