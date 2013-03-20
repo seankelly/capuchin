@@ -11,7 +11,10 @@ class Player():
         pass
 
     def load_data(self, stats):
-        pass
+        """
+        stats must be a dictionary with the year being the key, which points to
+        a dictionary of the stats and their values for that year.
+        """
 
     def project(self):
         raise NotImplementedError('Need to know how to project the player!')
