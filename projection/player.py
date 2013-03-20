@@ -8,13 +8,15 @@ def autovivify():
 
 class Player():
     def __init__(self):
-        pass
+        self.stats = {}
 
     def load_data(self, stats):
         """
         stats must be a dictionary with the year being the key, which points to
         a dictionary of the stats and their values for that year.
         """
+        for year in stats:
+            self.stats[year] = stats[year].copy()
 
     def project(self):
         raise NotImplementedError('Need to know how to project the player!')
