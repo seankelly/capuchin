@@ -10,6 +10,6 @@ setup(name='Capuchin',
         'projection',
     ],
     scripts=[
-            'bin/marcel',
+            'bin/capuchin',
         ],
 )
