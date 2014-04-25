@@ -1,14 +1,7 @@
 from collections import defaultdict
-from projection.player import Player
 
 def autovivify():
     return defaultdict(autovivify)
-
-class CapuchinBatter(Player):
-    pass
-
-class CapuchinPitcher(Player):
-    pass
 
 class Capuchin():
     def __init__(self, bdb_directory, **kwargs):
@@ -24,12 +17,6 @@ class Capuchin():
         self.player_list = None
         self._validate_options()
         self.seasons = len(self.weights)
-
-    def load_retrosheet_events(self, years, event_dir):
-        """
-        Load data directly from Retrosheet event files.
-        """
-        pass
 
     def create(self, years, batters=True, pitchers=True):
         marcel_years = self._validate_years(years)
