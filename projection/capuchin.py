@@ -5,7 +5,7 @@ def autovivify():
 
 
 class Capuchin():
-    def __init__(self, batting, pitching, **kwargs):
+    def __init__(self, **kwargs):
         self.bdb_directory = bdb_directory
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
         self.pa_base = kwargs.get('pa_base', 200)
@@ -16,7 +16,8 @@ class Capuchin():
         self.use = kwargs.get('use', {'regression': True, 'weighting': True,
                                       'age': True})
         self.player_list = None
-        self.input_files = {'batting': batting, 'pitching': pitching}
+        self.input_files = {'batting': kwargs.get('batting'),
+                            'pitching': kwargs.get('pitching')}
         self._validate_options()
         self.seasons = len(self.weights)
 
