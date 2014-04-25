@@ -6,7 +6,6 @@ def autovivify():
 
 class Capuchin():
     def __init__(self, **kwargs):
-        self.bdb_directory = bdb_directory
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
         self.pa_base = kwargs.get('pa_base', 200)
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
