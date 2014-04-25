@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from datetime import date
+from projection.capuchin import Capuchin
 import argparse
 
 
@@ -40,6 +41,6 @@ def get_options():
 
 def run():
     options = get_options()
-    marcel_options = vars(options)
-    marcels = Marcel(options.bdb, **marcel_options)
-    marcels.create(date.today().year)
+    options = vars(options)
+    capuchins = Capuchin(**options)
+    capuchins.create(date.today().year)
