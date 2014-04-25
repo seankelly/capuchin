@@ -14,8 +14,10 @@ def get_options():
             suffix = ''
         return prefix + what + suffix
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
-    parser.add_argument('--bdb', default='adminDB', dest='bdb',
-                        help='BDB directory')
+    parser.add_argument('--batters', default=None, dest='batting',
+                        help='CSV file of batters')
+    parser.add_argument('--pitchers', default=None, dest='pitching',
+                        help='CSV file of pitchers')
     parser.add_argument('-y', '--year', dest='year', type=int,
                         help='For which year to generate Marcels')
     parser.add_argument('-a', '--aging', dest='age', type=int,
