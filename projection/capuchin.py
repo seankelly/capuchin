@@ -3,8 +3,9 @@ from collections import defaultdict
 def autovivify():
     return defaultdict(autovivify)
 
+
 class Capuchin():
-    def __init__(self, bdb_directory, **kwargs):
+    def __init__(self, batting, pitching, **kwargs):
         self.bdb_directory = bdb_directory
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
         self.pa_base = kwargs.get('pa_base', 200)
@@ -15,12 +16,13 @@ class Capuchin():
         self.use = kwargs.get('use', {'regression': True, 'weighting': True,
                                       'age': True})
         self.player_list = None
+        self.input_files = {'batting': batting, 'pitching': pitching}
         self._validate_options()
         self.seasons = len(self.weights)
 
     def create(self, years, batters=True, pitchers=True):
         marcel_years = self._validate_years(years)
-        self.load_players()
+        batters, pitchers = self._load_players()
         # Find all players that played in the last self.seasons seasons.
         fetch_years = set()
         for year in marcel_years:
@@ -65,10 +67,27 @@ class Capuchin():
                     batters[playerid][year] = players[playerid]['batting'][year]
         return batters, pitchers
 
-    def load_players(self):
+    def _load_players(self):
+        import csv
         if self.player_list is not None:
             return
-        self.player_list = PlayerList(self.bdb_directory)
+        batters, pitchers = None, None
+        for what, file in self.input_files.iteritems():
+            if file is None:
+                continue
+            f = csv.reader(open(file, 'r'))
+            players = []
+            read_header = False
+            for l in f:
+                if read_header:
+                    players.append(l)
+                else:
+                    players._header = l
+            if 'batting' in f:
+                batters = players
+            elif 'pitching' in f:
+                pitchers = players
+        return batters, pitchers
 
     def _validate_years(self, years):
         if type(years) == int:
