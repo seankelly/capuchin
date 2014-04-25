@@ -28,44 +28,11 @@ class Capuchin():
         for year in marcel_years:
             for delta in range(self.seasons):
                 fetch_years.add(year - (delta + 1))
-        players = self.player_list.get_players(fetch_years)
-        # TODO: Rename batters and pitchers variables.
-        batters, pitchers = self.classify_players(players)
         batter_projections = {}
         pitcher_projections = {}
         # Finally! Start generating projections.
         for year in marcel_years:
             pass
-
-    def classify_players(self, players):
-        batters = autovivify()
-        pitchers = autovivify()
-        # Check each season for a player and classify the season as pitching or
-        # batting.
-        for playerid in players:
-            # The majority of players only ever bat or pitch, so quickly check
-            # if the player has only a single type and move on.
-            if not players[playerid].get('pitching'):
-                batters[playerid] = players[playerid]['batting']
-                continue
-            elif not players[playerid].get('batting'):
-                pitchers[playerid] = players[playerid]['pitching']
-                continue
-            years = (set(players[playerid]['pitching']) |
-                     set(players[playerid]['batting']))
-            for year in years:
-                outs, pas = 0, 0
-                if year in players[playerid]['pitching']:
-                    outs = players[playerid]['pitching'][year]['outs']
-                if year in players[playerid]['batting']:
-                    pas = (players[playerid]['batting'][year]['ab'] +
-                           players[playerid]['batting'][year]['bb'] +
-                           players[playerid]['batting'][year]['ibb'])
-                if outs > pas:
-                    pitchers[playerid][year] = players[playerid]['pitching'][year]
-                else:
-                    batters[playerid][year] = players[playerid]['batting'][year]
-        return batters, pitchers
 
     def _load_players(self):
         import csv
