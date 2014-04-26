@@ -78,17 +78,12 @@ class Capuchin():
         self.seasons = len(self.weights)
 
     def create(self, years, batters=True, pitchers=True):
-        marcel_years = self._validate_years(years)
+        project_years = self._validate_years(years)
         batters, pitchers = self._load_players()
-        # Find all players that played in the last self.seasons seasons.
-        fetch_years = set()
-        for year in marcel_years:
-            for delta in range(self.seasons):
-                fetch_years.add(year - (delta + 1))
         batter_projections = {}
         pitcher_projections = {}
         # Finally! Start generating projections.
-        for year in marcel_years:
+        for year in project_years:
             pass
 
     def _load_players(self):
@@ -117,10 +112,10 @@ class Capuchin():
 
     def _validate_years(self, years):
         if type(years) == int:
-            marcel_years = [years]
+            project_years = [years]
         else:
-            marcel_years = years
-        return marcel_years
+            project_years = years
+        return project_years
 
     def _validate_options(self):
         """Normalize options to ensure they are as expected."""
