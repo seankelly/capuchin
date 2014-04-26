@@ -23,9 +23,24 @@ class PlayerList():
 
     def done(self):
         """
-        Run post-processing on the stored seasons.
+        Re-order the lists of season stats so every year's list is the same
+        size. Players appearing in other seasons will be replaced by seasons
+        with zero accumulated stats. The final lists will be arranged in
+        alphabetic order by player id.
         """
-        pass
+        all_players = sorted(self.players)
+        missing_season = [0.0] * (len(self._header) - 1)
+        for year in sorted(self.player_seasons):
+            stats = self.season_stats[year]
+            season_players = self.player_seasons[year]
+            final_list = []
+            for idx, player in enumerate(all_players):
+                if player in season_players:
+                    final_list.append(stats[season_players[player]])
+                    season_players[player] = idx
+                else:
+                    final_list.append(missing_season)
+            self.season_stats[year] = final_list
 
     def set_header(self, header):
         # Create an uppercase header to normalize stat checks.
