@@ -63,12 +63,20 @@ class PlayerList():
 
 class Capuchin():
     def __init__(self, **kwargs):
+        # Age adjustment is the adjustment to make for players before or after
+        # their peak age.
         self.age_adjustment = kwargs.get('age_adjustment', (0.003, 0.006))
+        # Base PA for projected PA.
         self.pa_base = kwargs.get('pa_base', 200)
+        # Weights for past N seasons' PAs to get projected PA.
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
+        # Player's peak age.
         self.peak_age = kwargs.get('peak_age', 29)
+        # Amount of league average PAs to add.
         self.regress = kwargs.get('regress', 1200)
+        # Weights for the past N seasons.
         self.weights = kwargs.get('weights', (5, 4, 3))
+        # Allow disabling any of the three parts of the projection.
         self.use = kwargs.get('use', {'regression': True, 'weighting': True,
                                       'age': True})
         self.player_list = None
