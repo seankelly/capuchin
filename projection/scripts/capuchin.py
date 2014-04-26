@@ -20,7 +20,7 @@ def get_options():
     parser.add_argument('--pitchers', default=None, dest='pitching',
                         help='CSV file of pitchers')
     parser.add_argument('-y', '--year', dest='year', type=int,
-                        help='For which year to generate Marcels')
+                        help='For which year to generate projections')
     parser.add_argument('-a', '--aging', dest='age', type=int,
                         help='Peak age')
     parser.add_argument('-r', '--regress', dest='regression', type=int,
