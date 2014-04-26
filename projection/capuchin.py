@@ -3,6 +3,47 @@ from collections import defaultdict
 def autovivify():
     return defaultdict(autovivify)
 
+class PlayerList():
+    def __init__(self, *args):
+        self.season_stats = defaultdict(list)
+        self.player_seasons = defaultdict(list)
+        self.players = set()
+        self._header = []
+        self._header_order = {}
+        self.is_batters = False
+        self.is_pitchers = False
+
+    def append(self, l):
+        id, year = l[0], int(l[1])
+        stats = map(lambda x: float(x), l[2:])
+        self.season_stats[year].append(stats)
+        self.player_seasons.append(id)
+        self.players.add(id)
+
+    def done(self):
+        """
+        Run post-processing on the stored seasons.
+        """
+        pass
+
+    def set_header(self, header):
+        # Create an uppercase header to normalize stat checks.
+        uppercase_header = map(lambda s: s.upper(), header)
+        self._header = uppercase_header
+        for i, field in enumerate(header):
+            self._header_order[field] = i
+        header_stats = set(uppercase_header)
+        # Check for stats that only a pitcher or batter can accumulate.
+        if ('PA' in header_stats and
+                'RBI' in header_stats and
+                'SF' in header_stats and
+                'SH' in header_stats):
+            self.is_batters = True
+        elif ('W' in header_stats and
+                'L' in header_stats and
+                'S' in header_stats and
+                'CG' in header_stats):
+            self.is_pitchers = True
 
 class Capuchin():
     def __init__(self, **kwargs):
@@ -43,16 +84,17 @@ class Capuchin():
             if file is None:
                 continue
             f = csv.reader(open(file, 'r'))
-            players = []
+            players = PlayerList()
             read_header = False
             for l in f:
                 if read_header:
                     players.append(l)
                 else:
-                    players._header = l
-            if 'batting' in f:
+                    players.set_header(l)
+            players.done()
+            if players.is_batters:
                 batters = players
-            elif 'pitching' in f:
+            elif players.is_pitchers:
                 pitchers = players
         return batters, pitchers
 
