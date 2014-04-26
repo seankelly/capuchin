@@ -42,5 +42,5 @@ def get_options():
 def run():
     options = get_options()
     options = vars(options)
-    capuchins = Capuchin(**options)
-    capuchins.create(date.today().year)
+    capuchin = Capuchin(**options)
+    capuchin.create(date.today().year)
