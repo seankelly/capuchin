@@ -91,6 +91,7 @@ class Capuchin():
                     players.append(l)
                 else:
                     players.set_header(l)
+                    read_header = True
             players.done()
             if players.is_batters:
                 batters = players
