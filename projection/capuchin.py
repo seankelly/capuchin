@@ -85,7 +85,7 @@ class Capuchin():
         self._validate_options()
         self.seasons = len(self.weights)
 
-    def create(self, years, batters=True, pitchers=True):
+    def create(self, years):
         project_years = self._validate_years(years)
         batters, pitchers = self._load_players()
         batter_projections = {}
