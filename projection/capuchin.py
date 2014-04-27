@@ -82,7 +82,6 @@ class Capuchin():
         self.player_list = None
         self.input_files = {'batting': kwargs.get('batting'),
                             'pitching': kwargs.get('pitching')}
-        self._validate_options()
         self.seasons = len(self.weights)
 
     def create(self, years):
@@ -124,13 +123,3 @@ class Capuchin():
         else:
             project_years = years
         return project_years
-
-    def _validate_options(self):
-        """Normalize options to ensure they are as expected."""
-        from decimal import Decimal
-
-        # Calculate the total weight.
-        decimal_weights = map(lambda x: Decimal(x), self.weights)
-        total_weight = sum(decimal_weights)
-        # Then make self.weights be weights/total_weight.
-        self.weights = map(lambda x: float(x/total_weight), decimal_weights)
