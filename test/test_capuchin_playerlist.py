@@ -27,3 +27,23 @@ class TestPlayerList(unittest.TestCase):
         # Both should have one entry in them.
         self.assertEqual(len(playerlist.player_seasons[2014]), 1)
         self.assertEqual(len(playerlist.season_stats[2014]), 1)
+
+    def test_done(self):
+        playerlist = PlayerList()
+        header = ['id','2014','pa']
+        playerlist.set_header(header)
+        playerlist.append(['player1id', '2013', '7'])
+        playerlist.append(['player2id', '2014', '8'])
+        playerlist.append(['player3id', '2014', '9'])
+        # Before the post-processing, each season remains as-is.
+        self.assertEqual(len(playerlist.player_seasons[2013]), 1)
+        self.assertEqual(len(playerlist.season_stats[2013]), 1)
+        self.assertEqual(len(playerlist.player_seasons[2014]), 2)
+        self.assertEqual(len(playerlist.season_stats[2014]), 2)
+        playerlist.done()
+        # After post-processing, the season_stats list will have a row for
+        # every player.
+        self.assertEqual(len(playerlist.player_seasons[2013]), 1)
+        self.assertEqual(len(playerlist.season_stats[2013]), 3)
+        self.assertEqual(len(playerlist.player_seasons[2014]), 2)
+        self.assertEqual(len(playerlist.season_stats[2014]), 3)
