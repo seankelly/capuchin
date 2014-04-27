@@ -25,5 +25,5 @@ class TestPlayerList(unittest.TestCase):
         # ...and season_stats.
         self.assertTrue(2014 in playerlist.season_stats)
         # Both should have one entry in them.
-        self.assertTrue(len(playerlist.player_seasons[2014]) == 1)
-        self.assertTrue(len(playerlist.season_stats[2014]) == 1)
+        self.assertEqual(len(playerlist.player_seasons[2014]), 1)
+        self.assertEqual(len(playerlist.season_stats[2014]), 1)
