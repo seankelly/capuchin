@@ -9,7 +9,7 @@ class TestPlayerList(unittest.TestCase):
         # First append is the header.
         header = ['id','2014','pa']
         # The header should be transformed to uppercase.
-        upper_header = map(lambda s: s.upper(), header)
+        upper_header = [s.upper() for s in header]
         playerlist.set_header(header)
         self.assertEqual(playerlist._header, upper_header)
 

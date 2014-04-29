@@ -16,7 +16,7 @@ class PlayerList():
 
     def append(self, l):
         id, year = l[0], int(l[1])
-        stats = map(lambda x: float(x), l[2:])
+        stats = [float(x) for x in l[2:]]
         self.season_stats[year].append(stats)
         self.player_seasons[year][id] = len(self.player_seasons[year])
         self.players.add(id)
@@ -44,7 +44,7 @@ class PlayerList():
 
     def set_header(self, header):
         # Create an uppercase header to normalize stat checks.
-        uppercase_header = map(lambda s: s.upper(), header)
+        uppercase_header = [s.upper() for s in header]
         self._header = uppercase_header
         for i, field in enumerate(header):
             self._header_order[field] = i
