@@ -24,9 +24,14 @@ def get_options():
     parser.add_argument('-a', '--aging', dest='age', type=int,
                         help='Peak age')
     parser.add_argument('-r', '--regress', dest='regression', type=int,
-                        help='Number of league average PAs', metavar='PAs')
+                        help='Number of league average PAs to regress',
+                        metavar='PAs')
     parser.add_argument('-w', '--weights', dest='weights',
                         help='Set weights for the seasons')
+    parser.add_argument('-p', '--pa-weights', dest='pa_weights',
+                        help='Set weights projecting PAs')
+    parser.add_argument('-P', '--pa-base', dest='pa_base',
+                        help='Set base PA projection')
     parser.add_argument('--age-adjustment', dest='ageadj', type=float,
                         help='Age adjustment')
     # Add the --use-foo and --skip-foo options.
