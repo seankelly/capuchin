@@ -6,7 +6,8 @@ def autovivify():
 
 class PlayerList():
     def __init__(self, *args):
-        self.season_stats = defaultdict(list)
+        self.season_stats = {}
+        self._season_stats = defaultdict(list)
         # The player_seasons dict maps years => players => row id.
         self.player_seasons = defaultdict(lambda: defaultdict(int))
         self.players = set()
@@ -18,7 +19,7 @@ class PlayerList():
     def append(self, l):
         id, year = l[0], int(l[1])
         stats = [float(x) for x in l[2:]]
-        self.season_stats[year].append(stats)
+        self._season_stats[year].append(stats)
         self.player_seasons[year][id] = len(self.player_seasons[year])
         self.players.add(id)
 
@@ -32,7 +33,7 @@ class PlayerList():
         all_players = sorted(self.players)
         missing_season = [0.0] * (len(self._header) - 1)
         for year in sorted(self.player_seasons):
-            stats = self.season_stats[year]
+            stats = self._season_stats[year]
             season_players = self.player_seasons[year]
             final_list = []
             for idx, player in enumerate(all_players):
