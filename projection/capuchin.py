@@ -1,4 +1,5 @@
 from collections import defaultdict
+import numpy as np
 
 def autovivify():
     return defaultdict(autovivify)
@@ -40,7 +41,7 @@ class PlayerList():
                     season_players[player] = idx
                 else:
                     final_list.append(missing_season)
-            self.season_stats[year] = final_list
+            self.season_stats[year] = np.array(final_list)
 
     def set_header(self, header):
         # Create an uppercase header to normalize stat checks.
