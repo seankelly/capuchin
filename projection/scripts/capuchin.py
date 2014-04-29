@@ -48,4 +48,4 @@ def run():
     options = get_options()
     options = vars(options)
     capuchin = Capuchin(**options)
-    capuchin.create(date.today().year)
+    capuchin.create(options.get('year', date.today().year))
