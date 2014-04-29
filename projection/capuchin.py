@@ -93,7 +93,25 @@ class Capuchin():
         pitcher_projections = {}
         # Finally! Start generating projections.
         for year in project_years:
-            pass
+            if batters is not None:
+                batter_projections[year] = self._create_projection_batters(batters, year)
+            if pitchers is not None:
+                batter_projections[year] = self._create_projection_pitchers(pitchers, year)
+
+    def _create_projection_batters(self, batters, year):
+        past_years = range(year - 1, year - (len(self.weights) + 1), -1)
+        # Find the first year in the history and create an empty projection for
+        # it to act as an accumulator.
+        for y in past_years:
+            if y in batters.season_stats:
+                projection = np.zeros(batters.season_stats[year - 1].shape)
+                break
+        else:
+            # No years in the past, so no projection to create.
+            return
+
+    def _create_projection_pitchers(self, pitchers, year):
+        pass
 
     def _load_players(self):
         import csv
