@@ -11,7 +11,10 @@ class TestPlayerList(unittest.TestCase):
         # The header should be transformed to uppercase.
         upper_header = [s.upper() for s in header]
         playerlist.set_header(header)
-        self.assertEqual(playerlist._header, upper_header)
+        # By default, the first two elements are not added.
+        self.assertEqual(playerlist._header, upper_header[2:])
+        # The _entire_header property has... the entire header!
+        self.assertEqual(playerlist._entire_header, upper_header)
 
     def test_append(self):
         playerlist = PlayerList()

@@ -31,7 +31,7 @@ class PlayerList():
         alphabetic order by player id.
         """
         all_players = sorted(self.players)
-        missing_season = [0.0] * (len(self._header) - 2)
+        missing_season = [0.0] * len(self._header)
         for year in sorted(self.player_seasons):
             stats = self._season_stats[year]
             season_players = self.player_seasons[year]
@@ -47,7 +47,8 @@ class PlayerList():
     def set_header(self, header):
         # Create an uppercase header to normalize stat checks.
         uppercase_header = [s.upper() for s in header]
-        self._header = uppercase_header
+        self._entire_header = uppercase_header
+        self._header = uppercase_header[2:]
         for i, field in enumerate(header):
             self._header_order[field] = i
         header_stats = set(uppercase_header)
