@@ -63,6 +63,9 @@ class PlayerList():
                 'CG' in header_stats):
             self.is_pitchers = True
 
+    def header_index(self, stat):
+        return self._header.index(stat)
+
 class Capuchin():
     def __init__(self, **kwargs):
         # Age adjustment is the adjustment to make for players before or after
