@@ -47,3 +47,7 @@ class TestPlayerList(unittest.TestCase):
         self.assertEqual(len(playerlist.season_stats[2013]), 3)
         self.assertEqual(len(playerlist.player_seasons[2014]), 2)
         self.assertEqual(len(playerlist.season_stats[2014]), 3)
+        # Check all column counts in each year to ensure they're equal.
+        for y in playerlist.season_stats:
+            columns = [len(l) for l in playerlist.season_stats[y]]
+            self.assertEqual(min(columns), max(columns))
