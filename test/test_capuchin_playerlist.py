@@ -30,7 +30,7 @@ class TestPlayerList(unittest.TestCase):
 
     def test_done(self):
         playerlist = PlayerList()
-        header = ['id','2014','pa']
+        header = ['id', '2014', 'pa']
         playerlist.set_header(header)
         playerlist.append(['player1id', '2013', '7'])
         playerlist.append(['player2id', '2014', '8'])
