@@ -104,7 +104,7 @@ class Capuchin():
         # it to act as an accumulator.
         for y in past_years:
             if y in batters.season_stats:
-                projection = np.zeros(batters.season_stats[year - 1].shape)
+                projection = np.zeros(batters.season_stats[y].shape)
                 break
         else:
             # No years in the past, so no projection to create.
