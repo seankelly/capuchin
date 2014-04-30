@@ -109,6 +109,8 @@ class Capuchin():
         else:
             # No years in the past, so no projection to create.
             return
+        for idx, y in enumerate(past_years):
+            projection += self.weights[idx] * batters.season_stats[y]
 
     def _create_projection_pitchers(self, pitchers, year):
         pass
