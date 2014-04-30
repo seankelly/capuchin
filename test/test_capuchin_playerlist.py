@@ -23,10 +23,10 @@ class TestPlayerList(unittest.TestCase):
         # 2014 should be a key in player_seasons...
         self.assertTrue(2014 in playerlist.player_seasons)
         # ...and season_stats.
-        self.assertTrue(2014 in playerlist.season_stats)
+        self.assertTrue(2014 in playerlist._season_stats)
         # Both should have one entry in them.
         self.assertEqual(len(playerlist.player_seasons[2014]), 1)
-        self.assertEqual(len(playerlist.season_stats[2014]), 1)
+        self.assertEqual(len(playerlist._season_stats[2014]), 1)
 
     def test_done(self):
         playerlist = PlayerList()
@@ -37,9 +37,9 @@ class TestPlayerList(unittest.TestCase):
         playerlist.append(['player3id', '2014', '9'])
         # Before the post-processing, each season remains as-is.
         self.assertEqual(len(playerlist.player_seasons[2013]), 1)
-        self.assertEqual(len(playerlist.season_stats[2013]), 1)
+        self.assertEqual(len(playerlist._season_stats[2013]), 1)
         self.assertEqual(len(playerlist.player_seasons[2014]), 2)
-        self.assertEqual(len(playerlist.season_stats[2014]), 2)
+        self.assertEqual(len(playerlist._season_stats[2014]), 2)
         playerlist.done()
         # After post-processing, the season_stats list will have a row for
         # every player.
