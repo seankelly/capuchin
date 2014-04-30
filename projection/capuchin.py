@@ -31,7 +31,7 @@ class PlayerList():
         alphabetic order by player id.
         """
         all_players = sorted(self.players)
-        missing_season = [0.0] * (len(self._header) - 1)
+        missing_season = [0.0] * (len(self._header) - 2)
         for year in sorted(self.player_seasons):
             stats = self._season_stats[year]
             season_players = self.player_seasons[year]
