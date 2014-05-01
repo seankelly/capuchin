@@ -116,13 +116,13 @@ class Capuchin():
         else:
             # No years in the past, so no projection to create.
             return
+
         for idx, y in enumerate(past_years):
             weight = self.weights[idx]
             season = batters.season_stats[y]
             weighted_season = weight * season
             projection += weighted_season
             # Weight each player by the number of plate appearances.
-            shape = weighted_season.shape
             for row in range(len(weighted_season)):
                 pa = season[row, pa_idx]
                 weighted_season[row, :] *= pa
