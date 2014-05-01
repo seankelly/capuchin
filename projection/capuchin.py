@@ -127,6 +127,8 @@ class Capuchin():
                 pa = season[row, pa_idx]
                 weighted_season[row, :] *= pa
                 weighted_season[row, :] *= weight
+                # Reset the PA to properly scale it. It remains to be seen if
+                # this is necessary.
                 weighted_season[row, pa_idx] = pa
             league_average += weighted_season
 
