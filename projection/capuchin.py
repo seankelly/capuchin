@@ -109,7 +109,7 @@ class Capuchin():
         for y in past_years:
             if y in batters.season_stats:
                 projection = np.zeros(batters.season_stats[y].shape)
-                league_average = np.zeros(batters.season_stats[y].shape)
+                league_average = np.zeros(batters.season_stats[y].shape[1])
                 # Get the PA index to calculate the league average.
                 pa_idx = batters.header_index('PA')
                 break
@@ -125,8 +125,7 @@ class Capuchin():
             # Weight each player by the number of plate appearances.
             for row in range(len(weighted_season)):
                 pa = season[row, pa_idx]
-                weighted_season[row, :] *= pa
-            league_average += weighted_season
+                league_average += weighted_season[row, :] * pa
 
     def _create_projection_pitchers(self, pitchers, year):
         pass
