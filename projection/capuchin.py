@@ -126,9 +126,6 @@ class Capuchin():
             for row in range(len(weighted_season)):
                 pa = season[row, pa_idx]
                 weighted_season[row, :] *= pa
-                # Reset the PA to properly scale it. It remains to be seen if
-                # this is necessary.
-                weighted_season[row, pa_idx] = pa
             league_average += weighted_season
 
     def _create_projection_pitchers(self, pitchers, year):
