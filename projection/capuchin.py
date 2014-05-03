@@ -126,9 +126,12 @@ class Capuchin():
             for row in range(len(weighted_season)):
                 pa = season[row, pa_idx]
                 league_total += weighted_season[row, :] * pa
+
         total_pa = league_total[pa_idx]
         regressed_pa = self.regress
         league_average = regressed_pa / total_pa * league_total
+        for row in projection:
+            row += league_average
 
     def _create_projection_pitchers(self, pitchers, year):
         pass
