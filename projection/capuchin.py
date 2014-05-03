@@ -109,7 +109,7 @@ class Capuchin():
         for y in past_years:
             if y in batters.season_stats:
                 projection = np.zeros(batters.season_stats[y].shape)
-                league_average = np.zeros(batters.season_stats[y].shape[1])
+                league_average = np.zeros(batters.season_stats[y].shape[1], dtype=np.float64)
                 # Get the PA index to calculate the league average.
                 pa_idx = batters.header_index('PA')
                 break
