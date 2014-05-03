@@ -123,9 +123,9 @@ class Capuchin():
             weighted_season = weight * season
             projection += weighted_season
             # Weight each player by the number of plate appearances.
-            for row in range(len(weighted_season)):
-                pa = season[row, pa_idx]
-                league_total += weighted_season[row, :] * pa
+            for row in weighted_season:
+                pa = row[pa_idx]
+                league_total += row * pa
 
         total_pa = league_total[pa_idx]
         regressed_pa = self.regress
