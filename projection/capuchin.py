@@ -134,6 +134,15 @@ class Capuchin():
         for row in projection:
             row += league_average
 
+        # Now to project PAs. There can be different number of seasons
+        # associated with it, so calculate it separately.
+        past_years = range(year - 1, year - (len(self.pa_weights) + 1), -1)
+        # Make the projected PAs a 1 column vector.
+        projected_pas = self.pa_base * np.ones((shape[0], 1))
+        for idx, y in enumerate(past_years):
+            weight = self.pa_weights[idx]
+            #projected_pas += weight * batters.season_stats[y][:, pa_idx]
+
     def _create_projection_pitchers(self, pitchers, year):
         pass
 
