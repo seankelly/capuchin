@@ -141,7 +141,8 @@ class Capuchin():
         projected_pas = self.pa_base * np.ones((shape[0], 1))
         for idx, y in enumerate(past_years):
             weight = self.pa_weights[idx]
-            #projected_pas += weight * batters.season_stats[y][:, pa_idx]
+            year_pas = batters.season_stats[y][:, pa_idx].reshape((shape[0], 1))
+            projected_pas += weight * year_pas
 
     def _create_projection_pitchers(self, pitchers, year):
         pass
