@@ -147,6 +147,12 @@ class Capuchin():
             year_pas = batters.season_stats[y][:, pa_idx].reshape((shape[0], 1))
             projected_pas += weight * year_pas
 
+        # Calculate final projection. Pro-rate numbers to projected PAs.
+        # TODO: Re-baseline results to league average of most recent year.
+        final_projection = np.zeros(shape)
+        for idx, player in enumerate(projection):
+            final_projection[idx] = projected_pas[idx] * player / player[pa_idx]
+
     def _create_projection_pitchers(self, pitchers, year):
         pass
 
