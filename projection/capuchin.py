@@ -134,6 +134,9 @@ class Capuchin():
         for row in projection:
             row += league_average
 
+        # Calculate age adjustment here! Dataset I am using right now lacks
+        # birth year, so have to skip it.
+
         # Now to project PAs. There can be different number of seasons
         # associated with it, so calculate it separately.
         past_years = range(year - 1, year - (len(self.pa_weights) + 1), -1)
