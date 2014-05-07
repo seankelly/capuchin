@@ -10,6 +10,8 @@ class PlayerList():
         self._season_stats = defaultdict(list)
         # The player_seasons dict maps years => players => row id.
         self.player_seasons = defaultdict(lambda: defaultdict(int))
+        # This is player_seasons but flattened to players => row id.
+        self.player_map = {}
         self.players = set()
         self._header = []
         self._header_order = {}
@@ -40,6 +42,7 @@ class PlayerList():
                 if player in season_players:
                     final_list.append(stats[season_players[player]])
                     season_players[player] = idx
+                    self.player_map[player] = idx
                 else:
                     final_list.append(missing_season)
             self.season_stats[year] = np.array(final_list)
