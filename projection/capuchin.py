@@ -86,8 +86,10 @@ class Capuchin():
         self.use = kwargs.get('use', {'regression': True, 'weighting': True,
                                       'age': True})
         self.player_list = None
-        self.input_files = {'batting': kwargs.get('batting'),
-                            'pitching': kwargs.get('pitching')}
+        self.input_files = {'batting': kwargs.get('batting_input'),
+                            'pitching': kwargs.get('pitching_input')}
+        self.output_files = {'batting': kwargs.get('batting_output'),
+                            'pitching': kwargs.get('pitching_output')}
         self.seasons = len(self.weights)
 
     def create(self, years):

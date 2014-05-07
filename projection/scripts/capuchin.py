@@ -15,10 +15,14 @@ def get_options():
             suffix = ''
         return prefix + what + suffix
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
-    parser.add_argument('--batters', default=None, dest='batting',
-                        help='CSV file of batters')
-    parser.add_argument('--pitchers', default=None, dest='pitching',
-                        help='CSV file of pitchers')
+    parser.add_argument('--batter-in', default=None, dest='batting_input',
+                        help='CSV file of batters input data')
+    parser.add_argument('--batter-out', default=None, dest='batting_output',
+                        help='CSV file of batters output')
+    parser.add_argument('--pitcher-in', default=None, dest='pitching_input',
+                        help='CSV file of pitchers input data')
+    parser.add_argument('--pitcher-out', default=None, dest='pitching_output',
+                        help='CSV file of pitchers output')
     parser.add_argument('-y', '--year', dest='year', type=int,
                         help='For which year to generate projections')
     parser.add_argument('-a', '--aging', dest='age', type=int,
