@@ -1,4 +1,5 @@
 from collections import defaultdict
+import csv
 import numpy as np
 
 def autovivify():
@@ -158,6 +159,15 @@ class Capuchin():
         final_projection = np.zeros(shape)
         for idx, player in enumerate(projection):
             final_projection[idx] = projected_pas[idx] * player / player[pa_idx]
+
+        output_file = self.output_files['batting']
+        if output_file is None:
+            return
+        output_csv = csv.writer(open(output_file, 'w'))
+        output_csv.writerow(batters._entire_header)
+        for player in sorted(batters.player_seasons[index_year]):
+            row = [player, year] + list(final_projection[batters.player_map[player]])
+            output_csv.writerow(row)
 
     def _create_projection_pitchers(self, pitchers, year):
         pass
