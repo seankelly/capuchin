@@ -115,6 +115,7 @@ class Capuchin():
                 league_total = np.zeros(shape[1], dtype=np.float64)
                 # Get the PA index to calculate the league average.
                 pa_idx = batters.header_index('PA')
+                index_year = y
                 break
         else:
             # No years in the past, so no projection to create.
