@@ -156,9 +156,11 @@ class Capuchin():
 
         # Calculate final projection. Pro-rate numbers to projected PAs.
         # TODO: Re-baseline results to league average of most recent year.
-        final_projection = np.zeros(shape)
+        final_projection = np.zeros(shape, dtype=np.int32)
         for idx, player in enumerate(projection):
-            final_projection[idx] = projected_pas[idx] * player / player[pa_idx]
+            # Rounded to the nearest integer.
+            V = np.rint(projected_pas[idx] * player / player[pa_idx])
+            final_projection[idx] = V
 
         output_file = self.output_files['batting']
         if output_file is None:
