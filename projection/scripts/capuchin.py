@@ -16,28 +16,41 @@ def get_options():
         return prefix + what + suffix
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
     parser.add_argument('--batter-in', default=None, dest='batting_input',
-                        help='CSV file of batters input data')
+                        metavar='FILE', help='CSV file of batters input data')
     parser.add_argument('--batter-out', default=None, dest='batting_output',
-                        help='CSV file of batters output')
+                        metavar='FILE', help='CSV file of batters output')
     parser.add_argument('--pitcher-in', default=None, dest='pitching_input',
-                        help='CSV file of pitchers input data')
+                        metavar='FILE', help='CSV file of pitchers input data')
     parser.add_argument('--pitcher-out', default=None, dest='pitching_output',
-                        help='CSV file of pitchers output')
+                        metavar='FILE', help='CSV file of pitchers output')
     parser.add_argument('-y', '--year', dest='year', type=int,
                         help='For which year to generate projections')
     parser.add_argument('-a', '--aging', dest='age', type=int,
                         help='Peak age')
-    parser.add_argument('-r', '--regress', dest='regression', type=int,
-                        help='Number of league average PAs to regress',
-                        metavar='PAs')
-    parser.add_argument('-w', '--weights', dest='weights',
-                        help='Set weights for the seasons')
-    parser.add_argument('-p', '--pa-weights', dest='pa_weights',
-                        help='Set weights projecting PAs')
-    parser.add_argument('-P', '--pa-base', dest='pa_base',
-                        help='Set base PA projection')
     parser.add_argument('--age-adjustment', dest='ageadj', type=float,
                         help='Age adjustment')
+    parser.add_argument('--batter-weights', dest='batter_weights',
+                        metavar='TUPLE',
+                        help="The weights for batters' previous seasons")
+    parser.add_argument('--batter-regress', dest='batter_regress',
+                        metavar='PAs', type=int,
+                        help='Number of league average PAs to regress')
+    parser.add_argument('--pa-weights', dest='pa_weights', metavar='TUPLE',
+                        help='Set weights projecting PAs')
+    parser.add_argument('--pa-base', dest='pa_base', metavar='PA',
+                        help='Set base PA projection')
+    parser.add_argument('--pitcher-weights', dest='pitcher_weights',
+                        metavar='TUPLE',
+                        help="The weights for pitchers' previous seasons")
+    parser.add_argument('--pitcher-regress', dest='pitcher_regress',
+                        metavar='IPs', type=int,
+                        help='Number of league average PAs to regress')
+    parser.add_argument('--ip-weights', dest='ip_weights', metavar='TUPLE',
+                        help='Set weights projecting IPs')
+    parser.add_argument('--starter-base', dest='starter_base', metavar='IP',
+                        help='Set base IP projection for starters')
+    parser.add_argument('--reliever-base', dest='reliever_base', metavar='IP',
+                        help='Set base IP projection for relievers')
     # Add the --use-foo and --skip-foo options.
     for what in ('aging', 'regression', 'weighting'):
         for choice in ('use', 'skip'):
