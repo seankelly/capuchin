@@ -161,8 +161,11 @@ class Capuchin():
             year_pas = batters.season_stats[y][:, pa_idx].reshape((shape[0], 1))
             projected_pas += weight * year_pas
 
+        # Re-baseline project. Calculate ratios of stats/PA for projection and
+        # most recent year. Scale the projection's ratios to the most recent
+        # years' ratios.
+
         # Calculate final projection. Pro-rate numbers to projected PAs.
-        # TODO: Re-baseline results to league average of most recent year.
         final_projection = np.zeros(shape, dtype=np.int32)
         for idx, player in enumerate(projection):
             # Rounded to the nearest integer.
