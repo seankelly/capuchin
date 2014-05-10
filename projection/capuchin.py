@@ -79,20 +79,20 @@ class Capuchin():
         # Base PA for projected PA.
         self.pa_base = kwargs.get('pa_base', 200)
         # Base IP for projected IP. It differs between starters and relievers.
-        self.pa_base = kwargs.get('starter_base', 60)
-        self.pa_base = kwargs.get('reliever_base', 25)
+        self.starter_base = kwargs.get('starter_base', 60)
+        self.reliever_base = kwargs.get('reliever_base', 25)
         # Weights for past N seasons' PAs to get projected PA.
         self.pa_weights = kwargs.get('pa_weights', (0.5, 0.1))
         # Weights for past N seasons' IPs to get projected IP.
-        self.pa_weights = kwargs.get('ip_weights', (0.5, 0.1))
+        self.ip_weights = kwargs.get('ip_weights', (0.5, 0.1))
         # Player's peak age.
         self.peak_age = kwargs.get('peak_age', 29)
         # Amount of league average PAs or IPs to add.
-        self.regress = kwargs.get('batter_regress', 1200)
-        self.regress = kwargs.get('pitcher_regress', 1200)
+        self.batter_regress = kwargs.get('batter_regress', 1200)
+        self.pitcher_regress = kwargs.get('pitcher_regress', 1200)
         # Weights for the past N seasons.
-        self.weights = kwargs.get('batter_weights', (5, 4, 3))
-        self.weights = kwargs.get('pitcher_weights', (3, 2, 1))
+        self.batter_weights = kwargs.get('batter_weights', (5, 4, 3))
+        self.pitcher_weights = kwargs.get('pitcher_weights', (3, 2, 1))
         # Allow disabling any of the three parts of the projection.
         self.use = kwargs.get('use', {'regression': True, 'weighting': True,
                                       'age': True})
@@ -101,7 +101,6 @@ class Capuchin():
                             'pitching': kwargs.get('pitching_input')}
         self.output_files = {'batting': kwargs.get('batting_output'),
                             'pitching': kwargs.get('pitching_output')}
-        self.seasons = len(self.weights)
 
     def create(self, years):
         project_years = self._validate_years(years)
@@ -120,7 +119,7 @@ class Capuchin():
         if output_file is None:
             return
 
-        past_years = range(year - 1, year - (len(self.weights) + 1), -1)
+        past_years = range(year - 1, year - (len(self.batter_weights) + 1), -1)
         # Find the first year in the history and create an empty projection for
         # it to act as an accumulator.
         for y in past_years:
@@ -137,7 +136,7 @@ class Capuchin():
             return
 
         for idx, y in enumerate(past_years):
-            weight = self.weights[idx]
+            weight = self.batter_weights[idx]
             season = batters.season_stats[y]
             weighted_season = weight * season
             projection += weighted_season
@@ -147,7 +146,7 @@ class Capuchin():
                 weighted_league_total += row * pa
 
         total_pa = weighted_league_total[pa_idx]
-        regressed_pa = self.regress
+        regressed_pa = self.batter_regress
         league_average = regressed_pa / total_pa * weighted_league_total
         for row in projection:
             row += league_average
