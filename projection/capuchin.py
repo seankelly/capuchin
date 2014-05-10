@@ -155,10 +155,11 @@ class Capuchin():
         # associated with it, so calculate it separately.
         past_years = range(year - 1, year - (len(self.pa_weights) + 1), -1)
         # Make the projected PAs a 1 column vector.
-        projected_pas = self.pa_base * np.ones((shape[0], 1))
+        pa_vector = (shape[0], 1)
+        projected_pas = self.pa_base * np.ones(pa_vector)
         for idx, y in enumerate(past_years):
             weight = self.pa_weights[idx]
-            year_pas = batters.season_stats[y][:, pa_idx].reshape((shape[0], 1))
+            year_pas = batters.season_stats[y][:, pa_idx].reshape(pa_vector)
             projected_pas += weight * year_pas
 
         # Pro-rate projection to projected number of plate appearances.
