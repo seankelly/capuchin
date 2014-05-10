@@ -123,7 +123,7 @@ class Capuchin():
             if y in batters.season_stats:
                 shape = batters.season_stats[y].shape
                 projection = np.zeros(shape)
-                league_total = np.zeros(shape[1], dtype=np.float64)
+                weighted_league_total = np.zeros(shape[1], dtype=np.float64)
                 # Get the PA index to calculate the league average.
                 pa_idx = batters.header_index('PA')
                 index_year = y
@@ -140,11 +140,11 @@ class Capuchin():
             # Weight each player by the number of plate appearances.
             for row in weighted_season:
                 pa = row[pa_idx]
-                league_total += row * pa
+                weighted_league_total += row * pa
 
-        total_pa = league_total[pa_idx]
+        total_pa = weighted_league_total[pa_idx]
         regressed_pa = self.regress
-        league_average = regressed_pa / total_pa * league_total
+        league_average = regressed_pa / total_pa * weighted_league_total
         for row in projection:
             row += league_average
 
