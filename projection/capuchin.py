@@ -116,6 +116,10 @@ class Capuchin():
                 batter_projections[year] = self._create_projection_pitchers(pitchers, year)
 
     def _create_projection_batters(self, batters, year):
+        output_file = self.output_files['batting']
+        if output_file is None:
+            return
+
         past_years = range(year - 1, year - (len(self.weights) + 1), -1)
         # Find the first year in the history and create an empty projection for
         # it to act as an accumulator.
@@ -170,9 +174,6 @@ class Capuchin():
         # most recent year. Scale the projection's ratios to the most recent
         # years' ratios.
 
-        output_file = self.output_files['batting']
-        if output_file is None:
-            return
         output_csv = csv.writer(open(output_file, 'w'))
         output_csv.writerow(batters._entire_header)
         for player in sorted(batters.player_seasons[index_year]):
