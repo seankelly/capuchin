@@ -1,5 +1,6 @@
 from collections import defaultdict
 import csv
+import itertools
 import numpy as np
 
 def autovivify():
@@ -161,8 +162,7 @@ class Capuchin():
         pa_vector = (shape[0], 1)
         projected_pas = np.empty(pa_vector)
         projected_pas.fill(self.pa_base)
-        for idx, y in enumerate(past_years):
-            weight = self.pa_weights[idx]
+        for weight, y in itertools.izip(self.pa_weights, past_years):
             year_pas = batters.season_stats[y][:, pa_idx].reshape(pa_vector)
             projected_pas += weight * year_pas
 
