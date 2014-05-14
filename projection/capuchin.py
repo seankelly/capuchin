@@ -170,9 +170,17 @@ class Capuchin():
         for idx, player in enumerate(projection):
             player *= projected_pas[idx] / player[pa_idx]
 
-        # Re-baseline project. Calculate ratios of stats/PA for projection and
-        # most recent year. Scale the projection's ratios to the most recent
-        # years' ratios.
+        # Re-baseline projection. Calculate ratios of stats/PA for projection
+        # and most recent year. Scale the projection's ratios to the most
+        # recent years' ratios.
+        league_average = np.sum(batters.season_stats[index_year], axis=0)
+        stat_rates = league_average / league_average[pa_idx]
+        proj_average = np.sum(projection, axis=0)
+        proj_rates = proj_average / proj_average[pa_idx]
+        ratios = np.divide(stat_rates, proj_rates)
+        final_projection = np.zeros(shape, dtype=np.int32)
+        for row, player in enumerate(projection):
+            final_projection[row] = np.multiply(ratios, player)
 
         output_csv = csv.writer(open(output_file, 'w'))
         output_csv.writerow(batters._entire_header)
