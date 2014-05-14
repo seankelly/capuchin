@@ -136,8 +136,7 @@ class Capuchin():
             # No years in the past, so no projection to create.
             return
 
-        for idx, y in enumerate(past_years):
-            weight = self.batter_weights[idx]
+        for weight, y in itertools.izip(self.batter_weights, past_years):
             season = batters.season_stats[y]
             weighted_season = weight * season
             projection += weighted_season
