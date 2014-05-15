@@ -181,7 +181,7 @@ class Capuchin():
         ratios = np.divide(stat_rates, proj_rates)
         final_projection = np.zeros(shape, dtype=np.int32)
         for row, player in enumerate(projection):
-            final_projection[row] = np.multiply(ratios, player)
+            final_projection[row] = ratios * player
 
         output_csv = csv.writer(open(output_file, 'w'))
         output_csv.writerow(batters._entire_header)
