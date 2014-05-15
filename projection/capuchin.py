@@ -178,6 +178,7 @@ class Capuchin():
         proj_average = np.sum(projection, axis=0)
         proj_rates = proj_average / proj_average[pa_idx]
         ratios = np.divide(stat_rates, proj_rates)
+        ratios[np.isnan(ratios)] = 0
         final_projection = np.rint(ratios * projection).astype(np.int32)
 
         output_csv = csv.writer(open(output_file, 'w'))
