@@ -179,9 +179,7 @@ class Capuchin():
         proj_average = np.sum(projection, axis=0)
         proj_rates = proj_average / proj_average[pa_idx]
         ratios = np.divide(stat_rates, proj_rates)
-        final_projection = np.zeros(shape, dtype=np.int32)
-        for row, player in enumerate(projection):
-            final_projection[row] = ratios * player
+        final_projection = (ratios * projection).astype(np.int32)
 
         output_csv = csv.writer(open(output_file, 'w'))
         output_csv.writerow(batters._entire_header)
