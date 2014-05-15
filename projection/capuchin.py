@@ -126,8 +126,12 @@ class Capuchin():
         for y in past_years:
             if y in batters.season_stats:
                 shape = batters.season_stats[y].shape
+                pa_vector = (shape[0], 1)
                 projection = np.zeros(shape)
-                weighted_league_total = np.zeros(shape[1], dtype=np.float64)
+                # A single row array that holds the weighted league totals for
+                # each stat.
+                stat_line = (1, shape[1])
+                weighted_league_total = np.zeros(stat_line, dtype=np.float64)
                 # Get the PA index to calculate the league average.
                 pa_idx = batters.header_index('PA')
                 index_year = y
@@ -141,15 +145,14 @@ class Capuchin():
             weighted_season = weight * season
             projection += weighted_season
             # Weight each player by the number of plate appearances.
-            for row in weighted_season:
-                pa = row[pa_idx]
-                weighted_league_total += row * pa
+            pa_weights = weighted_season[:, pa_idx].reshape(pa_vector)
+            s = np.sum(pa_weights * weighted_season, axis=0).reshape(stat_line)
+            weighted_league_total += s
 
-        total_pa = weighted_league_total[pa_idx]
+        total_pa = weighted_league_total[0, pa_idx]
         regressed_pa = self.batter_regress
         league_average = regressed_pa / total_pa * weighted_league_total
-        for row in projection:
-            row += league_average
+        projection += league_average
 
         # Calculate age adjustment here! Dataset I am using right now lacks
         # birth year, so have to skip it.
@@ -158,7 +161,6 @@ class Capuchin():
         # associated with it, so calculate it separately.
         past_years = range(year - 1, year - (len(self.pa_weights) + 1), -1)
         # Make the projected PAs a 1 column vector.
-        pa_vector = (shape[0], 1)
         projected_pas = np.empty(pa_vector)
         projected_pas.fill(self.pa_base)
         for weight, y in itertools.izip(self.pa_weights, past_years):
