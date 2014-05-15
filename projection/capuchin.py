@@ -168,8 +168,7 @@ class Capuchin():
             projected_pas += weight * year_pas
 
         # Pro-rate projection to projected number of plate appearances.
-        for idx, player in enumerate(projection):
-            player *= projected_pas[idx] / player[pa_idx]
+        projection *= projected_pas / projection[:, pa_idx].reshape(pa_vector)
 
         # Re-baseline projection. Calculate ratios of stats/PA for projection
         # and most recent year. Scale the projection's ratios to the most
