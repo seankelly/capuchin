@@ -1,6 +1,22 @@
 extern crate clap;
 
 use clap::{Arg, App};
+use std::default::Default;
+
+struct ProjectionOptions {
+    peak_age: u16,
+    year_weights: Vec<f32>,
+}
+
+impl Default for ProjectionOptions {
+    fn default() -> Self {
+        ProjectionOptions {
+            peak_age: 29,
+            year_weights: vec![5.0, 4.0, 3.0],
+        }
+    }
+}
+
 
 fn main() {
     let app = App::new("Capuchin")
