@@ -1,7 +1,16 @@
+#![recursion_limit = "1024"]
+
 extern crate clap;
+extern crate csv;
+#[macro_use]
+extern crate error_chain;
 
 use clap::{Arg, App};
 use std::default::Default;
+
+mod errors {
+    error_chain! {}
+}
 
 struct ProjectionOptions {
     peak_age: u16,
