@@ -7,3 +7,4 @@ authors = ["Sean Kelly <code@katron.org>"]
 clap = "2.19.0"
 csv = "0.15.0"
 error-chain = "0.10.0"
+rustc-serialize = "0.3.24"
