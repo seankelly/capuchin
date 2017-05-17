@@ -87,7 +87,7 @@ fn main() {
                             .parse().expect("Expected year to be an integer.");
     let mut proj = Projection::default();
     proj.year = projection_year;
-    proj.load_batting_season(batting_csv);
+    proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
 }
 
 impl Projection {
