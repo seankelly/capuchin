@@ -87,8 +87,12 @@ fn main() {
 impl Projection {
     fn load_batting_season(&mut self, batting_csv: &Path) -> errors::Result<()> {
         let mut rdr = csv::Reader::from_file(batting_csv)?;
+        let minimum_year = self.year - self.year_weights.len() as u16;
         for record in rdr.decode() {
             let record: BattingSeason = record?;
+            if record.yearid < minimum_year {
+                continue;
+            }
         }
         Ok(())
     }
