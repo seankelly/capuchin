@@ -20,7 +20,7 @@ mod errors {
     }
 }
 
-struct ProjectionOptions {
+struct Projection {
     peak_age: u16,
     year_weights: Vec<f32>,
 }
@@ -93,9 +93,9 @@ fn load_batting_season(batting_csv: &Path) -> errors::Result<()> {
     Ok(())
 }
 
-impl Default for ProjectionOptions {
+impl Default for Projection {
     fn default() -> Self {
-        ProjectionOptions {
+        Projection {
             peak_age: 29,
             year_weights: vec![5.0, 4.0, 3.0],
         }
