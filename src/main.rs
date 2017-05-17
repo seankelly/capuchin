@@ -7,8 +7,9 @@ extern crate error_chain;
 extern crate rustc_serialize;
 
 use clap::{Arg, App};
-use std::path::Path;
+use std::collections::HashMap;
 use std::default::Default;
+use std::path::Path;
 
 mod errors {
     use csv;
@@ -21,6 +22,7 @@ mod errors {
 }
 
 struct Projection {
+    batters: HashMap<String, Vec<BattingSeason>>,
     peak_age: u16,
     year: u16,
     year_weights: Vec<f32>,
@@ -93,6 +95,8 @@ impl Projection {
             if record.yearid < minimum_year {
                 continue;
             }
+            let mut batter = self.batters.entry(record.playerid.clone()).or_insert(Vec::new());
+            batter.push(record);
         }
         Ok(())
     }
@@ -101,6 +105,7 @@ impl Projection {
 impl Default for Projection {
     fn default() -> Self {
         Projection {
+            batters: HashMap::new(),
             peak_age: 29,
             year: 0,
             year_weights: vec![5.0, 4.0, 3.0],
