@@ -51,15 +51,6 @@ struct BattingSeason {
     gidp: Option<u8>,
 }
 
-impl Default for ProjectionOptions {
-    fn default() -> Self {
-        ProjectionOptions {
-            peak_age: 29,
-            year_weights: vec![5.0, 4.0, 3.0],
-        }
-    }
-}
-
 
 fn main() {
     let app = App::new("Capuchin")
@@ -100,4 +91,13 @@ fn load_batting_season(batting_csv: &Path) -> errors::Result<()> {
     }
     println!("Found {} records", found_records);
     Ok(())
+}
+
+impl Default for ProjectionOptions {
+    fn default() -> Self {
+        ProjectionOptions {
+            peak_age: 29,
+            year_weights: vec![5.0, 4.0, 3.0],
+        }
+    }
 }
