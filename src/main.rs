@@ -70,6 +70,7 @@ fn main() {
              .short("y")
              .long("year")
              .value_name("YEAR")
+             .required(true)
              .help("Year to project")
              .takes_value(true))
         .arg(Arg::with_name("peak_age")
@@ -82,7 +83,10 @@ fn main() {
     let matches = app.get_matches();
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
+    let projection_year = matches.value_of("year").expect("Need a year to project.")
+                            .parse().expect("Expected year to be an integer.");
     let mut proj = Projection::default();
+    proj.year = projection_year;
     proj.load_batting_season(batting_csv);
 }
 
