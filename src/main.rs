@@ -90,9 +90,13 @@ impl Projection {
     fn load_batting_season(&mut self, batting_csv: &Path) -> errors::Result<()> {
         let mut rdr = csv::Reader::from_file(batting_csv)?;
         let minimum_year = self.year - self.year_weights.len() as u16;
+        let maximum_year = self.year;
         for record in rdr.decode() {
             let record: BattingSeason = record?;
             if record.yearid < minimum_year {
+                continue;
+            }
+            else if maximum_year >= record.yearid {
                 continue;
             }
             let mut batter = self.batters.entry(record.playerid.clone()).or_insert(Vec::new());
