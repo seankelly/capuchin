@@ -79,18 +79,21 @@ fn main() {
     let matches = app.get_matches();
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
-    let batting = load_batting_season(batting_csv);
+    let mut proj = Projection::default();
+    proj.load_batting_season(batting_csv);
 }
 
-fn load_batting_season(batting_csv: &Path) -> errors::Result<()> {
-    let mut rdr = csv::Reader::from_file(batting_csv)?;
-    let mut found_records = 0;
-    for record in rdr.decode() {
-        let record: BattingSeason = record?;
-        found_records += 1;
+impl Projection {
+    fn load_batting_season(&mut self, batting_csv: &Path) -> errors::Result<()> {
+        let mut rdr = csv::Reader::from_file(batting_csv)?;
+        let mut found_records = 0;
+        for record in rdr.decode() {
+            let record: BattingSeason = record?;
+            found_records += 1;
+        }
+        println!("Found {} records", found_records);
+        Ok(())
     }
-    println!("Found {} records", found_records);
-    Ok(())
 }
 
 impl Default for Projection {
