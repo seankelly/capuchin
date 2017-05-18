@@ -10,6 +10,7 @@ use clap::{Arg, App};
 use std::collections::HashMap;
 use std::default::Default;
 use std::path::Path;
+use std::ops::Add;
 
 mod errors {
     use csv;
@@ -117,6 +118,48 @@ impl Default for Projection {
             peak_age: 29,
             year: 0,
             year_weights: vec![5.0, 4.0, 3.0],
+        }
+    }
+}
+
+impl Add for BattingSeason {
+    type Output = BattingSeason;
+
+    fn add(self, other: BattingSeason) -> BattingSeason {
+        assert!(self.playerid == other.playerid);
+
+        fn add_option<T: Add<Output=T>>(a: Option<T>, b: Option<T>) -> Option<T> {
+            match (a, b) {
+                (Some(x), Some(y)) => Some(x+y),
+                (Some(x), None) => Some(x),
+                (None, Some(y)) => Some(y),
+                (None, None) => None,
+            }
+        }
+
+        BattingSeason {
+            playerid: self.playerid,
+            yearid: self.yearid,
+            stint: self.stint,
+            teamid: self.teamid,
+            lgid: self.lgid,
+            g: self.g + other.g,
+            ab: self.ab + other.ab,
+            r: self.r + other.r,
+            h: self.h + other.h,
+            double: self.double + other.double,
+            triple: self.triple + other.triple,
+            hr: self.hr + other.hr,
+            rbi: add_option(self.rbi, other.rbi),
+            sb: add_option(self.sb, other.sb),
+            cs: add_option(self.cs, other.cs),
+            bb: self.bb + other.bb,
+            so: add_option(self.so, other.so),
+            ibb: add_option(self.ibb, other.ibb),
+            hbp: add_option(self.hbp, other.hbp),
+            sh: add_option(self.sh, other.sh),
+            sf: add_option(self.sf, other.sf),
+            gidp: add_option(self.gidp, other.gidp),
         }
     }
 }
