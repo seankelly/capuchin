@@ -23,7 +23,7 @@ mod errors {
 
 struct Projection {
     batters: HashMap<String, Vec<BattingSeason>>,
-    peak_age: u16,
+    peak_age: u8,
     year: u16,
     year_weights: Vec<f32>,
 }
