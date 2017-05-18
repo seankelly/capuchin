@@ -122,12 +122,37 @@ impl Default for Projection {
     }
 }
 
-impl Add for BattingSeason {
-    type Output = BattingSeason;
+impl Default for BattingSeason {
+    fn default() -> Self {
+        BattingSeason {
+            playerid: "".to_string(),
+            yearid: 0,
+            stint: "".to_string(),
+            teamid: "".to_string(),
+            lgid: "".to_string(),
+            g: 0,
+            ab: 0,
+            r: 0,
+            h: 0,
+            double: 0,
+            triple: 0,
+            hr: 0,
+            rbi: Some(0),
+            sb: Some(0),
+            cs: Some(0),
+            bb: 0,
+            so: Some(0),
+            ibb: Some(0),
+            hbp: Some(0),
+            sh: Some(0),
+            sf: Some(0),
+            gidp: Some(0),
+        }
+    }
+}
 
-    fn add(self, other: BattingSeason) -> BattingSeason {
-        assert!(self.playerid == other.playerid);
-
+impl BattingSeason {
+    fn add(&mut self, seasons: &Vec<BattingSeason>) {
         fn add_option<T: Add<Output=T>>(a: Option<T>, b: Option<T>) -> Option<T> {
             match (a, b) {
                 (Some(x), Some(y)) => Some(x+y),
@@ -137,29 +162,24 @@ impl Add for BattingSeason {
             }
         }
 
-        BattingSeason {
-            playerid: self.playerid,
-            yearid: self.yearid,
-            stint: self.stint,
-            teamid: self.teamid,
-            lgid: self.lgid,
-            g: self.g + other.g,
-            ab: self.ab + other.ab,
-            r: self.r + other.r,
-            h: self.h + other.h,
-            double: self.double + other.double,
-            triple: self.triple + other.triple,
-            hr: self.hr + other.hr,
-            rbi: add_option(self.rbi, other.rbi),
-            sb: add_option(self.sb, other.sb),
-            cs: add_option(self.cs, other.cs),
-            bb: self.bb + other.bb,
-            so: add_option(self.so, other.so),
-            ibb: add_option(self.ibb, other.ibb),
-            hbp: add_option(self.hbp, other.hbp),
-            sh: add_option(self.sh, other.sh),
-            sf: add_option(self.sf, other.sf),
-            gidp: add_option(self.gidp, other.gidp),
+        for season in seasons {
+                self.g += season.g;
+                self.ab += season.ab;
+                self.r += season.r;
+                self.h += season.h;
+                self.double += season.double;
+                self.triple += season.triple;
+                self.hr += season.hr;
+                self.bb += season.bb;
+                self.rbi = add_option(self.rbi, season.rbi);
+                self.sb = add_option(self.sb, season.sb);
+                self.cs = add_option(self.cs, season.cs);
+                self.so = add_option(self.so, season.so);
+                self.ibb = add_option(self.ibb, season.ibb);
+                self.hbp = add_option(self.hbp, season.hbp);
+                self.sh = add_option(self.sh, season.sh);
+                self.sf = add_option(self.sf, season.sf);
+                self.gidp = add_option(self.gidp, season.gidp);
         }
     }
 }
