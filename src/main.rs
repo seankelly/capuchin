@@ -55,6 +55,26 @@ struct BattingSeason {
     gidp: Option<u8>,
 }
 
+struct BattingSummary {
+    g: u32,
+    ab: u32,
+    r: u32,
+    h: u32,
+    double: u32,
+    triple: u32,
+    hr: u32,
+    rbi: u32,
+    sb: u32,
+    cs: u32,
+    bb: u32,
+    so: u32,
+    ibb: u32,
+    hbp: u32,
+    sh: u32,
+    sf: u32,
+    gidp: u32,
+}
+
 
 fn main() {
     let app = App::new("Capuchin")
@@ -151,35 +171,26 @@ impl Default for BattingSeason {
     }
 }
 
-impl BattingSeason {
+impl BattingSummary {
     fn add(&mut self, seasons: &Vec<BattingSeason>) {
-        fn add_option<T: Add<Output=T>>(a: Option<T>, b: Option<T>) -> Option<T> {
-            match (a, b) {
-                (Some(x), Some(y)) => Some(x+y),
-                (Some(x), None) => Some(x),
-                (None, Some(y)) => Some(y),
-                (None, None) => None,
-            }
-        }
-
         for season in seasons {
-                self.g += season.g;
-                self.ab += season.ab;
-                self.r += season.r;
-                self.h += season.h;
-                self.double += season.double;
-                self.triple += season.triple;
-                self.hr += season.hr;
-                self.bb += season.bb;
-                self.rbi = add_option(self.rbi, season.rbi);
-                self.sb = add_option(self.sb, season.sb);
-                self.cs = add_option(self.cs, season.cs);
-                self.so = add_option(self.so, season.so);
-                self.ibb = add_option(self.ibb, season.ibb);
-                self.hbp = add_option(self.hbp, season.hbp);
-                self.sh = add_option(self.sh, season.sh);
-                self.sf = add_option(self.sf, season.sf);
-                self.gidp = add_option(self.gidp, season.gidp);
+            self.g += season.g.into();
+            self.ab += season.ab.into();
+            self.r += season.r.into();
+            self.h += season.h.into();
+            self.double += season.double.into();
+            self.triple += season.triple.into();
+            self.hr += season.hr.into();
+            self.rbi += season.rbi.unwrap_or(0).into();
+            self.sb += season.sb.unwrap_or(0).into();
+            self.cs += season.cs.unwrap_or(0).into();
+            self.bb += season.bb.into();
+            self.so += season.so.unwrap_or(0).into();
+            self.ibb += season.ibb.unwrap_or(0).into();
+            self.hbp += season.hbp.unwrap_or(0).into();
+            self.sh += season.sh.unwrap_or(0).into();
+            self.sf += season.sf.unwrap_or(0).into();
+            self.gidp += season.gidp.unwrap_or(0).into();
         }
     }
 }
