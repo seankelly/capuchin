@@ -122,7 +122,7 @@ impl Projection {
             if record.yearid < minimum_year {
                 continue;
             }
-            else if maximum_year >= record.yearid {
+            else if record.yearid >= maximum_year {
                 continue;
             }
             let mut batter = self.batters.entry(record.playerid.clone()).or_insert(Vec::new());
