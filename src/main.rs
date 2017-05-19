@@ -142,14 +142,9 @@ impl Default for Projection {
     }
 }
 
-impl Default for BattingSeason {
+impl Default for BattingSummary {
     fn default() -> Self {
-        BattingSeason {
-            playerid: "".to_string(),
-            yearid: 0,
-            stint: "".to_string(),
-            teamid: "".to_string(),
-            lgid: "".to_string(),
+        BattingSummary {
             g: 0,
             ab: 0,
             r: 0,
@@ -157,16 +152,16 @@ impl Default for BattingSeason {
             double: 0,
             triple: 0,
             hr: 0,
-            rbi: Some(0),
-            sb: Some(0),
-            cs: Some(0),
+            rbi: 0,
+            sb: 0,
+            cs: 0,
             bb: 0,
-            so: Some(0),
-            ibb: Some(0),
-            hbp: Some(0),
-            sh: Some(0),
-            sf: Some(0),
-            gidp: Some(0),
+            so: 0,
+            ibb: 0,
+            hbp: 0,
+            sh: 0,
+            sf: 0,
+            gidp: 0,
         }
     }
 }
