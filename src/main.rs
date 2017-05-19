@@ -109,6 +109,7 @@ fn main() {
     let mut proj = Projection::default();
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
+    proj.create_projections();
 }
 
 impl Projection {
@@ -128,6 +129,13 @@ impl Projection {
             batter.push(record);
         }
         Ok(())
+    }
+
+    fn create_projections(&mut self) {
+        let mut summary = BattingSummary::default();
+        for (_batter, batter_seasons) in &self.batters {
+            summary.add(&batter_seasons);
+        }
     }
 }
 
