@@ -55,6 +55,7 @@ struct BattingSeason {
     gidp: Option<u8>,
 }
 
+#[derive(Debug)]
 struct BattingSummary {
     g: u32,
     ab: u32,
@@ -136,6 +137,8 @@ impl Projection {
         for (_batter, batter_seasons) in &self.batters {
             summary.add(&batter_seasons);
         }
+
+        println!("summary: {:?}", summary);
     }
 }
 
