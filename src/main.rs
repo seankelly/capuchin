@@ -163,6 +163,12 @@ impl Projection {
                 summary.add(season);
             }
         }
+
+        let mut rates = HashMap::new();
+        for (year, season) in &year_summaries {
+            let rate = BattingSummaryRates::from_summary(&season);
+            rates.insert(year, rate);
+        }
     }
 }
 
