@@ -133,12 +133,16 @@ impl Projection {
     }
 
     fn create_projections(&mut self) {
-        let mut summary = BattingSummary::default();
+        // Calculate the totals for each season to get per-PA averages.
+        let mut year_summaries: HashMap<u16, BattingSummary> = HashMap::new();
         for (_batter, batter_seasons) in &self.batters {
-            summary.add(&batter_seasons);
+            for season in batter_seasons {
+                let year = season.yearid;
+                let mut summary = year_summaries.entry(year)
+                                                .or_insert(BattingSummary::default());
+                summary.add(season);
+            }
         }
-
-        println!("summary: {:?}", summary);
     }
 }
 
@@ -178,25 +182,29 @@ impl Default for BattingSummary {
 }
 
 impl BattingSummary {
-    fn add(&mut self, seasons: &Vec<BattingSeason>) {
+    fn add(&mut self, season: &BattingSeason) {
+        self.g += season.g.into();
+        self.ab += season.ab.into();
+        self.r += season.r.into();
+        self.h += season.h.into();
+        self.double += season.double.into();
+        self.triple += season.triple.into();
+        self.hr += season.hr.into();
+        self.rbi += season.rbi.unwrap_or(0).into();
+        self.sb += season.sb.unwrap_or(0).into();
+        self.cs += season.cs.unwrap_or(0).into();
+        self.bb += season.bb.into();
+        self.so += season.so.unwrap_or(0).into();
+        self.ibb += season.ibb.unwrap_or(0).into();
+        self.hbp += season.hbp.unwrap_or(0).into();
+        self.sh += season.sh.unwrap_or(0).into();
+        self.sf += season.sf.unwrap_or(0).into();
+        self.gidp += season.gidp.unwrap_or(0).into();
+    }
+
+    fn add_seasons(&mut self, seasons: &Vec<BattingSeason>) {
         for season in seasons {
-            self.g += season.g.into();
-            self.ab += season.ab.into();
-            self.r += season.r.into();
-            self.h += season.h.into();
-            self.double += season.double.into();
-            self.triple += season.triple.into();
-            self.hr += season.hr.into();
-            self.rbi += season.rbi.unwrap_or(0).into();
-            self.sb += season.sb.unwrap_or(0).into();
-            self.cs += season.cs.unwrap_or(0).into();
-            self.bb += season.bb.into();
-            self.so += season.so.unwrap_or(0).into();
-            self.ibb += season.ibb.unwrap_or(0).into();
-            self.hbp += season.hbp.unwrap_or(0).into();
-            self.sh += season.sh.unwrap_or(0).into();
-            self.sf += season.sf.unwrap_or(0).into();
-            self.gidp += season.gidp.unwrap_or(0).into();
+            self.add(season);
         }
     }
 }
