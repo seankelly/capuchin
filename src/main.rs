@@ -76,6 +76,26 @@ struct BattingSummary {
     gidp: u32,
 }
 
+#[derive(Debug)]
+struct BattingSummaryRates {
+    pa: u32,
+    r: f32,
+    h: f32,
+    double: f32,
+    triple: f32,
+    hr: f32,
+    rbi: f32,
+    sb: f32,
+    cs: f32,
+    bb: f32,
+    so: f32,
+    ibb: f32,
+    hbp: f32,
+    sh: f32,
+    sf: f32,
+    gidp: f32,
+}
+
 
 fn main() {
     let app = App::new("Capuchin")
@@ -205,6 +225,31 @@ impl BattingSummary {
     fn add_seasons(&mut self, seasons: &Vec<BattingSeason>) {
         for season in seasons {
             self.add(season);
+        }
+    }
+}
+
+impl BattingSummaryRates {
+    fn from_summary(summary: &BattingSummary) -> Self {
+        let pa = summary.ab + summary.bb + summary.hbp + summary.sf + summary.sh;
+        let pa_f = pa as f32;
+        BattingSummaryRates {
+            pa: pa,
+            r: summary.r as f32 / pa_f,
+            h: summary.h as f32 / pa_f,
+            double: summary.double as f32 / pa_f,
+            triple: summary.triple as f32 / pa_f,
+            hr: summary.hr as f32 / pa_f,
+            rbi: summary.rbi as f32 / pa_f,
+            sb: summary.sb as f32 / pa_f,
+            cs: summary.cs as f32 / pa_f,
+            bb: summary.bb as f32 / pa_f,
+            so: summary.so as f32 / pa_f,
+            ibb: summary.ibb as f32 / pa_f,
+            hbp: summary.hbp as f32 / pa_f,
+            sh: summary.sh as f32 / pa_f,
+            sf: summary.sf as f32 / pa_f,
+            gidp: summary.gidp as f32 / pa_f,
         }
     }
 }
