@@ -27,6 +27,7 @@ struct Projection {
     peak_age: u8,
     year: u16,
     year_weights: Vec<f32>,
+    batter_regress: u16,
 }
 
 #[derive(RustcDecodable)]
@@ -206,6 +207,7 @@ impl Default for Projection {
             peak_age: 29,
             year: 0,
             year_weights: vec![5.0, 4.0, 3.0],
+            batter_regress: 1200,
         }
     }
 }
