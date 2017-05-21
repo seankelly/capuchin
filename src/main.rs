@@ -180,6 +180,13 @@ impl Projection {
         for (year, r) in &league_rates {
             println!("year: {:?}, league rates: {:?}", year, r);
         }
+
+        // Map the years to the weight to use for that year.
+        let mut weights_map = HashMap::with_capacity(number_years);
+        for (i, weight) in self.year_weights.iter().enumerate() {
+            weights_map.insert(self.year - i as u16, *weight);
+        }
+        let weights_map = weights_map;
     }
 }
 
