@@ -177,6 +177,7 @@ impl Projection {
             let rate = BattingSummaryRates::from_summary(&season);
             league_rates.insert(year, rate);
         }
+        let league_rates = league_rates;
 
         for (year, r) in &league_rates {
             println!("year: {:?}, league rates: {:?}", year, r);
