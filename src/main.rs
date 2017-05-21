@@ -146,7 +146,8 @@ impl Projection {
             else if record.yearid >= maximum_year {
                 continue;
             }
-            let mut batter = self.batters.entry(record.playerid.clone()).or_insert(Vec::new());
+            let mut batter = self.batters.entry(record.playerid.clone())
+                                .or_insert(Vec::with_capacity(self.year_weights.len()));
             batter.push(record);
         }
         Ok(())
@@ -154,7 +155,8 @@ impl Projection {
 
     fn create_projections(&mut self) {
         // Calculate the totals for each season to get per-PA averages.
-        let mut year_summaries: HashMap<u16, BattingSummary> = HashMap::new();
+        let mut year_summaries: HashMap<u16, BattingSummary> = HashMap::with_capacity(
+            self.year_weights.len());
         for (_batter, batter_seasons) in &self.batters {
             for season in batter_seasons {
                 let year = season.yearid;
@@ -164,7 +166,7 @@ impl Projection {
             }
         }
 
-        let mut rates = HashMap::new();
+        let mut rates = HashMap::with_capacity(self.year_weights.len());
         for (year, season) in &year_summaries {
             let rate = BattingSummaryRates::from_summary(&season);
             rates.insert(year, rate);
