@@ -194,7 +194,8 @@ impl Projection {
         for (_batter, batter_seasons) in &self.batters {
             let mut weighted_batter = BattingSummary::default();
             for season in batter_seasons {
-                let weight = weights_map.get(&season.yearid).unwrap_or(&default_weight);
+                let year = season.yearid;
+                let weight = weights_map.get(&year).unwrap_or(&default_weight);
                 weighted_batter.weighted_add(season, *weight);
             }
         }
