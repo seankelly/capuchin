@@ -160,8 +160,8 @@ impl Projection {
 
     fn create_projections(&mut self) {
         // Calculate the totals for each season to get per-PA averages.
-        let mut year_summaries: HashMap<u16, BattingSummary> = HashMap::with_capacity(
-            self.year_weights.len());
+        let number_years = self.year_weights.len();
+        let mut year_summaries: HashMap<u16, BattingSummary> = HashMap::with_capacity(number_years);
         for (_batter, batter_seasons) in &self.batters {
             for season in batter_seasons {
                 let year = season.yearid;
@@ -171,7 +171,7 @@ impl Projection {
             }
         }
 
-        let mut league_rates = HashMap::with_capacity(self.year_weights.len());
+        let mut league_rates = HashMap::with_capacity(number_years);
         for (year, season) in &year_summaries {
             let rate = BattingSummaryRates::from_summary(&season);
             league_rates.insert(year, rate);
