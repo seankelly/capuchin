@@ -150,6 +150,11 @@ impl Projection {
                                 .or_insert(Vec::with_capacity(self.year_weights.len()));
             batter.push(record);
         }
+
+        for (_batter, batter_seasons) in self.batters.iter_mut() {
+            batter_seasons.sort_by(|a, b| a.yearid.cmp(&b.yearid));
+        }
+
         Ok(())
     }
 
