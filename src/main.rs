@@ -166,10 +166,10 @@ impl Projection {
             }
         }
 
-        let mut rates = HashMap::with_capacity(self.year_weights.len());
+        let mut league_rates = HashMap::with_capacity(self.year_weights.len());
         for (year, season) in &year_summaries {
             let rate = BattingSummaryRates::from_summary(&season);
-            rates.insert(year, rate);
+            league_rates.insert(year, rate);
         }
     }
 }
