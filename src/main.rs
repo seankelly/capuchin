@@ -192,11 +192,20 @@ impl Projection {
 
         let default_weight = 0.0;
         for (_batter, batter_seasons) in &self.batters {
+            // Weighted batter seasons.
             let mut weighted_batter = BattingSummary::default();
+            // What the league did with the same PAs, weighted the same.
+            let mut batter_league_mean = BattingSummary::default();
             for season in batter_seasons {
                 let year = season.yearid;
                 let weight = weights_map.get(&year).unwrap_or(&default_weight);
                 weighted_batter.weighted_add(season, *weight);
+
+                let league_rate = league_rates.get(&year)
+                    .expect("Expected to get a rate for this year.");
+                let pa = season.ab + season.bb + season.hbp.unwrap_or(0) as u16 +
+                    season.sf.unwrap_or(0) as u16 + season.sh.unwrap_or(0) as u16;
+                batter_league_mean.weighted_rate_add(pa, league_rate, *weight);
             }
         }
     }
