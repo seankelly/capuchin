@@ -279,6 +279,26 @@ impl BattingSummary {
         self.gidp += (season.gidp.unwrap_or(0) as f32 * weight) as u32;
     }
 
+    fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSummaryRates, weight: f32) {
+        self.g += 0;
+        self.ab += 0;
+        self.r += (pa as f32 * rates.r * weight) as u32;
+        self.h += (pa as f32 * rates.h * weight) as u32;
+        self.double += (pa as f32 * rates.double * weight) as u32;
+        self.triple += (pa as f32 * rates.triple * weight) as u32;
+        self.hr += (pa as f32 * rates.hr * weight) as u32;
+        self.rbi += (pa as f32 * rates.rbi * weight) as u32;
+        self.sb += (pa as f32 * rates.sb * weight) as u32;
+        self.cs += (pa as f32 * rates.cs * weight) as u32;
+        self.bb += (pa as f32 * rates.bb * weight) as u32;
+        self.so += (pa as f32 * rates.so * weight) as u32;
+        self.ibb += (pa as f32 * rates.ibb * weight) as u32;
+        self.hbp += (pa as f32 * rates.hbp * weight) as u32;
+        self.sh += (pa as f32 * rates.sh * weight) as u32;
+        self.sf += (pa as f32 * rates.sf * weight) as u32;
+        self.gidp += (pa as f32 * rates.gidp * weight) as u32;
+    }
+
     fn add_seasons(&mut self, seasons: &Vec<BattingSeason>) {
         for season in seasons {
             self.add(season);
