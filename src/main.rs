@@ -260,8 +260,8 @@ impl BattingSummary {
     }
 
     fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
-        self.g += (season.g as f32 * weight) as u32;
-        self.ab += (season.ab as f32 * weight) as u32;
+        self.g += season.g.into();
+        self.ab += season.ab.into();
         self.r += (season.r as f32 * weight) as u32;
         self.h += (season.h as f32 * weight) as u32;
         self.double += (season.double as f32 * weight) as u32;
