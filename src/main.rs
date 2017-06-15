@@ -63,6 +63,7 @@ struct BattingSeason {
     teamid: String,
     lgid: String,
     g: u8,
+    pa: u16,
     ab: u16,
     r: u8,
     h: u16,
@@ -285,6 +286,8 @@ impl From<RawBattingSeason> for BattingSeason {
             teamid: csv.teamid,
             lgid: csv.lgid,
             g: csv.g,
+            pa: csv.ab + csv.bb + csv.hbp.unwrap_or(0) as u16 +
+                csv.sf.unwrap_or(0) as u16 + csv.sh.unwrap_or(0) as u16,
             ab: csv.ab,
             r: csv.r,
             h: csv.h,
