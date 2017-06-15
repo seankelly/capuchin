@@ -231,9 +231,7 @@ impl Projection {
 
                 let league_rate = league_rates.get(&year)
                     .expect("Expected to get a rate for this year.");
-                let pa = season.ab + season.bb + season.hbp as u16 +
-                    season.sf as u16 + season.sh as u16;
-                batter_league_mean.weighted_rate_add(pa, league_rate, *weight);
+                batter_league_mean.weighted_rate_add(season.pa, league_rate, *weight);
             }
 
             // Merge weighted player and league totals to regress the player.
