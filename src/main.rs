@@ -31,7 +31,7 @@ struct Projection {
 }
 
 #[derive(RustcDecodable)]
-struct BattingSeason {
+struct RawBattingSeason {
     playerid: String,
     yearid: u16,
     stint: String,
@@ -54,6 +54,31 @@ struct BattingSeason {
     sh: Option<u8>,
     sf: Option<u8>,
     gidp: Option<u8>,
+}
+
+struct BattingSeason {
+    playerid: String,
+    yearid: u16,
+    stint: String,
+    teamid: String,
+    lgid: String,
+    g: u8,
+    ab: u16,
+    r: u8,
+    h: u16,
+    double: u8,
+    triple: u8,
+    hr: u8,
+    rbi: u8,
+    sb: u8,
+    cs: u8,
+    bb: u16,
+    so: u16,
+    ibb: u8,
+    hbp: u8,
+    sh: u8,
+    sf: u8,
+    gidp: u8,
 }
 
 #[derive(Debug)]
@@ -140,7 +165,8 @@ impl Projection {
         let minimum_year = self.year - self.year_weights.len() as u16;
         let maximum_year = self.year;
         for record in rdr.decode() {
-            let record: BattingSeason = record?;
+            let record: RawBattingSeason = record?;
+            let record = BattingSeason::from(record);
             if record.yearid < minimum_year {
                 continue;
             }
@@ -204,8 +230,8 @@ impl Projection {
 
                 let league_rate = league_rates.get(&year)
                     .expect("Expected to get a rate for this year.");
-                let pa = season.ab + season.bb + season.hbp.unwrap_or(0) as u16 +
-                    season.sf.unwrap_or(0) as u16 + season.sh.unwrap_or(0) as u16;
+                let pa = season.ab + season.bb + season.hbp as u16 +
+                    season.sf as u16 + season.sh as u16;
                 batter_league_mean.weighted_rate_add(pa, league_rate, *weight);
             }
 
@@ -250,6 +276,35 @@ impl Default for BattingSummary {
     }
 }
 
+impl From<RawBattingSeason> for BattingSeason {
+    fn from(csv: RawBattingSeason) -> BattingSeason {
+        BattingSeason {
+            playerid: csv.playerid,
+            yearid: csv.yearid,
+            stint: csv.stint,
+            teamid: csv.teamid,
+            lgid: csv.lgid,
+            g: csv.g,
+            ab: csv.ab,
+            r: csv.r,
+            h: csv.h,
+            double: csv.double,
+            triple: csv.triple,
+            hr: csv.hr,
+            rbi: csv.rbi.unwrap_or(0),
+            sb: csv.sb.unwrap_or(0),
+            cs: csv.cs.unwrap_or(0),
+            bb: csv.bb,
+            so: csv.so.unwrap_or(0),
+            ibb: csv.ibb.unwrap_or(0),
+            hbp: csv.hbp.unwrap_or(0),
+            sh: csv.sh.unwrap_or(0),
+            sf: csv.sf.unwrap_or(0),
+            gidp: csv.gidp.unwrap_or(0),
+        }
+    }
+}
+
 impl BattingSummary {
     fn add(&mut self, season: &BattingSeason) {
         self.g += season.g.into();
@@ -259,16 +314,16 @@ impl BattingSummary {
         self.double += season.double.into();
         self.triple += season.triple.into();
         self.hr += season.hr.into();
-        self.rbi += season.rbi.unwrap_or(0).into();
-        self.sb += season.sb.unwrap_or(0).into();
-        self.cs += season.cs.unwrap_or(0).into();
+        self.rbi += season.rbi.into();
+        self.sb += season.sb.into();
+        self.cs += season.cs.into();
         self.bb += season.bb.into();
-        self.so += season.so.unwrap_or(0).into();
-        self.ibb += season.ibb.unwrap_or(0).into();
-        self.hbp += season.hbp.unwrap_or(0).into();
-        self.sh += season.sh.unwrap_or(0).into();
-        self.sf += season.sf.unwrap_or(0).into();
-        self.gidp += season.gidp.unwrap_or(0).into();
+        self.so += season.so.into();
+        self.ibb += season.ibb.into();
+        self.hbp += season.hbp.into();
+        self.sh += season.sh.into();
+        self.sf += season.sf.into();
+        self.gidp += season.gidp.into();
     }
 
     fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
@@ -279,16 +334,16 @@ impl BattingSummary {
         self.double += (season.double as f32 * weight) as u32;
         self.triple += (season.triple as f32 * weight) as u32;
         self.hr += (season.hr as f32 * weight) as u32;
-        self.rbi += (season.rbi.unwrap_or(0) as f32 * weight) as u32;
-        self.sb += (season.sb.unwrap_or(0) as f32 * weight) as u32;
-        self.cs += (season.cs.unwrap_or(0) as f32 * weight) as u32;
+        self.rbi += (season.rbi as f32 * weight) as u32;
+        self.sb += (season.sb as f32 * weight) as u32;
+        self.cs += (season.cs as f32 * weight) as u32;
         self.bb += (season.bb as f32 * weight) as u32;
-        self.so += (season.so.unwrap_or(0) as f32 * weight) as u32;
-        self.ibb += (season.ibb.unwrap_or(0) as f32 * weight) as u32;
-        self.hbp += (season.hbp.unwrap_or(0) as f32 * weight) as u32;
-        self.sh += (season.sh.unwrap_or(0) as f32 * weight) as u32;
-        self.sf += (season.sf.unwrap_or(0) as f32 * weight) as u32;
-        self.gidp += (season.gidp.unwrap_or(0) as f32 * weight) as u32;
+        self.so += (season.so as f32 * weight) as u32;
+        self.ibb += (season.ibb as f32 * weight) as u32;
+        self.hbp += (season.hbp as f32 * weight) as u32;
+        self.sh += (season.sh as f32 * weight) as u32;
+        self.sf += (season.sf as f32 * weight) as u32;
+        self.gidp += (season.gidp as f32 * weight) as u32;
     }
 
     fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSummaryRates, weight: f32) {
