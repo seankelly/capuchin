@@ -190,6 +190,7 @@ impl Projection {
         }
         let weights_map = weights_map;
 
+        // Weight player and league based on PA.
         let default_weight = 0.0;
         for (_batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
@@ -207,6 +208,8 @@ impl Projection {
                     season.sf.unwrap_or(0) as u16 + season.sh.unwrap_or(0) as u16;
                 batter_league_mean.weighted_rate_add(pa, league_rate, *weight);
             }
+
+            // Merge weighted player and league totals to regress the player.
         }
     }
 }
