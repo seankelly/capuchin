@@ -85,6 +85,7 @@ struct BattingSeason {
 #[derive(Debug)]
 struct BattingSummary {
     g: u32,
+    pa: u32,
     ab: u32,
     r: u32,
     h: u32,
@@ -255,6 +256,7 @@ impl Default for BattingSummary {
     fn default() -> Self {
         BattingSummary {
             g: 0,
+            pa: 0,
             ab: 0,
             r: 0,
             h: 0,
@@ -309,6 +311,7 @@ impl From<RawBattingSeason> for BattingSeason {
 impl BattingSummary {
     fn add(&mut self, season: &BattingSeason) {
         self.g += season.g.into();
+        self.pa += season.pa.into();
         self.ab += season.ab.into();
         self.r += season.r.into();
         self.h += season.h.into();
@@ -329,6 +332,7 @@ impl BattingSummary {
 
     fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
         self.g += (season.g as f32 * weight) as u32;
+        self.pa += (season.pa as f32 * weight) as u32;
         self.ab += (season.ab as f32 * weight) as u32;
         self.r += (season.r as f32 * weight) as u32;
         self.h += (season.h as f32 * weight) as u32;
@@ -376,10 +380,9 @@ impl BattingSummary {
 
 impl BattingSummaryRates {
     fn from_summary(summary: &BattingSummary) -> Self {
-        let pa = summary.ab + summary.bb + summary.hbp + summary.sf + summary.sh;
-        let pa_f = pa as f32;
+        let pa_f = summary.pa as f32;
         BattingSummaryRates {
-            pa: pa,
+            pa: summary.pa,
             r: summary.r as f32 / pa_f,
             h: summary.h as f32 / pa_f,
             double: summary.double as f32 / pa_f,
