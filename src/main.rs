@@ -208,7 +208,7 @@ impl Projection {
         Ok(())
     }
 
-    fn create_projections(&mut self) {
+    fn create_projections(&mut self) -> HashMap<String, BattingProjection> {
         // Calculate the totals for each season to get per-PA averages.
         let number_years = self.year_weights.len();
         let mut year_summaries = HashMap::with_capacity(number_years);
@@ -271,6 +271,8 @@ impl Projection {
             let projection = weighted_batter.prorate(projected_pa);
             player_projections.insert(batter.clone(), projection);
         }
+
+        return player_projections;
     }
 }
 
