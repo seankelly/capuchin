@@ -407,6 +407,26 @@ impl BattingSummaryRates {
 }
 
 impl BattingProjection {
+    fn add(&mut self, proj: &Self) {
+        self.pa += proj.pa;
+        self.ab += proj.ab;
+        self.r += proj.r;
+        self.h += proj.h;
+        self.double += proj.double;
+        self.triple += proj.triple;
+        self.hr += proj.hr;
+        self.rbi += proj.rbi;
+        self.sb += proj.sb;
+        self.cs += proj.cs;
+        self.bb += proj.bb;
+        self.so += proj.so;
+        self.ibb += proj.ibb;
+        self.hbp += proj.hbp;
+        self.sh += proj.sh;
+        self.sf += proj.sf;
+        self.gidp += proj.gidp;
+    }
+
     fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
         self.pa += season.pa as f32 * weight;
         self.ab += season.ab as f32 * weight;
