@@ -256,6 +256,7 @@ impl Projection {
                 batter_league_mean.weighted_rate_add(season.pa, league_rate, *weight);
             }
 
+            let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
             // Merge weighted player and league totals to regress the player.
         }
     }
