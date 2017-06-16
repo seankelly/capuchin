@@ -123,7 +123,7 @@ struct BattingSummaryRates {
     gidp: f32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, RustcEncodable)]
 struct BattingProjection {
     pa: f32,
     ab: f32,
