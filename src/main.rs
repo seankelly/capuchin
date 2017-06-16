@@ -178,7 +178,20 @@ fn main() {
     let mut proj = Projection::default();
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
-    proj.create_projections();
+    let projections = proj.create_projections();
+    write_batting_projection(&projections, proj.year);
+}
+
+fn write_batting_projection(projections: &HashMap<String, BattingProjection>, year: u16) -> errors::Result<()> {
+    let output_file = format!("BattingCapuchin{}.csv", year);
+    let output_path = Path::new(&output_file);
+    let mut wtr = csv::Writer::from_file(&output_path)?;
+
+    for (_batter, projection) in projections {
+        let _result = wtr.encode(projection)?;
+    }
+
+    Ok(())
 }
 
 impl Projection {
