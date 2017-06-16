@@ -246,8 +246,14 @@ impl Projection {
             let mut weighted_batter = BattingProjection::default();
             // What the league did with the same PAs, weighted the same.
             let mut batter_league_mean = BattingProjection::default();
+            let mut projected_pa = 200.0;
             for season in batter_seasons {
                 let year = season.yearid;
+                projected_pa += match self.year - year {
+                    1 => 0.5 * season.pa as f32,
+                    2 => 0.1 * season.pa as f32,
+                    _ => 0.0,
+                };
                 let weight = weights_map.get(&year).unwrap_or(&default_weight);
                 weighted_batter.weighted_add(season, *weight);
 
@@ -256,6 +262,7 @@ impl Projection {
                 batter_league_mean.weighted_rate_add(season.pa, league_rate, *weight);
             }
 
+            let projected_pa = projected_pa as u16;
             let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
             // Merge weighted player and league totals to regress the player.
             weighted_batter.add(&prorated_league_mean);
