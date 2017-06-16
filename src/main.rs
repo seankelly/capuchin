@@ -10,7 +10,6 @@ use clap::{Arg, App};
 use std::collections::HashMap;
 use std::default::Default;
 use std::path::Path;
-use std::ops::Add;
 
 mod errors {
     use csv;
