@@ -241,7 +241,8 @@ impl Projection {
 
         // Weight player and league based on PA.
         let default_weight = 0.0;
-        for (_batter, batter_seasons) in &self.batters {
+        let mut player_projections = HashMap::with_capacity(self.batters.len());
+        for (batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
             let mut weighted_batter = BattingProjection::default();
             // What the league did with the same PAs, weighted the same.
@@ -266,6 +267,9 @@ impl Projection {
             let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
             // Merge weighted player and league totals to regress the player.
             weighted_batter.add(&prorated_league_mean);
+
+            let projection = weighted_batter.prorate(projected_pa);
+            player_projections.insert(batter.clone(), projection);
         }
     }
 }
