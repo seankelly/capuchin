@@ -388,12 +388,6 @@ impl BattingSummary {
         self.sf += season.sf.into();
         self.gidp += season.gidp.into();
     }
-
-    fn add_seasons(&mut self, seasons: &Vec<BattingSeason>) {
-        for season in seasons {
-            self.add(season);
-        }
-    }
 }
 
 impl BattingSummaryRates {
