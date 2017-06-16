@@ -449,7 +449,7 @@ impl BattingProjection {
 
     fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSummaryRates, weight: f32) {
         let pa_f = pa as f32;
-        self.pa += pa_f;
+        self.pa += pa_f * weight;
         self.ab += 0.0;
         self.r += pa_f * rates.r * weight;
         self.h += pa_f * rates.h * weight;
