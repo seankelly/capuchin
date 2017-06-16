@@ -447,4 +447,28 @@ impl BattingProjection {
         self.sf += pa_f * rates.sf * weight;
         self.gidp += pa_f * rates.gidp * weight;
     }
+
+    fn prorate(&self, prorated_pa: u16) -> Self {
+        let pa_f = prorated_pa as f32;
+        let pa_factor = pa_f / self.pa;
+        BattingProjection {
+            pa: pa_f,
+            ab: self.ab * pa_factor,
+            r: self.r * pa_factor,
+            h: self.h * pa_factor,
+            double: self.double * pa_factor,
+            triple: self.triple * pa_factor,
+            hr: self.hr * pa_factor,
+            rbi: self.rbi * pa_factor,
+            sb: self.sb * pa_factor,
+            cs: self.cs * pa_factor,
+            bb: self.bb * pa_factor,
+            so: self.so * pa_factor,
+            ibb: self.ibb * pa_factor,
+            hbp: self.hbp * pa_factor,
+            sh: self.sh * pa_factor,
+            sf: self.sf * pa_factor,
+            gidp: self.gidp * pa_factor,
+        }
+    }
 }
