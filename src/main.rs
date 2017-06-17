@@ -286,6 +286,7 @@ impl Projection {
             player_projections.push(projection);
         }
 
+        player_projections.sort_by(|a, b| a.playerid.cmp(&b.playerid));
         return player_projections;
     }
 }
