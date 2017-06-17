@@ -240,14 +240,16 @@ impl Projection {
         let league_rates = league_rates;
 
         // Map the years to the weight to use for that year.
-        let mut weights_map = HashMap::with_capacity(number_years);
-        for (i, weight) in self.year_weights.iter().enumerate() {
-            weights_map.insert(self.year - (i + 1) as u16, *weight);
+        let mut weights_map = Vec::with_capacity(number_years + 1);
+        // Make the first element be the year of the projection. This makes the math a bit easier
+        // for indexing previous years.
+        weights_map.push(0.0);
+        for weight in &self.year_weights {
+            weights_map.push(*weight);
         }
         let weights_map = weights_map;
 
         // Weight player and league based on PA.
-        let default_weight = 0.0;
         let mut player_projections = Vec::with_capacity(self.batters.len());
         for (batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
@@ -262,12 +264,13 @@ impl Projection {
                     2 => 0.1 * season.pa as f32,
                     _ => 0.0,
                 };
-                let weight = weights_map.get(&year).unwrap_or(&default_weight);
-                weighted_batter.weighted_add(season, *weight);
+                let weight_idx = (self.year - year) as usize;
+                let weight = weights_map[weight_idx];
+                weighted_batter.weighted_add(season, weight);
 
                 let league_rate = league_rates.get(&year)
                     .expect("Expected to get a rate for this year.");
-                batter_league_mean.weighted_rate_add(season.pa, league_rate, *weight);
+                batter_league_mean.weighted_rate_add(season.pa, league_rate, weight);
             }
 
             let projected_pa = projected_pa as u16;
