@@ -4,7 +4,8 @@ extern crate clap;
 extern crate csv;
 #[macro_use]
 extern crate error_chain;
-extern crate rustc_serialize;
+#[macro_use]
+extern crate serde_derive;
 
 use clap::{Arg, App};
 use std::collections::HashMap;
@@ -29,18 +30,26 @@ struct Projection {
     batter_regress: u16,
 }
 
-#[derive(RustcDecodable)]
+#[derive(Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 struct RawBattingSeason {
+    #[serde(rename = "playerID")]
     playerid: String,
+    #[serde(rename = "yearID")]
     yearid: u16,
+    #[serde(rename = "stint")]
     stint: String,
+    #[serde(rename = "teamID")]
     teamid: String,
+    #[serde(rename = "lgID")]
     lgid: String,
     g: u8,
     ab: u16,
     r: u8,
     h: u16,
+    #[serde(rename = "2B")]
     double: u8,
+    #[serde(rename = "3B")]
     triple: u8,
     hr: u8,
     rbi: Option<u8>,
@@ -120,7 +129,7 @@ struct BattingSummaryRates {
     gidp: f32,
 }
 
-#[derive(Debug, RustcEncodable)]
+#[derive(Debug, Serialize)]
 struct BattingProjection {
     playerid: String,
     year: u16,
@@ -184,10 +193,10 @@ fn main() {
 fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> errors::Result<()> {
     let output_file = format!("BattingCapuchin{}.csv", year);
     let output_path = Path::new(&output_file);
-    let mut wtr = csv::Writer::from_file(&output_path)?;
+    let mut wtr = csv::Writer::from_path(&output_path)?;
 
     for projection in projections {
-        let _result = wtr.encode(projection)?;
+        let _result = wtr.serialize(projection)?;
     }
 
     Ok(())
@@ -195,10 +204,10 @@ fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> 
 
 impl Projection {
     fn load_batting_season(&mut self, batting_csv: &Path) -> errors::Result<()> {
-        let mut rdr = csv::Reader::from_file(batting_csv)?;
+        let mut rdr = csv::Reader::from_path(batting_csv)?;
         let minimum_year = self.year - self.year_weights.len() as u16;
         let maximum_year = self.year;
-        for record in rdr.decode() {
+        for record in rdr.deserialize() {
             let record: RawBattingSeason = record?;
             let record = BattingSeason::from(record);
             if record.yearid < minimum_year {
