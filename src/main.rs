@@ -125,6 +125,8 @@ struct BattingSummaryRates {
 
 #[derive(Debug, RustcEncodable)]
 struct BattingProjection {
+    playerid: String,
+    year: u16,
     pa: f32,
     ab: f32,
     r: f32,
@@ -256,7 +258,7 @@ impl Projection {
         let mut player_projections = HashMap::with_capacity(self.batters.len());
         for (batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
-            let mut weighted_batter = BattingProjection::default();
+            let mut weighted_batter = BattingProjection::new_player(&batter, self.year);
             // What the league did with the same PAs, weighted the same.
             let mut batter_league_mean = BattingProjection::default();
             let mut projected_pa = 200.0;
@@ -328,6 +330,8 @@ impl Default for BattingSummary {
 impl Default for BattingProjection {
     fn default() -> Self {
         BattingProjection {
+            playerid: String::from(""),
+            year: 0,
             pa: 0.0,
             ab: 0.0,
             r: 0.0,
@@ -428,6 +432,30 @@ impl BattingSummaryRates {
 }
 
 impl BattingProjection {
+    fn new_player(playerid: &String, year: u16) -> Self {
+        BattingProjection {
+            playerid: playerid.clone(),
+            year: year,
+            pa: 0.0,
+            ab: 0.0,
+            r: 0.0,
+            h: 0.0,
+            double: 0.0,
+            triple: 0.0,
+            hr: 0.0,
+            rbi: 0.0,
+            sb: 0.0,
+            cs: 0.0,
+            bb: 0.0,
+            so: 0.0,
+            ibb: 0.0,
+            hbp: 0.0,
+            sh: 0.0,
+            sf: 0.0,
+            gidp: 0.0,
+        }
+    }
+
     fn add(&mut self, proj: &Self) {
         self.pa += proj.pa;
         self.ab += proj.ab;
@@ -493,6 +521,8 @@ impl BattingProjection {
         let pa_f = prorated_pa as f32;
         let pa_factor = pa_f / self.pa;
         BattingProjection {
+            playerid: self.playerid.clone(),
+            year: self.year,
             pa: pa_f,
             ab: self.ab * pa_factor,
             r: self.r * pa_factor,
