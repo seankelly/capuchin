@@ -184,12 +184,12 @@ fn main() {
     write_batting_projection(&projections, proj.year);
 }
 
-fn write_batting_projection(projections: &HashMap<String, BattingProjection>, year: u16) -> errors::Result<()> {
+fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> errors::Result<()> {
     let output_file = format!("BattingCapuchin{}.csv", year);
     let output_path = Path::new(&output_file);
     let mut wtr = csv::Writer::from_file(&output_path)?;
 
-    for (_batter, projection) in projections {
+    for projection in projections {
         let _result = wtr.encode(projection)?;
     }
 
@@ -222,7 +222,7 @@ impl Projection {
         Ok(())
     }
 
-    fn create_projections(&mut self) -> HashMap<String, BattingProjection> {
+    fn create_projections(&mut self) -> Vec<BattingProjection> {
         // Calculate the totals for each season to get per-PA averages.
         let number_years = self.year_weights.len();
         let mut year_summaries = HashMap::with_capacity(number_years);
@@ -255,7 +255,7 @@ impl Projection {
 
         // Weight player and league based on PA.
         let default_weight = 0.0;
-        let mut player_projections = HashMap::with_capacity(self.batters.len());
+        let mut player_projections = Vec::with_capacity(self.batters.len());
         for (batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
             let mut weighted_batter = BattingProjection::new_player(&batter, self.year);
@@ -283,7 +283,7 @@ impl Projection {
             weighted_batter.add(&prorated_league_mean);
 
             let projection = weighted_batter.prorate(projected_pa);
-            player_projections.insert(batter.clone(), projection);
+            player_projections.push(projection);
         }
 
         return player_projections;
