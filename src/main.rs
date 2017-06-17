@@ -282,7 +282,8 @@ impl Projection {
             // Merge weighted player and league totals to regress the player.
             weighted_batter.add(&prorated_league_mean);
 
-            let projection = weighted_batter.prorate(projected_pa);
+            let mut projection = weighted_batter.prorate(projected_pa);
+            projection.round();
             player_projections.push(projection);
         }
 
@@ -542,5 +543,25 @@ impl BattingProjection {
             sf: self.sf * pa_factor,
             gidp: self.gidp * pa_factor,
         }
+    }
+
+    fn round(&mut self) {
+        self.pa = self.pa.round();
+        self.ab = self.ab.round();
+        self.r = self.r.round();
+        self.h = self.h.round();
+        self.double = self.double.round();
+        self.triple = self.triple.round();
+        self.hr = self.hr.round();
+        self.rbi = self.rbi.round();
+        self.sb = self.sb.round();
+        self.cs = self.cs.round();
+        self.bb = self.bb.round();
+        self.so = self.so.round();
+        self.ibb = self.ibb.round();
+        self.hbp = self.hbp.round();
+        self.sh = self.sh.round();
+        self.sf = self.sf.round();
+        self.gidp = self.gidp.round();
     }
 }
