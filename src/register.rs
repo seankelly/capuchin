@@ -1,4 +1,5 @@
 
+use std::collections::HashMap;
 use std::path::Path;
 
 use errors;
@@ -7,6 +8,7 @@ use csv;
 
 struct People {
     people: Vec<PeopleRegister>,
+    bbref_idx: HashMap<String, usize>,
 }
 
 #[derive(Deserialize)]
@@ -57,14 +59,20 @@ impl People {
     fn from_path(people_csv: &Path) -> errors::Result<Self> {
         let mut rdr = csv::Reader::from_path(people_csv)?;
         let mut people = Vec::new();
+        let mut bbref_idx = HashMap::new();
 
         for result in rdr.deserialize() {
-            let person = result?;
+            let person: PeopleRegister = result?;
+            let idx = people.len() + 1;
+            if let Some(ref bbrefid) = person.key_bbref {
+                bbref_idx.insert(bbrefid.clone(), idx);
+            }
             people.push(person);
         }
 
         Ok(People {
             people: people,
+            bbref_idx: bbref_idx,
         })
     }
 }
