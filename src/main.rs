@@ -30,6 +30,7 @@ struct Projection {
     year: u16,
     year_weights: Vec<f32>,
     batter_regress: u16,
+    people: register::People,
 }
 
 #[derive(Deserialize)]
@@ -313,6 +314,7 @@ impl Default for Projection {
             year: 0,
             year_weights: vec![5.0, 4.0, 3.0],
             batter_regress: 1200,
+            people: register::People::new(),
         }
     }
 }

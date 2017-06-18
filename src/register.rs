@@ -6,13 +6,13 @@ use errors;
 
 use csv;
 
-struct People {
+pub struct People {
     people: Vec<PeopleRegister>,
     bbref_idx: HashMap<String, usize>,
 }
 
 #[derive(Deserialize)]
-struct PeopleRegister {
+pub struct PeopleRegister {
     key_person: String,
     key_uuid: String,
     key_mlbam: Option<String>,
@@ -56,6 +56,13 @@ struct PeopleRegister {
 }
 
 impl People {
+    pub fn new() -> Self {
+        People {
+            people: Vec::new(),
+            bbref_idx: HashMap::new(),
+        }
+    }
+
     fn from_path(people_csv: &Path) -> errors::Result<Self> {
         let mut rdr = csv::Reader::from_path(people_csv)?;
         let mut people = Vec::new();
@@ -76,7 +83,7 @@ impl People {
         })
     }
 
-    fn find_by_bbref(&self, key_bbref: &str) -> Option<&PeopleRegister> {
+    pub fn find_by_bbref(&self, key_bbref: &str) -> Option<&PeopleRegister> {
         self.bbref_idx.get(key_bbref).and_then(|idx| self.people.get(*idx))
     }
 }
