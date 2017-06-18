@@ -75,4 +75,8 @@ impl People {
             bbref_idx: bbref_idx,
         })
     }
+
+    fn find_by_bbref(&self, key_bbref: &str) -> Option<&PeopleRegister> {
+        self.bbref_idx.get(key_bbref).and_then(|idx| self.people.get(*idx))
+    }
 }
