@@ -22,6 +22,8 @@ mod errors {
     }
 }
 
+mod register;
+
 struct Projection {
     batters: HashMap<String, Vec<BattingSeason>>,
     peak_age: u8,
@@ -157,6 +159,12 @@ fn main() {
     let app = App::new("Capuchin")
         .version("0.1.0")
         .about("Simple baseball projections")
+        .arg(Arg::with_name("register")
+             .short("r")
+             .long("register")
+             .value_name("FILE")
+             .help("people.csv file")
+             .takes_value(true))
         .arg(Arg::with_name("batting")
              .short("b")
              .long("batting")
