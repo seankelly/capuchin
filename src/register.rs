@@ -63,7 +63,7 @@ impl People {
         }
     }
 
-    fn load_register(&mut self, people_csv: &Path) -> errors::Result<()> {
+    pub fn load_register(&mut self, people_csv: &Path) -> errors::Result<()> {
         let mut rdr = csv::Reader::from_path(people_csv)?;
 
         for result in rdr.deserialize() {

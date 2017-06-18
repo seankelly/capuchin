@@ -189,10 +189,16 @@ fn main() {
         ;
     let matches = app.get_matches();
 
+    let mut proj = Projection::default();
+
+    // Is the register available? Load it.
+    if let Some(register) = matches.value_of("register") {
+        proj.load_register(Path::new(register));
+    }
+
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
     let projection_year = matches.value_of("year").expect("Need a year to project.")
                             .parse().expect("Expected year to be an integer.");
-    let mut proj = Projection::default();
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
     let projections = proj.create_projections();
@@ -303,6 +309,10 @@ impl Projection {
 
         player_projections.sort_by(|a, b| a.playerid.cmp(&b.playerid));
         return player_projections;
+    }
+
+    fn load_register(&mut self, people_csv: &Path) -> errors::Result<()> {
+        self.people.load_register(people_csv)
     }
 }
 
