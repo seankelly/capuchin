@@ -63,24 +63,19 @@ impl People {
         }
     }
 
-    fn from_path(people_csv: &Path) -> errors::Result<Self> {
+    fn load_register(&mut self, people_csv: &Path) -> errors::Result<()> {
         let mut rdr = csv::Reader::from_path(people_csv)?;
-        let mut people = Vec::new();
-        let mut bbref_idx = HashMap::new();
 
         for result in rdr.deserialize() {
             let person: PeopleRegister = result?;
-            let idx = people.len() + 1;
+            let idx = self.people.len() + 1;
             if let Some(ref bbrefid) = person.key_bbref {
-                bbref_idx.insert(bbrefid.clone(), idx);
+                self.bbref_idx.insert(bbrefid.clone(), idx);
             }
-            people.push(person);
+            self.people.push(person);
         }
 
-        Ok(People {
-            people: people,
-            bbref_idx: bbref_idx,
-        })
+        Ok(())
     }
 
     pub fn find_by_bbref(&self, key_bbref: &str) -> Option<&PeopleRegister> {
