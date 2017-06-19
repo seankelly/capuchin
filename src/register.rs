@@ -33,9 +33,9 @@ pub struct PeopleRegister {
     name_matrilineal: Option<String>,
     name_nick: Option<String>,
     */
-    birth_year: Option<String>,
-    birth_month: Option<String>,
-    birth_day: Option<String>,
+    birth_year: Option<u16>,
+    birth_month: Option<u8>,
+    birth_day: Option<u8>,
     /*
     death_year: Option<String>,
     death_month: Option<String>,
