@@ -15,9 +15,10 @@ pub struct People {
 pub struct PeopleRegister {
     key_person: String,
     key_uuid: String,
-    key_mlbam: Option<String>,
-    key_retro: Option<String>,
+    //key_mlbam: Option<String>,
+    //key_retro: Option<String>,
     key_bbref: Option<String>,
+    /*
     key_bbref_minors: Option<String>,
     key_fangraphs: Option<String>,
     key_npb: Option<String>,
@@ -31,9 +32,11 @@ pub struct PeopleRegister {
     name_suffix: Option<String>,
     name_matrilineal: Option<String>,
     name_nick: Option<String>,
+    */
     birth_year: Option<String>,
     birth_month: Option<String>,
     birth_day: Option<String>,
+    /*
     death_year: Option<String>,
     death_month: Option<String>,
     death_day: Option<String>,
@@ -53,6 +56,7 @@ pub struct PeopleRegister {
     pro_umpired_last: Option<String>,
     mlb_umpired_first: Option<String>,
     mlb_umpired_last: Option<String>,
+    */
 }
 
 impl People {
