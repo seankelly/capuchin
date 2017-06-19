@@ -588,4 +588,22 @@ impl BattingProjection {
         self.sf = self.sf.round();
         self.gidp = self.gidp.round();
     }
+
+    fn age_adjust(&mut self, amount: f32) {
+        self.r *= amount;
+        self.h *= amount;
+        self.double *= amount;
+        self.triple *= amount;
+        self.hr *= amount;
+        self.rbi *= amount;
+        self.sb *= amount;
+        self.cs *= amount;
+        self.bb *= amount;
+        self.so *= amount;
+        self.ibb *= amount;
+        self.hbp *= amount;
+        self.sh *= amount;
+        self.sf *= amount;
+        self.gidp *= amount;
+    }
 }
