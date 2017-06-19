@@ -86,3 +86,9 @@ impl People {
         self.bbref_idx.get(key_bbref).and_then(|idx| self.people.get(*idx))
     }
 }
+
+impl PeopleRegister {
+    pub fn get_age(&self, year: u16) -> Option<u8> {
+        self.birth_year.and_then(|birth| Some((year - birth) as u8))
+    }
+}
