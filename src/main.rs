@@ -40,12 +40,14 @@ struct RawBattingSeason {
     playerid: String,
     #[serde(rename = "yearID")]
     yearid: u16,
+    /*
     #[serde(rename = "stint")]
     stint: String,
     #[serde(rename = "teamID")]
     teamid: String,
     #[serde(rename = "lgID")]
     lgid: String,
+    */
     g: u8,
     ab: u16,
     r: u8,
