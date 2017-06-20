@@ -305,17 +305,18 @@ impl Projection {
             weighted_batter.add(&prorated_league_mean);
 
             let mut projection = weighted_batter.prorate(projected_pa);
-            let age = self.people.find_by_bbref(&batter).and_then(|p| p.get_age(self.year));
-            if let Some(age) = age {
-                if self.peak_age < age {
-                    let age_diff = (self.peak_age - age) as f32;
-                    projection.age_adjust(age_diff * 0.003);
-                }
-                else if self.peak_age > age {
-                    let age_diff = (self.peak_age - age) as f32;
-                    projection.age_adjust(age_diff * 0.006);
-                }
-            }
+            self.people.find_by_bbref(&batter)
+                .and_then(|p| p.get_age(self.year))
+                .map(|age| {
+                    if self.peak_age < age {
+                        let age_diff = (self.peak_age - age) as f32;
+                        projection.age_adjust(age_diff * 0.003);
+                    }
+                    else if self.peak_age > age {
+                        let age_diff = (self.peak_age - age) as f32;
+                        projection.age_adjust(age_diff * 0.006);
+                    }
+                });
             projection.round();
             player_projections.push(projection);
         }
