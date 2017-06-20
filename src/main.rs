@@ -305,7 +305,7 @@ impl Projection {
             let reliability = weighted_pa / (weighted_pa + self.batter_regress as f32);
             let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
             // Merge weighted player and league totals to regress the player.
-            weighted_batter.add(&prorated_league_mean);
+            weighted_batter.regress(&prorated_league_mean);
 
             let mut projection = weighted_batter.prorate(projected_pa);
             self.people.find_by_bbref(&batter)
@@ -499,7 +499,7 @@ impl BattingProjection {
         }
     }
 
-    fn add(&mut self, proj: &Self) {
+    fn regress(&mut self, proj: &Self) {
         self.pa += proj.pa;
         self.ab += proj.ab;
         self.r += proj.r;
