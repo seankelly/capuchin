@@ -310,11 +310,11 @@ impl Projection {
                 .map(|age| {
                     if self.peak_age < age {
                         let age_diff = (self.peak_age - age) as f32;
-                        projection.age_adjust(age_diff * 0.003);
+                        projection.age_adjust(1.0 + (age_diff * 0.003));
                     }
                     else if self.peak_age > age {
                         let age_diff = (self.peak_age - age) as f32;
-                        projection.age_adjust(age_diff * 0.006);
+                        projection.age_adjust(1.0 + (age_diff * 0.006));
                     }
                 });
             projection.round();
