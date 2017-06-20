@@ -300,6 +300,8 @@ impl Projection {
             }
 
             let projected_pa = projected_pa as u16;
+            let weighted_pa = weighted_batter.pa;
+            let reliability = weighted_pa / (weighted_pa + self.batter_regress as f32);
             let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
             // Merge weighted player and league totals to regress the player.
             weighted_batter.add(&prorated_league_mean);
