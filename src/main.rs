@@ -138,6 +138,7 @@ struct BattingSummaryRates {
 struct BattingProjection {
     playerid: String,
     year: u16,
+    reliability: f32,
     pa: f32,
     ab: f32,
     r: f32,
@@ -375,6 +376,7 @@ impl Default for BattingProjection {
         BattingProjection {
             playerid: String::from(""),
             year: 0,
+            reliability: 0.0,
             pa: 0.0,
             ab: 0.0,
             r: 0.0,
@@ -476,6 +478,7 @@ impl BattingProjection {
         BattingProjection {
             playerid: playerid.clone(),
             year: year,
+            reliability: 0.0,
             pa: 0.0,
             ab: 0.0,
             r: 0.0,
@@ -563,6 +566,7 @@ impl BattingProjection {
         BattingProjection {
             playerid: self.playerid.clone(),
             year: self.year,
+            reliability: 0.0,
             pa: pa_f,
             ab: self.ab * pa_factor,
             r: self.r * pa_factor,
