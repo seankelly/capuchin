@@ -565,7 +565,7 @@ impl BattingProjection {
         BattingProjection {
             playerid: self.playerid.clone(),
             year: self.year,
-            reliability: 0.0,
+            reliability: self.reliability,
             pa: pa_f,
             ab: self.ab * pa_factor,
             r: self.r * pa_factor,
