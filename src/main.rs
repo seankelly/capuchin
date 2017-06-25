@@ -22,6 +22,7 @@ mod errors {
     }
 }
 
+mod databank;
 mod register;
 
 struct Projection {
