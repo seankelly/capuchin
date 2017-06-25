@@ -204,7 +204,7 @@ fn main() {
                             .parse().expect("Expected year to be an integer.");
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
-    let projections = proj.create_projections();
+    let projections = proj.create_projections(projection_year);
     write_batting_projection(&projections, proj.year);
 }
 
@@ -246,23 +246,22 @@ impl Projection {
         Ok(())
     }
 
-    fn create_projections(&mut self) -> Vec<BattingProjection> {
+    fn create_projections(&mut self, year: u16) -> Vec<BattingProjection> {
         // Calculate the totals for each season to get per-PA averages.
         let number_years = self.year_weights.len();
         let mut year_summaries = HashMap::with_capacity(number_years);
         for (_batter, batter_seasons) in &self.batters {
             for season in batter_seasons {
-                let year = season.yearid;
-                let mut summary = year_summaries.entry(year)
+                let mut summary = year_summaries.entry(season.yearid)
                                                 .or_insert(BattingSummary::default());
                 summary.add(season);
             }
         }
 
         let mut league_rates = HashMap::with_capacity(number_years);
-        for (year, season) in &year_summaries {
+        for (yr, season) in &year_summaries {
             let rate = BattingSummaryRates::from_summary(&season);
-            league_rates.insert(year, rate);
+            league_rates.insert(yr, rate);
         }
         let league_rates = league_rates;
 
@@ -280,22 +279,21 @@ impl Projection {
         let mut player_projections = Vec::with_capacity(self.batters.len());
         for (batter, batter_seasons) in &self.batters {
             // Weighted batter seasons.
-            let mut weighted_batter = BattingProjection::new_player(&batter, self.year);
+            let mut weighted_batter = BattingProjection::new_player(&batter, year);
             // What the league did with the same PAs, weighted the same.
             let mut batter_league_mean = BattingProjection::default();
             let mut projected_pa = 200.0;
             for season in batter_seasons {
-                let year = season.yearid;
-                projected_pa += match self.year - year {
+                projected_pa += match year - season.yearid {
                     1 => 0.5 * season.pa as f32,
                     2 => 0.1 * season.pa as f32,
                     _ => 0.0,
                 };
-                let weight_idx = (self.year - year) as usize;
+                let weight_idx = (year - season.yearid) as usize;
                 let weight = weights_map[weight_idx];
                 weighted_batter.weighted_add(season, weight);
 
-                let league_rate = league_rates.get(&year)
+                let league_rate = league_rates.get(&season.yearid)
                     .expect("Expected to get a rate for this year.");
                 batter_league_mean.weighted_rate_add(season.pa, league_rate, weight);
             }
@@ -307,7 +305,7 @@ impl Projection {
 
             let mut projection = weighted_batter.prorate(projected_pa);
             self.people.find_by_bbref(&batter)
-                .and_then(|p| p.get_age(self.year))
+                .and_then(|p| p.get_age(year))
                 .map(|age| {
                     if self.peak_age < age {
                         let age_diff = (self.peak_age - age) as f32;
