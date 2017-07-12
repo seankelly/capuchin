@@ -11,6 +11,7 @@ use clap::{Arg, App};
 use std::collections::HashMap;
 use std::default::Default;
 use std::path::Path;
+use std::str::FromStr;
 
 mod errors {
     use csv;
@@ -202,9 +203,11 @@ fn main() {
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
     proj.players.load_batting(&batting_csv).expect("Failed load Batting.csv");
-    let years: Vec<&str> = matches.values_of("year").expect("Need a year to project.").collect();
-    let projection_year = matches.value_of("year").expect("Need a year to project.")
-                            .parse().expect("Expected year to be an integer.");
+    let years: Vec<u16> = matches.values_of("year")
+        .expect("Need a year to project.")
+        .map(|year| u16::from_str(year).expect("Expected to get integer year"))
+        .collect();
+    let projection_year = years[0];
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
     let projections = proj.create_projections(projection_year);
