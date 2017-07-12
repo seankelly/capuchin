@@ -77,6 +77,13 @@ struct BattingSeason {
 }
 
 impl Players {
+    pub fn new() -> Self {
+        Players {
+            players: HashMap::new(),
+            batting: Vec::new(),
+        }
+    }
+
     pub fn load_batting(&mut self, batting_csv: &Path) -> errors::Result<()> {
         let mut rdr = csv::Reader::from_path(batting_csv)?;
         for record in rdr.deserialize() {
@@ -89,6 +96,12 @@ impl Players {
         }
 
         Ok(())
+    }
+
+    pub fn batting_season(&self, start_year: u16, end_year: u16) -> Vec<&BattingSeason> {
+        self.batting.iter().filter(|season| start_year <= season.yearid &&
+                                            season.yearid <= end_year)
+            .collect()
     }
 }
 

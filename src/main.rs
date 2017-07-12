@@ -32,6 +32,7 @@ struct Projection {
     year_weights: Vec<f32>,
     batter_regress: u16,
     people: register::People,
+    players: databank::Players,
 }
 
 #[derive(Deserialize)]
@@ -200,6 +201,7 @@ fn main() {
     }
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
+    proj.players.load_batting(&batting_csv).expect("Failed load Batting.csv");
     let years: Vec<&str> = matches.values_of("year").expect("Need a year to project.").collect();
     let projection_year = matches.value_of("year").expect("Need a year to project.")
                             .parse().expect("Expected year to be an integer.");
@@ -338,6 +340,7 @@ impl Default for Projection {
             year_weights: vec![5.0, 4.0, 3.0],
             batter_regress: 1200,
             people: register::People::new(),
+            players: databank::Players::new(),
         }
     }
 }
