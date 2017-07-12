@@ -200,6 +200,7 @@ fn main() {
     }
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
+    let years: Vec<&str> = matches.values_of("year").expect("Need a year to project.").collect();
     let projection_year = matches.value_of("year").expect("Need a year to project.")
                             .parse().expect("Expected year to be an integer.");
     proj.year = projection_year;
