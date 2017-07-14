@@ -98,7 +98,7 @@ impl Players {
         Ok(())
     }
 
-    pub fn batting_season(&self, start_year: u16, end_year: u16) -> Vec<&BattingSeason> {
+    pub fn batting_seasons(&self, start_year: u16, end_year: u16) -> Vec<&BattingSeason> {
         self.batting.iter().filter(|season| start_year <= season.yearid &&
                                             season.yearid <= end_year)
             .collect()
