@@ -24,6 +24,7 @@ mod errors {
 }
 
 mod databank;
+mod projection;
 mod register;
 
 struct Projection {
@@ -224,6 +225,8 @@ fn main() {
     let batter_regress = matches.value_of("batter_regress")
         .map_or(BATTER_REGRESS, |age| u16::from_str(age)
                                 .expect("Unable to parse amount to regress batters."));
+
+    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age);
 
     let projection_year = years[0];
     proj.year = projection_year;
