@@ -53,7 +53,8 @@ struct RawBattingSeason {
     gidp: Option<u8>,
 }
 
-struct BattingSeason {
+#[derive(Debug)]
+pub struct BattingSeason {
     playerid: String,
     yearid: u16,
     g: u8,
@@ -74,6 +75,72 @@ struct BattingSeason {
     sh: u8,
     sf: u8,
     gidp: u8,
+}
+
+#[derive(Debug)]
+pub struct BattingSeasonSummary {
+    g: u32,
+    pa: u32,
+    ab: u32,
+    r: u32,
+    h: u32,
+    double: u32,
+    triple: u32,
+    hr: u32,
+    rbi: u32,
+    sb: u32,
+    cs: u32,
+    bb: u32,
+    so: u32,
+    ibb: u32,
+    hbp: u32,
+    sh: u32,
+    sf: u32,
+    gidp: u32,
+}
+
+#[derive(Debug)]
+pub struct BattingSeasonSummaryRates {
+    pa: u32,
+    r: f32,
+    h: f32,
+    double: f32,
+    triple: f32,
+    hr: f32,
+    rbi: f32,
+    sb: f32,
+    cs: f32,
+    bb: f32,
+    so: f32,
+    ibb: f32,
+    hbp: f32,
+    sh: f32,
+    sf: f32,
+    gidp: f32,
+}
+
+#[derive(Debug, Serialize)]
+pub struct BattingProjection {
+    playerid: String,
+    year: u16,
+    reliability: f32,
+    pa: f32,
+    ab: f32,
+    r: f32,
+    h: f32,
+    double: f32,
+    triple: f32,
+    hr: f32,
+    rbi: f32,
+    sb: f32,
+    cs: f32,
+    bb: f32,
+    so: f32,
+    ibb: f32,
+    hbp: f32,
+    sh: f32,
+    sf: f32,
+    gidp: f32,
 }
 
 impl Players {
@@ -151,5 +218,180 @@ impl From<RawBattingSeason> for BattingSeason {
             sf: csv.sf.unwrap_or(0),
             gidp: csv.gidp.unwrap_or(0),
         }
+    }
+}
+
+impl BattingSeasonSummary {
+    pub fn new() -> Self {
+        BattingSeasonSummary {
+            g: 0,
+            pa: 0,
+            ab: 0,
+            r: 0,
+            h: 0,
+            double: 0,
+            triple: 0,
+            hr: 0,
+            rbi: 0,
+            sb: 0,
+            cs: 0,
+            bb: 0,
+            so: 0,
+            ibb: 0,
+            hbp: 0,
+            sh: 0,
+            sf: 0,
+            gidp: 0,
+        }
+    }
+
+    pub fn add_season(&mut self, season: &BattingSeason) {
+        self.g += season.g.into();
+        self.pa += season.pa.into();
+        self.ab += season.ab.into();
+        self.r += season.r.into();
+        self.h += season.h.into();
+        self.double += season.double.into();
+        self.triple += season.triple.into();
+        self.hr += season.hr.into();
+        self.rbi += season.rbi.into();
+        self.sb += season.sb.into();
+        self.cs += season.cs.into();
+        self.bb += season.bb.into();
+        self.so += season.so.into();
+        self.ibb += season.ibb.into();
+        self.hbp += season.hbp.into();
+        self.sh += season.sh.into();
+        self.sf += season.sf.into();
+        self.gidp += season.gidp.into();
+    }
+}
+
+impl BattingProjection {
+    fn regress(&mut self, proj: &Self) {
+        self.reliability = self.pa / (self.pa + proj.pa);
+        self.pa += proj.pa;
+        self.ab += proj.ab;
+        self.r += proj.r;
+        self.h += proj.h;
+        self.double += proj.double;
+        self.triple += proj.triple;
+        self.hr += proj.hr;
+        self.rbi += proj.rbi;
+        self.sb += proj.sb;
+        self.cs += proj.cs;
+        self.bb += proj.bb;
+        self.so += proj.so;
+        self.ibb += proj.ibb;
+        self.hbp += proj.hbp;
+        self.sh += proj.sh;
+        self.sf += proj.sf;
+        self.gidp += proj.gidp;
+    }
+
+    fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
+        self.pa += season.pa as f32 * weight;
+        self.ab += season.ab as f32 * weight;
+        self.r += season.r as f32 * weight;
+        self.h += season.h as f32 * weight;
+        self.double += season.double as f32 * weight;
+        self.triple += season.triple as f32 * weight;
+        self.hr += season.hr as f32 * weight;
+        self.rbi += season.rbi as f32 * weight;
+        self.sb += season.sb as f32 * weight;
+        self.cs += season.cs as f32 * weight;
+        self.bb += season.bb as f32 * weight;
+        self.so += season.so as f32 * weight;
+        self.ibb += season.ibb as f32 * weight;
+        self.hbp += season.hbp as f32 * weight;
+        self.sh += season.sh as f32 * weight;
+        self.sf += season.sf as f32 * weight;
+        self.gidp += season.gidp as f32 * weight;
+    }
+
+    fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSeasonSummaryRates, weight: f32) {
+        let pa_f = pa as f32;
+        self.pa += pa_f * weight;
+        self.ab += 0.0;
+        self.r += pa_f * rates.r * weight;
+        self.h += pa_f * rates.h * weight;
+        self.double += pa_f * rates.double * weight;
+        self.triple += pa_f * rates.triple * weight;
+        self.hr += pa_f * rates.hr * weight;
+        self.rbi += pa_f * rates.rbi * weight;
+        self.sb += pa_f * rates.sb * weight;
+        self.cs += pa_f * rates.cs * weight;
+        self.bb += pa_f * rates.bb * weight;
+        self.so += pa_f * rates.so * weight;
+        self.ibb += pa_f * rates.ibb * weight;
+        self.hbp += pa_f * rates.hbp * weight;
+        self.sh += pa_f * rates.sh * weight;
+        self.sf += pa_f * rates.sf * weight;
+        self.gidp += pa_f * rates.gidp * weight;
+    }
+
+    fn prorate(&self, prorated_pa: u16) -> Self {
+        let pa_f = prorated_pa as f32;
+        let pa_factor = pa_f / self.pa;
+        BattingProjection {
+            playerid: self.playerid.clone(),
+            year: self.year,
+            reliability: self.reliability,
+            pa: pa_f,
+            ab: self.ab * pa_factor,
+            r: self.r * pa_factor,
+            h: self.h * pa_factor,
+            double: self.double * pa_factor,
+            triple: self.triple * pa_factor,
+            hr: self.hr * pa_factor,
+            rbi: self.rbi * pa_factor,
+            sb: self.sb * pa_factor,
+            cs: self.cs * pa_factor,
+            bb: self.bb * pa_factor,
+            so: self.so * pa_factor,
+            ibb: self.ibb * pa_factor,
+            hbp: self.hbp * pa_factor,
+            sh: self.sh * pa_factor,
+            sf: self.sf * pa_factor,
+            gidp: self.gidp * pa_factor,
+        }
+    }
+
+    fn round(&mut self) {
+        self.pa = self.pa.round();
+        self.ab = self.ab.round();
+        self.r = self.r.round();
+        self.h = self.h.round();
+        self.double = self.double.round();
+        self.triple = self.triple.round();
+        self.hr = self.hr.round();
+        self.rbi = self.rbi.round();
+        self.sb = self.sb.round();
+        self.cs = self.cs.round();
+        self.bb = self.bb.round();
+        self.so = self.so.round();
+        self.ibb = self.ibb.round();
+        self.hbp = self.hbp.round();
+        self.sh = self.sh.round();
+        self.sf = self.sf.round();
+        self.gidp = self.gidp.round();
+    }
+
+    fn age_adjust(&mut self, amount: f32) {
+        self.r *= amount;
+        self.h *= amount;
+        self.double *= amount;
+        self.triple *= amount;
+        self.hr *= amount;
+        self.rbi *= amount;
+        self.sb *= amount;
+        self.cs *= amount;
+        self.bb *= amount;
+        self.so *= amount;
+        self.ibb *= amount;
+        self.hbp *= amount;
+        self.sh *= amount;
+        self.sf *= amount;
+        self.gidp *= amount;
     }
 }
