@@ -216,6 +216,15 @@ fn main() {
         .expect("Need a year to project.")
         .map(|year| u16::from_str(year).expect("Expected to get integer year"))
         .collect();
+
+    let peak_age = matches.value_of("peak_age")
+        .map_or(PEAK_AGE, |age| u8::from_str(age)
+                                .expect("Unable to parse peak age."));
+
+    let batter_regress = matches.value_of("batter_regress")
+        .map_or(BATTER_REGRESS, |age| u16::from_str(age)
+                                .expect("Unable to parse amount to regress batters."));
+
     let projection_year = years[0];
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
