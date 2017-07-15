@@ -223,6 +223,8 @@ fn main() {
     }
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
+    capuchin.load_batting(&batting_csv).expect("Failed load Batting.csv");
+
     let years: Vec<u16> = matches.values_of("year")
         .expect("Need a year to project.")
         .map(|year| u16::from_str(year).expect("Expected to get integer year"))
