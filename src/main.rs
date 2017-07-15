@@ -162,6 +162,9 @@ struct BattingProjection {
 }
 
 
+const PEAK_AGE: u8 = 27;
+
+
 fn main() {
     let app = App::new("Capuchin")
         .version("0.1.0")
