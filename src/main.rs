@@ -162,6 +162,7 @@ struct BattingProjection {
 }
 
 
+const BATTER_REGRESS: u16 = 1200;
 const PEAK_AGE: u8 = 27;
 
 
@@ -181,6 +182,11 @@ fn main() {
              .value_name("FILE")
              .required(true)
              .help("Batting.csv file")
+             .takes_value(true))
+        .arg(Arg::with_name("batter_regress")
+             .long("batter-regress")
+             .value_name("PA")
+             .help("Number of league average PA to regress players")
              .takes_value(true))
         .arg(Arg::with_name("peak_age")
              .short("a")
