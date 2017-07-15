@@ -204,7 +204,16 @@ fn main() {
         ;
     let matches = app.get_matches();
 
+    let peak_age = matches.value_of("peak_age")
+        .map_or(PEAK_AGE, |age| u8::from_str(age)
+                                .expect("Unable to parse peak age."));
+
+    let batter_regress = matches.value_of("batter_regress")
+        .map_or(BATTER_REGRESS, |age| u16::from_str(age)
+                                .expect("Unable to parse amount to regress batters."));
+
     let mut proj = Projection::default();
+    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age);
 
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
@@ -217,16 +226,6 @@ fn main() {
         .expect("Need a year to project.")
         .map(|year| u16::from_str(year).expect("Expected to get integer year"))
         .collect();
-
-    let peak_age = matches.value_of("peak_age")
-        .map_or(PEAK_AGE, |age| u8::from_str(age)
-                                .expect("Unable to parse peak age."));
-
-    let batter_regress = matches.value_of("batter_regress")
-        .map_or(BATTER_REGRESS, |age| u16::from_str(age)
-                                .expect("Unable to parse amount to regress batters."));
-
-    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age);
 
     let projection_year = years[0];
     proj.year = projection_year;
