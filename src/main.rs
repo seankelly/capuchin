@@ -217,6 +217,9 @@ fn main() {
 
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
+        let mut people = register::People::new();
+        people.load_register(Path::new(register));
+        capuchin.load_register(people);
         proj.load_register(Path::new(register));
     }
 
