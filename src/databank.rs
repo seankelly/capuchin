@@ -221,6 +221,24 @@ impl From<RawBattingSeason> for BattingSeason {
     }
 }
 
+impl BattingSeason {
+    pub fn playerid(&self) -> &String {
+        &self.playerid
+    }
+
+    pub fn yearid(&self) -> &u16 {
+        &self.yearid
+    }
+
+    pub fn pa(&self) -> &u16 {
+        &self.pa
+    }
+
+    pub fn is_year(&self, year: u16) -> bool {
+        self.yearid == year
+    }
+}
+
 impl BattingSeasonSummary {
     pub fn new() -> Self {
         BattingSeasonSummary {
@@ -245,7 +263,34 @@ impl BattingSeasonSummary {
         }
     }
 
-    pub fn add_season(&mut self, season: &BattingSeason) {
+    pub fn pa(&self) -> &u32 {
+        &self.pa
+    }
+
+    pub fn add_season(&self, season: &BattingSeason) -> Self {
+        BattingSeasonSummary {
+            g: self.g + season.g as u32,
+            pa: self.pa + season.pa as u32,
+            ab: self.ab + season.ab as u32,
+            r: self.r + season.r as u32,
+            h: self.h + season.h as u32,
+            double: self.double + season.double as u32,
+            triple: self.triple + season.triple as u32,
+            hr: self.hr + season.hr as u32,
+            rbi: self.rbi + season.rbi as u32,
+            sb: self.sb + season.sb as u32,
+            cs: self.cs + season.cs as u32,
+            bb: self.bb + season.bb as u32,
+            so: self.so + season.so as u32,
+            ibb: self.ibb + season.ibb as u32,
+            hbp: self.hbp + season.hbp as u32,
+            sh: self.sh + season.sh as u32,
+            sf: self.sf + season.sf as u32,
+            gidp: self.gidp + season.gidp as u32,
+        }
+    }
+
+    pub fn mut_add_season(&mut self, season: &BattingSeason) {
         self.g += season.g.into();
         self.pa += season.pa.into();
         self.ab += season.ab.into();
@@ -267,8 +312,82 @@ impl BattingSeasonSummary {
     }
 }
 
+impl From<BattingSeasonSummary> for BattingSeasonSummaryRates {
+    fn from(summary: BattingSeasonSummary) -> BattingSeasonSummaryRates {
+        let pa_f = summary.pa as f32;
+        BattingSeasonSummaryRates {
+            pa: summary.pa,
+            r: summary.r as f32 / pa_f,
+            h: summary.h as f32 / pa_f,
+            double: summary.double as f32 / pa_f,
+            triple: summary.triple as f32 / pa_f,
+            hr: summary.hr as f32 / pa_f,
+            rbi: summary.rbi as f32 / pa_f,
+            sb: summary.sb as f32 / pa_f,
+            cs: summary.cs as f32 / pa_f,
+            bb: summary.bb as f32 / pa_f,
+            so: summary.so as f32 / pa_f,
+            ibb: summary.ibb as f32 / pa_f,
+            hbp: summary.hbp as f32 / pa_f,
+            sh: summary.sh as f32 / pa_f,
+            sf: summary.sf as f32 / pa_f,
+            gidp: summary.gidp as f32 / pa_f,
+        }
+    }
+}
+
 impl BattingProjection {
-    fn regress(&mut self, proj: &Self) {
+    pub fn new_player(playerid: &String, year: u16) -> Self {
+        BattingProjection {
+            playerid: playerid.clone(),
+            year: year,
+            reliability: 0.0,
+            pa: 0.0,
+            ab: 0.0,
+            r: 0.0,
+            h: 0.0,
+            double: 0.0,
+            triple: 0.0,
+            hr: 0.0,
+            rbi: 0.0,
+            sb: 0.0,
+            cs: 0.0,
+            bb: 0.0,
+            so: 0.0,
+            ibb: 0.0,
+            hbp: 0.0,
+            sh: 0.0,
+            sf: 0.0,
+            gidp: 0.0,
+        }
+    }
+
+    pub fn league() -> Self {
+        BattingProjection {
+            playerid: String::from(""),
+            year: 0,
+            reliability: 0.0,
+            pa: 0.0,
+            ab: 0.0,
+            r: 0.0,
+            h: 0.0,
+            double: 0.0,
+            triple: 0.0,
+            hr: 0.0,
+            rbi: 0.0,
+            sb: 0.0,
+            cs: 0.0,
+            bb: 0.0,
+            so: 0.0,
+            ibb: 0.0,
+            hbp: 0.0,
+            sh: 0.0,
+            sf: 0.0,
+            gidp: 0.0,
+        }
+    }
+
+    pub fn regress(&mut self, proj: &Self) {
         self.reliability = self.pa / (self.pa + proj.pa);
         self.pa += proj.pa;
         self.ab += proj.ab;
@@ -289,7 +408,7 @@ impl BattingProjection {
         self.gidp += proj.gidp;
     }
 
-    fn weighted_add(&mut self, season: &BattingSeason, weight: f32) {
+    pub fn weighted_add(&mut self, season: &BattingSeasonSummary, weight: f32) {
         self.pa += season.pa as f32 * weight;
         self.ab += season.ab as f32 * weight;
         self.r += season.r as f32 * weight;
@@ -309,7 +428,7 @@ impl BattingProjection {
         self.gidp += season.gidp as f32 * weight;
     }
 
-    fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSeasonSummaryRates, weight: f32) {
+    pub fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSeasonSummaryRates, weight: f32) {
         let pa_f = pa as f32;
         self.pa += pa_f * weight;
         self.ab += 0.0;
@@ -330,7 +449,7 @@ impl BattingProjection {
         self.gidp += pa_f * rates.gidp * weight;
     }
 
-    fn prorate(&self, prorated_pa: u16) -> Self {
+    pub fn prorate(&self, prorated_pa: u16) -> Self {
         let pa_f = prorated_pa as f32;
         let pa_factor = pa_f / self.pa;
         BattingProjection {
@@ -357,7 +476,7 @@ impl BattingProjection {
         }
     }
 
-    fn round(&mut self) {
+    pub fn round(&mut self) {
         self.pa = self.pa.round();
         self.ab = self.ab.round();
         self.r = self.r.round();
@@ -377,7 +496,7 @@ impl BattingProjection {
         self.gidp = self.gidp.round();
     }
 
-    fn age_adjust(&mut self, amount: f32) {
+    pub fn age_adjust(&mut self, amount: f32) {
         self.r *= amount;
         self.h *= amount;
         self.double *= amount;
