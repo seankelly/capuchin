@@ -87,6 +87,11 @@ fn main() {
         .map_or(default_weights, |weights| split_weights(weights)
                                  .expect("Unable to parse weights."));
 
+    let years: Vec<u16> = matches.values_of("year")
+        .expect("Need a year to project.")
+        .map(|year| u16::from_str(year).expect("Expected to get integer year"))
+        .collect();
+
     let mut capuchin = projection::Capuchin::new(batter_regress, peak_age, year_weights);
 
     // Is the register available? Load it.
@@ -98,11 +103,6 @@ fn main() {
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
     capuchin.load_batting(&batting_csv).expect("Failed load Batting.csv");
-
-    let years: Vec<u16> = matches.values_of("year")
-        .expect("Need a year to project.")
-        .map(|year| u16::from_str(year).expect("Expected to get integer year"))
-        .collect();
 
     for year in &years {
         let projections = capuchin.batting_projection(*year);
