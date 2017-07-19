@@ -41,7 +41,7 @@ impl Capuchin {
         let number_years = self.year_weights.len();
         let start_year = year - number_years as u16;
         let end_year = year - 1;
-        let past_seasons = self.players.batting_seasons(year - number_years as u16, year - 1);
+        let past_seasons = self.players.batting_seasons(start_year, end_year);
 
         // Build a list of every player that appeared in those seasons. Each will get a projection.
         // Combine each player's split seasons into a single season summary.
