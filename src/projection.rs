@@ -17,10 +17,10 @@ pub struct Capuchin {
 }
 
 impl Capuchin {
-    pub fn new(batter_regress: u16, peak_age: u8) -> Self {
+    pub fn new(batter_regress: u16, peak_age: u8, year_weights: Vec<f32>) -> Self {
         Capuchin {
             peak_age: peak_age,
-            year_weights: vec![5.0, 4.0, 3.0],
+            year_weights: year_weights,
             batter_regress: batter_regress,
             people: None,
             players: databank::Players::new(),

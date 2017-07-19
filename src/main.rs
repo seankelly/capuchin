@@ -28,6 +28,7 @@ mod register;
 
 const BATTER_REGRESS: u16 = 1200;
 const PEAK_AGE: u8 = 27;
+const YEAR_WEIGHTS: &'static [f32] = &[0.5, 0.4, 0.3];
 
 
 fn main() {
@@ -58,6 +59,12 @@ fn main() {
              .value_name("AGE")
              .help("Peak age for player")
              .takes_value(true))
+        .arg(Arg::with_name("year_weights")
+             .short("y")
+             .long("weights")
+             .value_name("W1,W2,...")
+             .help("Weights to use for previous seasons")
+             .takes_value(true))
         .arg(Arg::with_name("year")
              .value_name("YEAR")
              .required(true)
@@ -75,7 +82,12 @@ fn main() {
         .map_or(BATTER_REGRESS, |age| u16::from_str(age)
                                 .expect("Unable to parse amount to regress batters."));
 
-    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age);
+    let default_weights = Vec::from(YEAR_WEIGHTS);
+    let year_weights = matches.value_of("year_weights")
+        .map_or(default_weights, |weights| split_weights(weights)
+                                 .expect("Unable to parse weights."));
+
+    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age, year_weights);
 
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
@@ -96,4 +108,10 @@ fn main() {
         let projections = capuchin.batting_projection(*year);
         databank::write_batting_projection(&projections, *year);
     }
+}
+
+// Free-standing function to make it simpler to see how the weights are converted from the
+// commandline arguments to something usable.
+fn split_weights(weights: &str) -> Result<Vec<f32>, std::num::ParseFloatError> {
+    weights.split(",").map(str::trim).map(f32::from_str).collect()
 }
