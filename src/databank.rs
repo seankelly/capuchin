@@ -230,10 +230,6 @@ impl BattingSeason {
         &self.yearid
     }
 
-    pub fn pa(&self) -> &u16 {
-        &self.pa
-    }
-
     pub fn is_year(&self, year: u16) -> bool {
         self.yearid == year
     }
