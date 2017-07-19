@@ -514,3 +514,15 @@ impl BattingProjection {
         self.gidp *= amount;
     }
 }
+
+pub fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> errors::Result<()> {
+    let output_file = format!("BattingCapuchin{}.csv", year);
+    let output_path = Path::new(&output_file);
+    let mut wtr = csv::Writer::from_path(&output_path)?;
+
+    for projection in projections {
+        let _result = wtr.serialize(projection)?;
+    }
+
+    Ok(())
+}

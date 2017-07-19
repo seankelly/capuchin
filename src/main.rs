@@ -230,11 +230,18 @@ fn main() {
         .map(|year| u16::from_str(year).expect("Expected to get integer year"))
         .collect();
 
+    for year in &years {
+        let projections = capuchin.batting_projection(*year);
+        databank::write_batting_projection(&projections, *year);
+    }
+
+    /*
     let projection_year = years[0];
     proj.year = projection_year;
     proj.load_batting_season(batting_csv).expect("Failed loading Batting.csv");
     let projections = proj.create_projections(projection_year);
     write_batting_projection(&projections, proj.year);
+    */
 }
 
 fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> errors::Result<()> {
