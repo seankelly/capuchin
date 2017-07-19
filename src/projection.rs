@@ -20,7 +20,7 @@ impl Capuchin {
     pub fn new(batter_regress: u16, peak_age: u8) -> Self {
         Capuchin {
             peak_age: peak_age,
-            year_weights: Vec::new(),
+            year_weights: vec![5.0, 4.0, 3.0],
             batter_regress: batter_regress,
             people: None,
             players: databank::Players::new(),
