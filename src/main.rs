@@ -97,8 +97,12 @@ fn main() {
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
         let mut people = register::People::new();
-        people.load_register(Path::new(register));
-        capuchin.load_register(people);
+        if let Err(e) = people.load_register(Path::new(register)) {
+            println!("Unable to load player register, skipping: {}", e);
+        }
+        else {
+            capuchin.load_register(people);
+        }
     }
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
@@ -106,7 +110,9 @@ fn main() {
 
     for year in &years {
         let projections = capuchin.batting_projection(*year);
-        databank::write_batting_projection(&projections, *year);
+        if let Err(e) = databank::write_batting_projection(&projections, *year) {
+            println!("Unable to write batting projection for year {}: {}", year, e);
+        }
     }
 }
 
