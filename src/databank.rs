@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::path::Path;
@@ -508,6 +509,26 @@ impl BattingProjection {
         self.sh *= amount;
         self.sf *= amount;
         self.gidp *= amount;
+    }
+}
+
+impl Eq for BattingProjection {}
+
+impl Ord for BattingProjection {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.playerid.cmp(&other.playerid)
+    }
+}
+
+impl PartialOrd for BattingProjection {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for BattingProjection {
+    fn eq(&self, other: &Self) -> bool {
+        self.playerid == other.playerid
     }
 }
 

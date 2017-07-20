@@ -125,6 +125,7 @@ impl Capuchin {
             player_projections.push(projection);
         }
 
+        player_projections.sort();
         player_projections
     }
 
