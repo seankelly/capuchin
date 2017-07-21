@@ -28,7 +28,7 @@ mod register;
 
 const BATTER_REGRESS: u16 = 1200;
 const PEAK_AGE: u8 = 27;
-const YEAR_WEIGHTS: &'static [f32] = &[0.5, 0.4, 0.3];
+const YEAR_WEIGHTS: &'static [f32] = &[5.0, 4.0, 3.0];
 
 
 fn main() {
