@@ -10,7 +10,7 @@ use errors;
 pub struct Players {
     players: HashMap<String, Player>,
     batting: Vec<BattingSeason>,
-    //pitching: Vec<PitchingSeason>,
+    pitching: Vec<PitchingSeason>,
 }
 
 pub struct Player {
@@ -73,6 +73,81 @@ pub struct BattingSeason {
     so: u16,
     ibb: u8,
     hbp: u8,
+    sh: u8,
+    sf: u8,
+    gidp: u8,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+struct RawPitchingSeason {
+    #[serde(rename = "playerID")]
+    playerid: String,
+    #[serde(rename = "yearID")]
+    yearid: u16,
+    /*
+    #[serde(rename = "stint")]
+    stint: String,
+    #[serde(rename = "teamID")]
+    teamid: String,
+    #[serde(rename = "lgID")]
+    lgid: String,
+    */
+    w: u8,
+    l: u8,
+    g: u8,
+    gs: u8,
+    cg: u8,
+    sho: u8,
+    sv: u8,
+    #[serde(rename = "IPouts")]
+    ipouts: u16,
+    h: u16,
+    er: u8,
+    hr: u8,
+    bb: u16,
+    so: u16,
+    #[serde(rename = "BAOpp")]
+    baopp: Option<f32>,
+    era: Option<f32>,
+    ibb: Option<u8>,
+    wp: Option<u8>,
+    hbp: Option<u8>,
+    bk: u8,
+    bfp: Option<u8>,
+    gf: Option<u8>,
+    r: u16,
+    sh: Option<u8>,
+    sf: Option<u8>,
+    gidp: Option<u8>,
+}
+
+#[derive(Debug)]
+pub struct PitchingSeason {
+    playerid: String,
+    yearid: u16,
+    w: u8,
+    l: u8,
+    g: u8,
+    gs: u8,
+    cg: u8,
+    sho: u8,
+    sv: u8,
+    ipouts: u16,
+    h: u16,
+    er: u8,
+    hr: u8,
+    bb: u16,
+    so: u16,
+    baopp: f32,
+    era: f32,
+    ibb: u8,
+    wp: u8,
+    hbp: u8,
+    bk: u8,
+    bfp: u8,
+    gf: u8,
+    r: u16,
     sh: u8,
     sf: u8,
     gidp: u8,
@@ -149,6 +224,7 @@ impl Players {
         Players {
             players: HashMap::new(),
             batting: Vec::new(),
+            pitching: Vec::new(),
         }
     }
 
@@ -215,6 +291,40 @@ impl From<RawBattingSeason> for BattingSeason {
             so: csv.so.unwrap_or(0),
             ibb: csv.ibb.unwrap_or(0),
             hbp: csv.hbp.unwrap_or(0),
+            sh: csv.sh.unwrap_or(0),
+            sf: csv.sf.unwrap_or(0),
+            gidp: csv.gidp.unwrap_or(0),
+        }
+    }
+}
+
+impl From<RawPitchingSeason> for PitchingSeason {
+    fn from(csv: RawPitchingSeason) -> PitchingSeason {
+        PitchingSeason {
+            playerid: csv.playerid,
+            yearid: csv.yearid,
+            w: csv.w,
+            l: csv.l,
+            g: csv.g,
+            gs: csv.gs,
+            cg: csv.cg,
+            sho: csv.sho,
+            sv: csv.sv,
+            ipouts: csv.ipouts,
+            h: csv.h,
+            er: csv.er,
+            hr: csv.hr,
+            bb: csv.bb,
+            so: csv.so,
+            baopp: csv.baopp.unwrap_or(0.0),
+            era: csv.era.unwrap_or(0.0),
+            ibb: csv.ibb.unwrap_or(0),
+            wp: csv.wp.unwrap_or(0),
+            hbp: csv.hbp.unwrap_or(0),
+            bk: csv.bk,
+            bfp: csv.bfp.unwrap_or(0),
+            gf: csv.gf.unwrap_or(0),
+            r: csv.r,
             sh: csv.sh.unwrap_or(0),
             sf: csv.sf.unwrap_or(0),
             gidp: csv.gidp.unwrap_or(0),
