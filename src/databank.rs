@@ -14,7 +14,7 @@ pub struct Players {
 }
 
 pub struct Player {
-    ipouts: BTreeMap<u16, u16>,
+    ip: BTreeMap<u16, u16>,
     pa: BTreeMap<u16, u16>,
 }
 
@@ -95,62 +95,58 @@ struct RawPitchingSeason {
     */
     w: u8,
     l: u8,
+    /*
     g: u8,
     gs: u8,
     cg: u8,
     sho: u8,
+    */
     sv: u8,
     #[serde(rename = "IPouts")]
     ipouts: u16,
     h: u16,
+    r: u16,
     er: u8,
     hr: u8,
     bb: u16,
     so: u16,
+    /*
     #[serde(rename = "BAOpp")]
     baopp: Option<f32>,
+    */
     era: Option<f32>,
     ibb: Option<u8>,
     wp: Option<u8>,
     hbp: Option<u8>,
     bk: u8,
+    /*
     bfp: Option<u8>,
     gf: Option<u8>,
-    r: u16,
     sh: Option<u8>,
     sf: Option<u8>,
     gidp: Option<u8>,
+    */
 }
 
 #[derive(Debug)]
 pub struct PitchingSeason {
     playerid: String,
     yearid: u16,
+    ip: u16,
     w: u8,
     l: u8,
-    g: u8,
-    gs: u8,
-    cg: u8,
-    sho: u8,
     sv: u8,
-    ipouts: u16,
     h: u16,
-    er: u8,
-    hr: u8,
-    bb: u16,
-    so: u16,
-    baopp: f32,
-    era: f32,
-    ibb: u8,
-    wp: u8,
-    hbp: u8,
-    bk: u8,
-    bfp: u8,
-    gf: u8,
     r: u16,
-    sh: u8,
-    sf: u8,
-    gidp: u8,
+    er: u8,
+    era: f32,
+    hr: u8,
+    so: u16,
+    bb: u16,
+    ibb: u8,
+    hbp: u8,
+    wp: u8,
+    bk: u8,
 }
 
 #[derive(Debug)]
@@ -255,7 +251,7 @@ impl Players {
             let record = PitchingSeason::from(record);
             let mut player = self.players.entry(record.playerid.clone())
                 .or_insert(Player::new());
-            player.add_ipouts(&record);
+            player.add_ip(&record);
             self.pitching.push(record);
         }
 
@@ -272,16 +268,16 @@ impl Players {
 impl Player {
     fn new() -> Self {
         Player {
-            ipouts: BTreeMap::new(),
+            ip: BTreeMap::new(),
             pa: BTreeMap::new(),
         }
     }
 
-    fn add_ipouts(&mut self, record: &PitchingSeason) {
+    fn add_ip(&mut self, record: &PitchingSeason) {
         let year = record.yearid;
-        let ipouts = record.ipouts;
-        let mut season_ipouts = self.ipouts.entry(year).or_insert(0);
-        *season_ipouts += ipouts;
+        let ip = record.ip;
+        let mut season_ip = self.ip.entry(year).or_insert(0);
+        *season_ip += ip;
     }
 
     fn add_pa(&mut self, record: &BattingSeason) {
@@ -322,34 +318,27 @@ impl From<RawBattingSeason> for BattingSeason {
 
 impl From<RawPitchingSeason> for PitchingSeason {
     fn from(csv: RawPitchingSeason) -> PitchingSeason {
+        // Convert the outs into IP and then into an integer number of IP.
+        let ip = csv.ipouts as f32 / 3.0;
+        let ip = ip.round() as u16;
         PitchingSeason {
             playerid: csv.playerid,
             yearid: csv.yearid,
             w: csv.w,
             l: csv.l,
-            g: csv.g,
-            gs: csv.gs,
-            cg: csv.cg,
-            sho: csv.sho,
             sv: csv.sv,
-            ipouts: csv.ipouts,
+            ip: ip,
             h: csv.h,
+            r: csv.r,
             er: csv.er,
             hr: csv.hr,
             bb: csv.bb,
             so: csv.so,
-            baopp: csv.baopp.unwrap_or(0.0),
             era: csv.era.unwrap_or(0.0),
             ibb: csv.ibb.unwrap_or(0),
             wp: csv.wp.unwrap_or(0),
             hbp: csv.hbp.unwrap_or(0),
             bk: csv.bk,
-            bfp: csv.bfp.unwrap_or(0),
-            gf: csv.gf.unwrap_or(0),
-            r: csv.r,
-            sh: csv.sh.unwrap_or(0),
-            sf: csv.sf.unwrap_or(0),
-            gidp: csv.gidp.unwrap_or(0),
         }
     }
 }
