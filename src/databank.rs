@@ -14,7 +14,7 @@ pub struct Players {
 }
 
 pub struct Player {
-    ip: BTreeMap<u16, u16>,
+    ipouts: BTreeMap<u16, u16>,
     pa: BTreeMap<u16, u16>,
 }
 
@@ -247,19 +247,41 @@ impl Players {
                                             season.yearid <= end_year)
             .collect()
     }
+
+    pub fn load_pitching(&mut self, pitching_csv: &Path) -> errors::Result<()> {
+        let mut rdr = csv::Reader::from_path(pitching_csv)?;
+        for record in rdr.deserialize() {
+            let record: RawPitchingSeason = record?;
+            let record = PitchingSeason::from(record);
+            let mut player = self.players.entry(record.playerid.clone())
+                .or_insert(Player::new());
+            player.add_ipouts(&record);
+            self.pitching.push(record);
+        }
+
+        Ok(())
+    }
+
+    pub fn pitching_seasons(&self, start_year: u16, end_year: u16) -> Vec<&PitchingSeason> {
+        self.pitching.iter().filter(|season| start_year <= season.yearid &&
+                                            season.yearid <= end_year)
+            .collect()
+    }
 }
 
 impl Player {
     fn new() -> Self {
         Player {
-            ip: BTreeMap::new(),
+            ipouts: BTreeMap::new(),
             pa: BTreeMap::new(),
         }
     }
 
-    fn add_ip(&mut self, year: u16, ip: u16) {
-        let mut season_ip = self.ip.entry(year).or_insert(0);
-        *season_ip += ip;
+    fn add_ipouts(&mut self, record: &PitchingSeason) {
+        let year = record.yearid;
+        let ipouts = record.ipouts;
+        let mut season_ipouts = self.ipouts.entry(year).or_insert(0);
+        *season_ipouts += ipouts;
     }
 
     fn add_pa(&mut self, record: &BattingSeason) {
