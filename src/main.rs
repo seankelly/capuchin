@@ -48,6 +48,13 @@ fn main() {
              .required(true)
              .help("Batting.csv file")
              .takes_value(true))
+        .arg(Arg::with_name("pitching")
+             .short("p")
+             .long("pitching")
+             .value_name("FILE")
+             .required(true)
+             .help("Pitching.csv file")
+             .takes_value(true))
         .arg(Arg::with_name("batter_regress")
              .long("batter-regress")
              .value_name("PA")
@@ -107,6 +114,9 @@ fn main() {
 
     let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
     capuchin.load_batting(&batting_csv).expect("Failed load Batting.csv");
+
+    let pitching_csv = Path::new(matches.value_of("pitching").expect("No Pitching.csv file."));
+    capuchin.load_pitching(&pitching_csv).expect("Failed load Pitching.csv");
 
     for year in &years {
         let projections = capuchin.batting_projection(*year);

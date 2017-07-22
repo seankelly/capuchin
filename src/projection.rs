@@ -36,6 +36,10 @@ impl Capuchin {
         self.players.load_batting(batting_csv)
     }
 
+    pub fn load_pitching(&mut self, pitching_csv: &Path) -> errors::Result<()> {
+        self.players.load_pitching(pitching_csv)
+    }
+
     pub fn batting_projection(&mut self, year: u16) -> Vec<databank::BattingProjection> {
         // Calculate the totals for each season to get per-PA averages.
         let number_years = self.year_weights.len();
