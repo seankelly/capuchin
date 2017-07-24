@@ -9,6 +9,7 @@ use databank;
 pub struct Capuchin {
     batter_regress: u16,
     peak_age: u8,
+    pitcher_regress: u16,
     year_weights: Vec<f32>,
     people: Option<register::People>,
     players: databank::Players,
@@ -17,11 +18,12 @@ pub struct Capuchin {
 }
 
 impl Capuchin {
-    pub fn new(batter_regress: u16, peak_age: u8, year_weights: Vec<f32>) -> Self {
+    pub fn new(batter_regress: u16, peak_age: u8, pitcher_regress: u16, year_weights: Vec<f32>) -> Self {
         Capuchin {
             peak_age: peak_age,
             year_weights: year_weights,
             batter_regress: batter_regress,
+            pitcher_regress: pitcher_regress,
             people: None,
             players: databank::Players::new(),
             batting_league_totals: BTreeMap::new(),
