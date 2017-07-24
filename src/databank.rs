@@ -943,21 +943,21 @@ impl PitchingProjection {
     }
 
     pub fn round(&mut self) {
-        self.ip.round();
-        self.w.round();
-        self.l.round();
-        self.sv.round();
-        self.h.round();
-        self.r.round();
-        self.er.round();
+        self.ip = self.ip.round();
+        self.w = self.w.round();
+        self.l = self.l.round();
+        self.sv = self.sv.round();
+        self.h = self.h.round();
+        self.r = self.r.round();
+        self.er = self.er.round();
         // Ideally round the ERA to two digits of precision.
-        self.hr.round();
-        self.so.round();
-        self.bb.round();
-        self.ibb.round();
-        self.hbp.round();
-        self.wp.round();
-        self.bk.round();
+        self.hr = self.hr.round();
+        self.so = self.so.round();
+        self.bb = self.bb.round();
+        self.ibb = self.ibb.round();
+        self.hbp = self.hbp.round();
+        self.wp = self.wp.round();
+        self.bk = self.bk.round();
     }
 
     pub fn age_adjust(&mut self, amount: f32) {
