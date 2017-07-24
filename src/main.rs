@@ -45,14 +45,12 @@ fn main() {
              .short("b")
              .long("batting")
              .value_name("FILE")
-             .required(true)
              .help("Batting.csv file")
              .takes_value(true))
         .arg(Arg::with_name("pitching")
              .short("p")
              .long("pitching")
              .value_name("FILE")
-             .required(true)
              .help("Pitching.csv file")
              .takes_value(true))
         .arg(Arg::with_name("batter_regress")
@@ -112,21 +110,39 @@ fn main() {
         }
     }
 
-    let batting_csv = Path::new(matches.value_of("batting").expect("No Batting.csv file."));
-    capuchin.load_batting(&batting_csv).expect("Failed load Batting.csv");
+    let mut loaded_batting = false;
+    if let Some(batting_csv) = matches.value_of("batting") {
+        let batting_csv = Path::new(batting_csv);
+        capuchin.load_batting(&batting_csv).expect("Failed load Batting.csv");
+        loaded_batting = true;
+    }
+    else {
+        println!("No Batting.csv, skipping batter projections.");
+    }
 
-    let pitching_csv = Path::new(matches.value_of("pitching").expect("No Pitching.csv file."));
-    capuchin.load_pitching(&pitching_csv).expect("Failed load Pitching.csv");
+    let mut loaded_pitching = false;
+    if let Some(pitching_csv) = matches.value_of("pitching") {
+        let pitching_csv = Path::new(pitching_csv);
+        capuchin.load_pitching(&pitching_csv).expect("Failed load Pitching.csv");
+        loaded_pitching = true;
+    }
+    else {
+        println!("No Pitching.csv, skipping pitcher projections.");
+    }
 
     for year in &years {
-        let b_projections = capuchin.batting_projection(*year);
-        if let Err(e) = databank::write_batting_projection(&b_projections, *year) {
-            println!("Unable to write batting projection for year {}: {}", year, e);
+        if loaded_batting {
+            let b_projections = capuchin.batting_projection(*year);
+            if let Err(e) = databank::write_batting_projection(&b_projections, *year) {
+                println!("Unable to write batting projection for year {}: {}", year, e);
+            }
         }
 
-        let p_projections = capuchin.pitching_projection(*year);
-        if let Err(e) = databank::write_pitching_projection(&p_projections, *year) {
-            println!("Unable to write pitching projection for year {}: {}", year, e);
+        if loaded_pitching {
+            let p_projections = capuchin.pitching_projection(*year);
+            if let Err(e) = databank::write_pitching_projection(&p_projections, *year) {
+                println!("Unable to write pitching projection for year {}: {}", year, e);
+            }
         }
     }
 }
