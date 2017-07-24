@@ -10,6 +10,7 @@ extern crate serde_derive;
 use clap::{Arg, App};
 use std::path::Path;
 use std::str::FromStr;
+use std::process::exit;
 
 mod errors {
     use csv;
@@ -128,6 +129,11 @@ fn main() {
     }
     else {
         println!("No Pitching.csv, skipping pitcher projections.");
+    }
+
+    if !loaded_batting && !loaded_pitching {
+        println!("No Batting.csv nor Pitching.csv provided, exiting.");
+        exit(1);
     }
 
     for year in &years {
