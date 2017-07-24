@@ -145,9 +145,9 @@ impl Capuchin {
 
         // Build a list of every player that appeared in those seasons. Each will get a projection.
         // Combine each player's split seasons into a single season summary.
-        let mut batters = HashMap::new();
+        let mut pitchers = HashMap::new();
         for season in &past_seasons {
-            let mut player = batters.entry(season.playerid())
+            let mut player = pitchers.entry(season.playerid())
                 .or_insert(BTreeMap::new());
             let mut summary = player.entry(season.yearid())
                 .or_insert(databank::PitchingSeasonSummary::new());
@@ -178,14 +178,14 @@ impl Capuchin {
         let weights_map = weights_map;
 
         // Weight player and league based on IP.
-        let mut player_projections = Vec::with_capacity(batters.len());
-        for (batter, batter_seasons) in batters {
-            // Weighted batter seasons.
-            let mut weighted_batter = databank::PitchingProjection::new_player(&batter, year);
+        let mut player_projections = Vec::with_capacity(pitchers.len());
+        for (pitcher, pitcher_seasons) in pitchers {
+            // Weighted pitcher seasons.
+            let mut weighted_pitcher = databank::PitchingProjection::new_player(&pitcher, year);
             // What the league did with the same IPs, weighted the same.
-            let mut batter_league_mean = databank::PitchingProjection::league();
+            let mut pitcher_league_mean = databank::PitchingProjection::league();
             let mut projected_ip = 200.0;
-            for (season_year, season) in &batter_seasons {
+            for (season_year, season) in &pitcher_seasons {
                 let season_year = *season_year;
                 let season_ip = *season.ip() as u16;
                 projected_ip += match year - season_year {
@@ -195,21 +195,21 @@ impl Capuchin {
                 };
                 let weight_idx = (year - season_year) as usize;
                 let weight = weights_map[weight_idx];
-                weighted_batter.weighted_add(season, weight);
+                weighted_pitcher.weighted_add(season, weight);
 
                 let league_rate = self.pitching_league_totals.get(&season_year)
                     .expect("Expected to get a rate for this year.");
-                batter_league_mean.weighted_rate_add(season_ip, league_rate, weight);
+                pitcher_league_mean.weighted_rate_add(season_ip, league_rate, weight);
             }
 
             let projected_ip = projected_ip as u16;
-            let prorated_league_mean = batter_league_mean.prorate(self.batter_regress);
+            let prorated_league_mean = pitcher_league_mean.prorate(self.pitcher_regress);
             // Merge weighted player and league totals to regress the player.
-            weighted_batter.regress(&prorated_league_mean);
+            weighted_pitcher.regress(&prorated_league_mean);
 
-            let mut projection = weighted_batter.prorate(projected_ip);
+            let mut projection = weighted_pitcher.prorate(projected_ip);
             if let Some(ref people) = self.people {
-                people.find_by_bbref(&batter)
+                people.find_by_bbref(&pitcher)
                     .and_then(|p| p.get_age(year))
                     .map(|age| {
                         let age_diff = self.peak_age as f32 - age as f32;
