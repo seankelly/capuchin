@@ -119,9 +119,14 @@ fn main() {
     capuchin.load_pitching(&pitching_csv).expect("Failed load Pitching.csv");
 
     for year in &years {
-        let projections = capuchin.batting_projection(*year);
-        if let Err(e) = databank::write_batting_projection(&projections, *year) {
+        let b_projections = capuchin.batting_projection(*year);
+        if let Err(e) = databank::write_batting_projection(&b_projections, *year) {
             println!("Unable to write batting projection for year {}: {}", year, e);
+        }
+
+        let p_projections = capuchin.pitching_projection(*year);
+        if let Err(e) = databank::write_pitching_projection(&p_projections, *year) {
+            println!("Unable to write pitching projection for year {}: {}", year, e);
         }
     }
 }
