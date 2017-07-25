@@ -13,7 +13,9 @@ pub struct People {
 
 #[derive(Deserialize)]
 pub struct PeopleRegister {
+    /*
     key_person: String,
+    */
     key_uuid: String,
     //key_mlbam: Option<String>,
     //key_retro: Option<String>,
