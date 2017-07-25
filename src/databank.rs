@@ -238,7 +238,9 @@ pub struct BattingProjection {
     ab: f32,
     r: f32,
     h: f32,
+    #[serde(rename = "2B")]
     double: f32,
+    #[serde(rename = "3B")]
     triple: f32,
     hr: f32,
     rbi: f32,
