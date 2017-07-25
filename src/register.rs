@@ -74,7 +74,7 @@ impl People {
 
         for result in rdr.deserialize() {
             let person: PeopleRegister = result?;
-            let idx = self.people.len() + 1;
+            let idx = self.people.len();
             if let Some(ref bbrefid) = person.key_bbref {
                 self.bbref_idx.insert(bbrefid.clone(), idx);
             }
