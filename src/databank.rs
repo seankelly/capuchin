@@ -782,6 +782,10 @@ impl BattingProjection {
         self.gidp = self.gidp.round();
     }
 
+    pub fn set_age(&mut self, age: u8) {
+        self.age = age;
+    }
+
     pub fn age_adjust(&mut self, amount: f32) {
         self.r *= amount;
         self.h *= amount;
@@ -968,6 +972,10 @@ impl PitchingProjection {
         self.hbp = self.hbp.round();
         self.wp = self.wp.round();
         self.bk = self.bk.round();
+    }
+
+    pub fn set_age(&mut self, age: u8) {
+        self.age = age;
     }
 
     pub fn age_adjust(&mut self, amount: f32) {

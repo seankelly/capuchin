@@ -119,6 +119,7 @@ impl Capuchin {
                 people.find_by_bbref(&batter)
                     .and_then(|p| p.get_age(year))
                     .map(|age| {
+                        projection.set_age(age);
                         let age_diff = self.peak_age as f32 - age as f32;
                         if self.peak_age < age {
                             projection.age_adjust(1.0 + (age_diff * 0.003));
@@ -212,6 +213,7 @@ impl Capuchin {
                 people.find_by_bbref(&pitcher)
                     .and_then(|p| p.get_age(year))
                     .map(|age| {
+                        projection.set_age(age);
                         let age_diff = self.peak_age as f32 - age as f32;
                         if self.peak_age < age {
                             projection.age_adjust(1.0 + (age_diff * 0.003));
