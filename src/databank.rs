@@ -232,6 +232,7 @@ pub struct PitchingSeasonSummaryRates {
 #[derive(Debug, Serialize)]
 pub struct BattingProjection {
     playerid: String,
+    age: u8,
     year: u16,
     reliability: f32,
     pa: f32,
@@ -258,6 +259,7 @@ pub struct BattingProjection {
 #[derive(Debug, Serialize)]
 pub struct PitchingProjection {
     playerid: String,
+    age: u8,
     year: u16,
     reliability: f32,
     ip: f32,
@@ -621,6 +623,7 @@ impl BattingProjection {
     pub fn new_player(playerid: &String, year: u16) -> Self {
         BattingProjection {
             playerid: playerid.clone(),
+            age: 0,
             year: year,
             reliability: 0.0,
             pa: 0.0,
@@ -646,6 +649,7 @@ impl BattingProjection {
     pub fn league() -> Self {
         BattingProjection {
             playerid: String::from(""),
+            age: 0,
             year: 0,
             reliability: 0.0,
             pa: 0.0,
@@ -735,6 +739,7 @@ impl BattingProjection {
         let pa_factor = pa_f / self.pa;
         BattingProjection {
             playerid: self.playerid.clone(),
+            age: 0,
             year: self.year,
             reliability: self.reliability,
             pa: pa_f,
@@ -820,6 +825,7 @@ impl PitchingProjection {
     pub fn new_player(playerid: &String, year: u16) -> Self {
         PitchingProjection {
             playerid: playerid.clone(),
+            age: 0,
             year: year,
             reliability: 0.0,
             ip: 0.0,
@@ -843,6 +849,7 @@ impl PitchingProjection {
     pub fn league() -> Self {
         PitchingProjection {
             playerid: String::from(""),
+            age: 0,
             year: 0,
             reliability: 0.0,
             ip: 0.0,
@@ -924,6 +931,7 @@ impl PitchingProjection {
         let ip_factor = ip_f / self.ip;
         PitchingProjection {
             playerid: self.playerid.clone(),
+            age: 0,
             year: self.year,
             reliability: self.reliability,
             ip: ip_f,
