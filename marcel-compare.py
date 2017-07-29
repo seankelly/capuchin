@@ -70,12 +70,12 @@ def compare(headers, marcel, new_proj):
                 print(f"{player}'s age doesn't agree: {m_stat} != {n_stat}")
             stat_differences[stat].append(diff)
 
-    print("stat\trmse\tstddev\tvariance")
+    print("stat\trmse\t\tstddev\t\tvariance")
     for stat, stat_diff in stat_differences.items():
         rmse = numpy.sqrt((numpy.array(stat_diff) ** 2).mean())
         stddev = numpy.std(stat_diff)
         variance = numpy.var(stat_diff)
-        print(f"{stat}\t{rmse}\t{stddev}\t{variance}")
+        print(f"{stat}\t{rmse:8.5}\t{stddev:8.5}\t{variance:8.5}")
 
 
 def main(args):
