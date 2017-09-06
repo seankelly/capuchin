@@ -324,7 +324,7 @@ impl Players {
 
     pub fn pitching_seasons(&self, start_year: u16, end_year: u16) -> Vec<&PitchingSeason> {
         self.pitching.iter().filter(|season| start_year <= season.yearid &&
-                                            season.yearid <= end_year)
+                                             season.yearid <= end_year)
             .collect()
     }
 }
