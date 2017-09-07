@@ -18,6 +18,12 @@ pub struct Player {
     pa: BTreeMap<u16, u16>,
 }
 
+pub enum PlayerType {
+    Unknown,
+    Batter,
+    Pitcher,
+}
+
 #[derive(Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 struct RawBattingSeason {
@@ -349,6 +355,38 @@ impl Player {
         let pa = record.pa;
         let mut season_pa = self.pa.entry(year).or_insert(0);
         *season_pa += pa;
+    }
+
+    fn player_type(&self, year: u16) -> PlayerType {
+        let default = &0;
+        let year_pa = self.pa.get(&year).unwrap_or(default);
+        let year_ip = self.ip.get(&year).unwrap_or(default);
+
+        if *year_pa > *year_ip {
+            return PlayerType::Batter;
+        }
+        else if *year_pa < *year_ip {
+            return PlayerType::Pitcher;
+        }
+        else {
+            return PlayerType::Unknown;
+        }
+    }
+
+    fn is_batter(&self, year: u16) -> bool {
+        match self.player_type(year) {
+            PlayerType::Batter => true,
+            PlayerType::Pitcher => false,
+            PlayerType::Unknown => true,
+        }
+    }
+
+    fn is_pitcher(&self, year: u16) -> bool {
+        match self.player_type(year) {
+            PlayerType::Batter => false,
+            PlayerType::Pitcher => true,
+            PlayerType::Unknown => true,
+        }
     }
 }
 
