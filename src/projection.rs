@@ -42,6 +42,10 @@ impl Capuchin {
     pub fn load_pitching(&mut self, pitching_csv: &Path) -> errors::Result<()> {
         self.players.load_pitching(pitching_csv)
     }
+    /// Remove players playing out of position. This counts batters pitching and pitchers batting.
+    pub fn remove_out_of_position_players(&mut self) {
+        self.players.remove_out_of_position_players();
+    }
 
     pub fn batting_projection(&mut self, year: u16) -> Vec<databank::BattingProjection> {
         // Calculate the totals for each season to get per-PA averages.

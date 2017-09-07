@@ -142,7 +142,10 @@ fn main() {
         println!("No Pitching.csv, skipping pitcher projections.");
     }
 
-    if !loaded_batting && !loaded_pitching {
+    if loaded_batting && loaded_pitching {
+        capuchin.remove_out_of_position_players();
+    }
+    else if !loaded_batting && !loaded_pitching {
         println!("No Batting.csv nor Pitching.csv provided, exiting.");
         exit(1);
     }

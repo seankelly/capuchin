@@ -333,6 +333,10 @@ impl Players {
                                              season.yearid <= end_year)
             .collect()
     }
+
+    /// Remove players playing out of position. This counts batters pitching and pitchers batting.
+    pub fn remove_out_of_position_players(&mut self) {
+    }
 }
 
 impl Player {
