@@ -738,7 +738,6 @@ impl BattingProjection {
     pub fn regress(&mut self, proj: &Self) {
         self.reliability = self.pa / (self.pa + proj.pa);
         self.pa += proj.pa;
-        self.ab += proj.ab;
         self.r += proj.r;
         self.h += proj.h;
         self.double += proj.double;
@@ -754,11 +753,11 @@ impl BattingProjection {
         self.sh += proj.sh;
         self.sf += proj.sf;
         self.gidp += proj.gidp;
+        self.ab = self.pa - (self.bb + self.hbp + self.sf + self.sh);
     }
 
     pub fn weighted_add(&mut self, season: &BattingSeasonSummary, weight: f32) {
         self.pa += season.pa as f32 * weight;
-        self.ab += season.ab as f32 * weight;
         self.r += season.r as f32 * weight;
         self.h += season.h as f32 * weight;
         self.double += season.double as f32 * weight;
@@ -774,12 +773,12 @@ impl BattingProjection {
         self.sh += season.sh as f32 * weight;
         self.sf += season.sf as f32 * weight;
         self.gidp += season.gidp as f32 * weight;
+        self.ab = self.pa - (self.bb + self.hbp + self.sf + self.sh);
     }
 
     pub fn weighted_rate_add(&mut self, pa: u16, rates: &BattingSeasonSummaryRates, weight: f32) {
         let pa_f = pa as f32;
         self.pa += pa_f * weight;
-        self.ab += 0.0;
         self.r += pa_f * rates.r * weight;
         self.h += pa_f * rates.h * weight;
         self.double += pa_f * rates.double * weight;
@@ -795,18 +794,19 @@ impl BattingProjection {
         self.sh += pa_f * rates.sh * weight;
         self.sf += pa_f * rates.sf * weight;
         self.gidp += pa_f * rates.gidp * weight;
+        self.ab = self.pa - (self.bb + self.hbp + self.sf + self.sh);
     }
 
     pub fn prorate(&self, prorated_pa: u16) -> Self {
         let pa_f = prorated_pa as f32;
         let pa_factor = pa_f / self.pa;
-        BattingProjection {
+        let mut proj = BattingProjection {
             playerid: self.playerid.clone(),
             age: 0,
             year: self.year,
             reliability: self.reliability,
             pa: pa_f,
-            ab: self.ab * pa_factor,
+            ab: 0.0,
             r: self.r * pa_factor,
             h: self.h * pa_factor,
             double: self.double * pa_factor,
@@ -822,12 +822,14 @@ impl BattingProjection {
             sh: self.sh * pa_factor,
             sf: self.sf * pa_factor,
             gidp: self.gidp * pa_factor,
-        }
+        };
+
+        proj.ab = proj.pa - (proj.bb + proj.hbp + proj.sf + proj.sh);
+        return proj;
     }
 
     pub fn round(&mut self) {
         self.pa = self.pa.round();
-        self.ab = self.ab.round();
         self.r = self.r.round();
         self.h = self.h.round();
         self.double = self.double.round();
@@ -843,6 +845,7 @@ impl BattingProjection {
         self.sh = self.sh.round();
         self.sf = self.sf.round();
         self.gidp = self.gidp.round();
+        self.ab = self.pa - (self.bb + self.hbp + self.sf + self.sh);
     }
 
     pub fn set_age(&mut self, age: u8) {
