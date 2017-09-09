@@ -18,7 +18,7 @@ pub struct Player {
     pa: BTreeMap<u16, u16>,
 }
 
-pub enum PlayerType {
+enum PlayerType {
     Unknown,
     Batter,
     Pitcher,
