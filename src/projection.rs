@@ -7,9 +7,10 @@ use register;
 use databank;
 
 pub struct Capuchin {
-    batter_regress: u16,
     peak_age: u8,
-    pitcher_regress: u16,
+    batter_regress: u16,
+    starter_regress: u16,
+    reliever_regress: u16,
     batter_weights: Vec<f32>,
     pitcher_weights: Vec<f32>,
     people: Option<register::People>,
@@ -19,13 +20,14 @@ pub struct Capuchin {
 }
 
 impl Capuchin {
-    pub fn new(batter_regress: u16, peak_age: u8, pitcher_regress: u16, batter_weights: Vec<f32>, pitcher_weights: Vec<f32>) -> Self {
+    pub fn new(peak_age: u8, batter_regress: u16, starter_regress: u16, reliever_regress: u16, batter_weights: Vec<f32>, pitcher_weights: Vec<f32>) -> Self {
         Capuchin {
             peak_age: peak_age,
             batter_weights: batter_weights,
             pitcher_weights: pitcher_weights,
             batter_regress: batter_regress,
-            pitcher_regress: pitcher_regress,
+            starter_regress: starter_regress,
+            reliever_regress: reliever_regress,
             people: None,
             players: databank::Players::new(),
             batting_league_totals: BTreeMap::new(),
@@ -210,7 +212,7 @@ impl Capuchin {
             }
 
             let projected_ip = projected_ip as u16;
-            let prorated_league_mean = pitcher_league_mean.prorate(self.pitcher_regress);
+            let prorated_league_mean = pitcher_league_mean.prorate(self.starter_regress);
             // Merge weighted player and league totals to regress the player.
             weighted_pitcher.regress(&prorated_league_mean);
 

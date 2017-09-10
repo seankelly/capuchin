@@ -27,9 +27,10 @@ mod projection;
 mod register;
 
 
-const BATTER_REGRESS: u16 = 1200;
 const PEAK_AGE: u8 = 27;
-const PITCHER_REGRESS: u16 = 1200;
+const BATTER_REGRESS: u16 = 1200;
+const STARTER_REGRESS: u16 = 60;
+const RELIEVER_REGRESS: u16 = 25;
 const BATTER_WEIGHTS: &'static [f32] = &[5.0, 4.0, 3.0];
 const PITCHER_WEIGHTS: &'static [f32] = &[3.0, 2.0, 1.0];
 
@@ -61,10 +62,15 @@ fn main() {
              .value_name("PA")
              .help("Number of league average PA to regress batters")
              .takes_value(true))
-        .arg(Arg::with_name("pitcher_regress")
-             .long("pitcher-regress")
+        .arg(Arg::with_name("starter_regress")
+             .long("starter-regress")
              .value_name("IP")
-             .help("Number of league average PA to regress pitchers")
+             .help("Number of league average IP to regress starters")
+             .takes_value(true))
+        .arg(Arg::with_name("reliever_regress")
+             .long("reliever-regress")
+             .value_name("IP")
+             .help("Number of league average IP to regress relievers")
              .takes_value(true))
         .arg(Arg::with_name("peak_age")
              .short("a")
@@ -101,9 +107,12 @@ fn main() {
         .map_or(BATTER_REGRESS, |age| u16::from_str(age)
                                 .expect("Unable to parse amount to regress batters."));
 
-    let pitcher_regress = matches.value_of("pitcher_regress")
-        .map_or(PITCHER_REGRESS, |age| u16::from_str(age)
-                                .expect("Unable to parse amount to regress pitchers."));
+    let starter_regress = matches.value_of("starter_regress")
+        .map_or(STARTER_REGRESS, |ip| u16::from_str(ip)
+                                .expect("Unable to parse amount to regress starters."));
+    let reliever_regress = matches.value_of("reliever_regress")
+        .map_or(RELIEVER_REGRESS, |ip| u16::from_str(ip)
+                                .expect("Unable to parse amount to regress relievers."));
 
     let default_weights = Vec::from(BATTER_WEIGHTS);
     let batter_weights = matches.value_of("batter_weights")
@@ -120,8 +129,10 @@ fn main() {
         .map(|year| u16::from_str(year).expect("Expected to get integer year"))
         .collect();
 
-    let mut capuchin = projection::Capuchin::new(batter_regress, peak_age, pitcher_regress,
-                                                 batter_weights, pitcher_weights);
+    let mut capuchin = projection::Capuchin::new(
+        peak_age, batter_regress, starter_regress, reliever_regress, batter_weights,
+        pitcher_weights
+    );
 
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
