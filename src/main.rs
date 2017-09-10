@@ -104,7 +104,7 @@ fn main() {
                                 .expect("Unable to parse peak age."));
 
     let batter_regress = matches.value_of("batter_regress")
-        .map_or(BATTER_REGRESS, |age| u16::from_str(age)
+        .map_or(BATTER_REGRESS, |pa| u16::from_str(pa)
                                 .expect("Unable to parse amount to regress batters."));
 
     let starter_regress = matches.value_of("starter_regress")
