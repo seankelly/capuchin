@@ -11,6 +11,7 @@ pub struct Capuchin {
     peak_age: u8,
     pitcher_regress: u16,
     batter_weights: Vec<f32>,
+    pitcher_weights: Vec<f32>,
     people: Option<register::People>,
     players: databank::Players,
     batting_league_totals: BTreeMap<u16, databank::BattingSeasonSummaryRates>,
@@ -18,10 +19,11 @@ pub struct Capuchin {
 }
 
 impl Capuchin {
-    pub fn new(batter_regress: u16, peak_age: u8, pitcher_regress: u16, batter_weights: Vec<f32>) -> Self {
+    pub fn new(batter_regress: u16, peak_age: u8, pitcher_regress: u16, batter_weights: Vec<f32>, pitcher_weights: Vec<f32>) -> Self {
         Capuchin {
             peak_age: peak_age,
             batter_weights: batter_weights,
+            pitcher_weights: pitcher_weights,
             batter_regress: batter_regress,
             pitcher_regress: pitcher_regress,
             people: None,
@@ -143,7 +145,7 @@ impl Capuchin {
 
     pub fn pitching_projection(&mut self, year: u16) -> Vec<databank::PitchingProjection> {
         // Calculate the totals for each season to get per-PA averages.
-        let number_years = self.batter_weights.len();
+        let number_years = self.pitcher_weights.len();
         let start_year = year - number_years as u16;
         let end_year = year - 1;
         let past_seasons = self.players.pitching_seasons(start_year, end_year);
@@ -177,7 +179,7 @@ impl Capuchin {
         // Make the first element be the year of the projection. This makes the math a bit easier
         // for indexing previous years.
         weights_map.push(0.0);
-        for weight in &self.batter_weights {
+        for weight in &self.pitcher_weights {
             weights_map.push(*weight);
         }
         let weights_map = weights_map;
