@@ -30,7 +30,7 @@ mod register;
 const BATTER_REGRESS: u16 = 1200;
 const PEAK_AGE: u8 = 27;
 const PITCHER_REGRESS: u16 = 1200;
-const YEAR_WEIGHTS: &'static [f32] = &[5.0, 4.0, 3.0];
+const BATTER_WEIGHTS: &'static [f32] = &[5.0, 4.0, 3.0];
 
 
 fn main() {
@@ -71,11 +71,11 @@ fn main() {
              .value_name("AGE")
              .help("Peak age for player")
              .takes_value(true))
-        .arg(Arg::with_name("year_weights")
-             .short("y")
-             .long("weights")
+        .arg(Arg::with_name("batter_weights")
+             .short("w")
+             .long("batter-weights")
              .value_name("W1,W2,...")
-             .help("Weights to use for previous seasons")
+             .help("Weights to use for batters in previous seasons")
              .takes_value(true))
         .arg(Arg::with_name("year")
              .value_name("YEAR")
@@ -98,10 +98,10 @@ fn main() {
         .map_or(PITCHER_REGRESS, |age| u16::from_str(age)
                                 .expect("Unable to parse amount to regress pitchers."));
 
-    let default_weights = Vec::from(YEAR_WEIGHTS);
-    let year_weights = matches.value_of("year_weights")
+    let default_weights = Vec::from(BATTER_WEIGHTS);
+    let batter_weights = matches.value_of("batter_weights")
         .map_or(default_weights, |weights| split_weights(weights)
-                                 .expect("Unable to parse weights."));
+                                 .expect("Unable to parse batter weights."));
 
     let years: Vec<u16> = matches.values_of("year")
         .expect("Need a year to project.")
@@ -109,7 +109,7 @@ fn main() {
         .collect();
 
     let mut capuchin = projection::Capuchin::new(batter_regress, peak_age, pitcher_regress,
-                                                 year_weights);
+                                                 batter_weights);
 
     // Is the register available? Load it.
     if let Some(register) = matches.value_of("register") {
