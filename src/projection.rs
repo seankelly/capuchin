@@ -96,9 +96,9 @@ impl Capuchin {
         let mut player_projections = Vec::with_capacity(batters.len());
         for (batter, batter_seasons) in batters {
             // Weighted batter seasons.
-            let mut weighted_batter = databank::BattingProjection::new_player(&batter, year);
+            let mut weighted_batter = databank::IntBattingProjection::new_player(&batter, year);
             // What the league did with the same PAs, weighted the same.
-            let mut batter_league_mean = databank::BattingProjection::league();
+            let mut batter_league_mean = databank::IntBattingProjection::league();
             let mut projected_pa = 200.0;
             for (season_year, season) in &batter_seasons {
                 let season_year = *season_year;
@@ -137,8 +137,7 @@ impl Capuchin {
                         }
                     });
             }
-            projection.round();
-            player_projections.push(projection);
+            player_projections.push(projection.finalize());
         }
 
         player_projections.sort();

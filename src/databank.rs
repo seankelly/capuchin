@@ -236,6 +236,33 @@ pub struct PitchingSeasonSummaryRates {
 }
 
 #[derive(Debug, Serialize)]
+pub struct IntBattingProjection {
+    playerid: String,
+    age: u8,
+    year: u16,
+    reliability: f32,
+    pa: f32,
+    ab: f32,
+    r: f32,
+    h: f32,
+    #[serde(rename = "2B")]
+    double: f32,
+    #[serde(rename = "3B")]
+    triple: f32,
+    hr: f32,
+    rbi: f32,
+    sb: f32,
+    cs: f32,
+    bb: f32,
+    so: f32,
+    ibb: f32,
+    hbp: f32,
+    sh: f32,
+    sf: f32,
+    gidp: f32,
+}
+
+#[derive(Debug, Serialize)]
 pub struct BattingProjection {
     playerid: String,
     age: u8,
@@ -682,9 +709,9 @@ impl From<PitchingSeasonSummary> for PitchingSeasonSummaryRates {
     }
 }
 
-impl BattingProjection {
+impl IntBattingProjection {
     pub fn new_player(playerid: &String, year: u16) -> Self {
-        BattingProjection {
+        IntBattingProjection {
             playerid: playerid.clone(),
             age: 0,
             year: year,
@@ -710,7 +737,7 @@ impl BattingProjection {
     }
 
     pub fn league() -> Self {
-        BattingProjection {
+        IntBattingProjection {
             playerid: String::from(""),
             age: 0,
             year: 0,
@@ -800,7 +827,7 @@ impl BattingProjection {
     pub fn prorate(&self, prorated_pa: u16) -> Self {
         let pa_f = prorated_pa as f32;
         let pa_factor = pa_f / self.pa;
-        let mut proj = BattingProjection {
+        let mut proj = IntBattingProjection {
             playerid: self.playerid.clone(),
             age: 0,
             year: self.year,
@@ -828,26 +855,6 @@ impl BattingProjection {
         return proj;
     }
 
-    pub fn round(&mut self) {
-        self.pa = self.pa.round();
-        self.r = self.r.round();
-        self.h = self.h.round();
-        self.double = self.double.round();
-        self.triple = self.triple.round();
-        self.hr = self.hr.round();
-        self.rbi = self.rbi.round();
-        self.sb = self.sb.round();
-        self.cs = self.cs.round();
-        self.bb = self.bb.round();
-        self.so = self.so.round();
-        self.ibb = self.ibb.round();
-        self.hbp = self.hbp.round();
-        self.sh = self.sh.round();
-        self.sf = self.sf.round();
-        self.gidp = self.gidp.round();
-        self.ab = self.pa - (self.bb + self.hbp + self.sf + self.sh);
-    }
-
     pub fn set_age(&mut self, age: u8) {
         self.age = age;
     }
@@ -868,6 +875,32 @@ impl BattingProjection {
         self.sh *= amount;
         self.sf *= amount;
         self.gidp *= amount;
+    }
+
+    pub fn finalize(self) -> BattingProjection {
+        BattingProjection {
+            playerid: self.playerid,
+            age: self.age,
+            year: self.year,
+            reliability: self.reliability,
+            pa: self.pa.round(),
+            r: self.r.round(),
+            h: self.h.round(),
+            double: self.double.round(),
+            triple: self.triple.round(),
+            hr: self.hr.round(),
+            rbi: self.rbi.round(),
+            sb: self.sb.round(),
+            cs: self.cs.round(),
+            bb: self.bb.round(),
+            so: self.so.round(),
+            ibb: self.ibb.round(),
+            hbp: self.hbp.round(),
+            sh: self.sh.round(),
+            sf: self.sf.round(),
+            gidp: self.gidp.round(),
+            ab: self.pa - (self.bb + self.hbp + self.sf + self.sh),
+        }
     }
 }
 
