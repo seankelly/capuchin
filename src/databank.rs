@@ -119,8 +119,8 @@ struct RawPitchingSeason {
     /*
     #[serde(rename = "BAOpp")]
     baopp: Option<f32>,
-    */
     era: Option<f32>,
+    */
     ibb: Option<u8>,
     wp: Option<u8>,
     hbp: Option<u8>,
@@ -145,7 +145,6 @@ pub struct PitchingSeason {
     h: u16,
     r: u16,
     er: u16,
-    era: f32,
     hr: u8,
     so: u16,
     bb: u16,
@@ -186,7 +185,6 @@ pub struct PitchingSeasonSummary {
     h: u32,
     r: u32,
     er: u32,
-    era: f32,
     hr: u32,
     so: u32,
     bb: u32,
@@ -225,7 +223,6 @@ pub struct PitchingSeasonSummaryRates {
     h: f32,
     r: f32,
     er: f32,
-    era: f32,
     hr: f32,
     so: f32,
     bb: f32,
@@ -260,6 +257,28 @@ pub struct IntBattingProjection {
     sh: f32,
     sf: f32,
     gidp: f32,
+}
+
+#[derive(Debug, Serialize)]
+pub struct IntPitchingProjection {
+    playerid: String,
+    age: u8,
+    year: u16,
+    reliability: f32,
+    ip: f32,
+    w: f32,
+    l: f32,
+    sv: f32,
+    h: f32,
+    r: f32,
+    er: f32,
+    hr: f32,
+    so: f32,
+    bb: f32,
+    ibb: f32,
+    hbp: f32,
+    wp: f32,
+    bk: f32,
 }
 
 #[derive(Debug, Serialize)]
@@ -488,7 +507,6 @@ impl From<RawPitchingSeason> for PitchingSeason {
             hr: csv.hr,
             bb: csv.bb,
             so: csv.so,
-            era: csv.era.unwrap_or(0.0),
             ibb: csv.ibb.unwrap_or(0),
             wp: csv.wp.unwrap_or(0),
             hbp: csv.hbp.unwrap_or(0),
@@ -608,7 +626,6 @@ impl PitchingSeasonSummary {
             h: 0,
             r: 0,
             er: 0,
-            era: 0.0,
             hr: 0,
             so: 0,
             bb: 0,
@@ -632,7 +649,6 @@ impl PitchingSeasonSummary {
             h: self.h + season.h as u32,
             r: self.r + season.r as u32,
             er: self.er + season.er as u32,
-            era: self.er as f32 * 9.0 / self.ip as f32,
             hr: self.hr + season.hr as u32,
             so: self.so + season.so as u32,
             bb: self.bb + season.bb as u32,
@@ -651,7 +667,6 @@ impl PitchingSeasonSummary {
         self.h += season.h.into();
         self.r += season.r.into();
         self.er += season.er.into();
-        self.era = self.er as f32 * 9.0 / self.ip as f32;
         self.hr += season.hr.into();
         self.so += season.so.into();
         self.bb += season.bb.into();
@@ -697,7 +712,6 @@ impl From<PitchingSeasonSummary> for PitchingSeasonSummaryRates {
             h: summary.h as f32 / ip_f,
             r: summary.r as f32 / ip_f,
             er: summary.er as f32 / ip_f,
-            era: summary.era,
             hr: summary.hr as f32 / ip_f,
             so: summary.so as f32 / ip_f,
             bb: summary.bb as f32 / ip_f,
@@ -924,9 +938,9 @@ impl PartialEq for BattingProjection {
     }
 }
 
-impl PitchingProjection {
+impl IntPitchingProjection {
     pub fn new_player(playerid: &String, year: u16) -> Self {
-        PitchingProjection {
+        IntPitchingProjection {
             playerid: playerid.clone(),
             age: 0,
             year: year,
@@ -938,7 +952,6 @@ impl PitchingProjection {
             h: 0.0,
             r: 0.0,
             er: 0.0,
-            era: 0.0,
             hr: 0.0,
             so: 0.0,
             bb: 0.0,
@@ -950,7 +963,7 @@ impl PitchingProjection {
     }
 
     pub fn league() -> Self {
-        PitchingProjection {
+        IntPitchingProjection {
             playerid: String::from(""),
             age: 0,
             year: 0,
@@ -962,7 +975,6 @@ impl PitchingProjection {
             h: 0.0,
             r: 0.0,
             er: 0.0,
-            era: 0.0,
             hr: 0.0,
             so: 0.0,
             bb: 0.0,
@@ -982,7 +994,6 @@ impl PitchingProjection {
         self.h += proj.h;
         self.r += proj.r;
         self.er += proj.er;
-        self.era = self.er * 9.0 / self.ip;
         self.hr += proj.hr;
         self.so += proj.so;
         self.bb += proj.bb;
@@ -1000,7 +1011,6 @@ impl PitchingProjection {
         self.h += season.h as f32 * weight;
         self.r += season.r as f32 * weight;
         self.er += season.er as f32 * weight;
-        self.era = self.er * 9.0 / self.ip;
         self.hr += season.hr as f32 * weight;
         self.so += season.so as f32 * weight;
         self.bb += season.bb as f32 * weight;
@@ -1019,7 +1029,6 @@ impl PitchingProjection {
         self.h += ip_f * rates.h * weight;
         self.r += ip_f * rates.r * weight;
         self.er += ip_f * rates.er * weight;
-        self.era = self.er * 9.0 / self.ip;
         self.hr += ip_f * rates.hr * weight;
         self.so += ip_f * rates.so * weight;
         self.bb += ip_f * rates.bb * weight;
@@ -1032,7 +1041,7 @@ impl PitchingProjection {
     pub fn prorate(&self, prorated_ip: u16) -> Self {
         let ip_f = prorated_ip as f32;
         let ip_factor = ip_f / self.ip;
-        PitchingProjection {
+        IntPitchingProjection {
             playerid: self.playerid.clone(),
             age: 0,
             year: self.year,
@@ -1044,7 +1053,6 @@ impl PitchingProjection {
             h: self.h * ip_factor,
             r: self.r * ip_factor,
             er: self.er * ip_factor,
-            era: self.er * 9.0 / ip_f,
             hr: self.hr * ip_factor,
             so: self.so * ip_factor,
             bb: self.bb * ip_factor,
@@ -1053,24 +1061,6 @@ impl PitchingProjection {
             wp: self.wp * ip_factor,
             bk: self.bk * ip_factor,
         }
-    }
-
-    pub fn round(&mut self) {
-        self.ip = self.ip.round();
-        self.w = self.w.round();
-        self.l = self.l.round();
-        self.sv = self.sv.round();
-        self.h = self.h.round();
-        self.r = self.r.round();
-        self.er = self.er.round();
-        // Ideally round the ERA to two digits of precision.
-        self.hr = self.hr.round();
-        self.so = self.so.round();
-        self.bb = self.bb.round();
-        self.ibb = self.ibb.round();
-        self.hbp = self.hbp.round();
-        self.wp = self.wp.round();
-        self.bk = self.bk.round();
     }
 
     pub fn set_age(&mut self, age: u8) {
@@ -1085,7 +1075,6 @@ impl PitchingProjection {
         self.h *= amount;
         self.r *= amount;
         self.er *= amount;
-        self.era = self.er * 9.0 / self.ip;
         self.hr *= amount;
         self.so *= amount;
         self.bb *= amount;
@@ -1093,6 +1082,32 @@ impl PitchingProjection {
         self.hbp *= amount;
         self.wp *= amount;
         self.bk *= amount;
+    }
+
+    pub fn finalize(self) -> PitchingProjection {
+        let final_ip = self.ip.round();
+        PitchingProjection {
+            playerid: self.playerid,
+            age: self.age,
+            year: self.year,
+            reliability: self.reliability,
+            ip: final_ip,
+            w: self.w.round(),
+            l: self.l.round(),
+            sv: self.sv.round(),
+            h: self.h.round(),
+            r: self.r.round(),
+            er: self.er.round(),
+            // Ideally round the ERA to two digits of precision.
+            era: self.er * 9.0 / final_ip,
+            hr: self.hr.round(),
+            so: self.so.round(),
+            bb: self.bb.round(),
+            ibb: self.ibb.round(),
+            hbp: self.hbp.round(),
+            wp: self.wp.round(),
+            bk: self.bk.round(),
+        }
     }
 }
 

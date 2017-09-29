@@ -189,9 +189,9 @@ impl Capuchin {
         let mut player_projections = Vec::with_capacity(pitchers.len());
         for (pitcher, pitcher_seasons) in pitchers {
             // Weighted pitcher seasons.
-            let mut weighted_pitcher = databank::PitchingProjection::new_player(&pitcher, year);
+            let mut weighted_pitcher = databank::IntPitchingProjection::new_player(&pitcher, year);
             // What the league did with the same IPs, weighted the same.
-            let mut pitcher_league_mean = databank::PitchingProjection::league();
+            let mut pitcher_league_mean = databank::IntPitchingProjection::league();
             let mut projected_ip = 200.0;
             for (season_year, season) in &pitcher_seasons {
                 let season_year = *season_year;
@@ -230,8 +230,7 @@ impl Capuchin {
                         }
                     });
             }
-            projection.round();
-            player_projections.push(projection);
+            player_projections.push(projection.finalize());
         }
 
         player_projections.sort();
