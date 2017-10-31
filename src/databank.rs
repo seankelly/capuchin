@@ -14,7 +14,7 @@ pub struct Players {
 }
 
 pub struct Player {
-    ip: BTreeMap<u16, u16>,
+    ipouts: BTreeMap<u16, u16>,
     pa: BTreeMap<u16, u16>,
 }
 
@@ -138,7 +138,7 @@ struct RawPitchingSeason {
 pub struct PitchingSeason {
     playerid: String,
     yearid: u16,
-    ip: u16,
+    ipouts: u16,
     w: u8,
     l: u8,
     sv: u8,
@@ -178,7 +178,7 @@ pub struct BattingSeasonSummary {
 
 #[derive(Debug)]
 pub struct PitchingSeasonSummary {
-    ip: u32,
+    ipouts: u32,
     w: u32,
     l: u32,
     sv: u32,
@@ -216,7 +216,7 @@ pub struct BattingSeasonSummaryRates {
 
 #[derive(Debug)]
 pub struct PitchingSeasonSummaryRates {
-    ip: u32,
+    ipouts: u32,
     w: f32,
     l: f32,
     sv: f32,
@@ -265,7 +265,7 @@ pub struct IntPitchingProjection {
     age: u8,
     year: u16,
     reliability: f32,
-    ip: f32,
+    ipouts: f32,
     w: f32,
     l: f32,
     sv: f32,
@@ -409,16 +409,16 @@ impl Players {
 impl Player {
     fn new() -> Self {
         Player {
-            ip: BTreeMap::new(),
+            ipouts: BTreeMap::new(),
             pa: BTreeMap::new(),
         }
     }
 
     fn add_ip(&mut self, record: &PitchingSeason) {
         let year = record.yearid;
-        let ip = record.ip;
-        let mut season_ip = self.ip.entry(year).or_insert(0);
-        *season_ip += ip;
+        let ipouts = record.ipouts;
+        let mut season_ipouts = self.ipouts.entry(year).or_insert(0);
+        *season_ipouts += ipouts;
     }
 
     fn add_pa(&mut self, record: &BattingSeason) {
@@ -431,12 +431,17 @@ impl Player {
     fn player_type(&self, year: u16) -> PlayerType {
         let default = &0;
         let year_pa = self.pa.get(&year).unwrap_or(default);
-        let year_ip = self.ip.get(&year).unwrap_or(default);
+        let year_ipouts = self.ipouts.get(&year).unwrap_or(default);
+        // Convert outs recorded into IP. If only one or two outs were recorded that season, still
+        // map that to one IP so it compares better with the PA.
+        let year_ip = if *year_ipouts >= 3 { *year_ipouts / 3 }
+                      else if *year_ipouts > 0 { 1 }
+                      else { 0 };
 
-        if *year_pa > *year_ip {
+        if *year_pa > year_ip {
             return PlayerType::Batter;
         }
-        else if *year_pa < *year_ip {
+        else if *year_pa < year_ip {
             return PlayerType::Pitcher;
         }
         else {
@@ -491,16 +496,13 @@ impl From<RawBattingSeason> for BattingSeason {
 
 impl From<RawPitchingSeason> for PitchingSeason {
     fn from(csv: RawPitchingSeason) -> PitchingSeason {
-        // Convert the outs into IP and then into an integer number of IP.
-        let ip = csv.ipouts as f32 / 3.0;
-        let ip = ip.round() as u16;
         PitchingSeason {
             playerid: csv.playerid,
             yearid: csv.yearid,
             w: csv.w,
             l: csv.l,
             sv: csv.sv,
-            ip: ip,
+            ipouts: csv.ipouts,
             h: csv.h,
             r: csv.r,
             er: csv.er,
@@ -619,7 +621,7 @@ impl BattingSeasonSummary {
 impl PitchingSeasonSummary {
     pub fn new() -> Self {
         PitchingSeasonSummary {
-            ip: 0,
+            ipouts: 0,
             w: 0,
             l: 0,
             sv: 0,
@@ -636,13 +638,13 @@ impl PitchingSeasonSummary {
         }
     }
 
-    pub fn ip(&self) -> &u32 {
-        &self.ip
+    pub fn ipouts(&self) -> &u32 {
+        &self.ipouts
     }
 
     pub fn add_season(&self, season: &PitchingSeason) -> Self {
         PitchingSeasonSummary {
-            ip: self.ip + season.ip as u32,
+            ipouts: self.ipouts + season.ipouts as u32,
             w: self.w + season.w as u32,
             l: self.l + season.l as u32,
             sv: self.sv + season.sv as u32,
@@ -660,7 +662,7 @@ impl PitchingSeasonSummary {
     }
 
     pub fn mut_add_season(&mut self, season: &PitchingSeason) {
-        self.ip += season.ip.into();
+        self.ipouts += season.ipouts.into();
         self.w += season.w.into();
         self.l += season.l.into();
         self.sv += season.sv.into();
@@ -703,9 +705,9 @@ impl From<BattingSeasonSummary> for BattingSeasonSummaryRates {
 
 impl From<PitchingSeasonSummary> for PitchingSeasonSummaryRates {
     fn from(summary: PitchingSeasonSummary) -> PitchingSeasonSummaryRates {
-        let ip_f = summary.ip as f32;
+        let ip_f = summary.ipouts as f32;
         PitchingSeasonSummaryRates {
-            ip: summary.ip,
+            ipouts: summary.ipouts,
             w: summary.w as f32 / ip_f,
             l: summary.l as f32 / ip_f,
             sv: summary.sv as f32 / ip_f,
@@ -945,7 +947,7 @@ impl IntPitchingProjection {
             age: 0,
             year: year,
             reliability: 0.0,
-            ip: 0.0,
+            ipouts: 0.0,
             w: 0.0,
             l: 0.0,
             sv: 0.0,
@@ -968,7 +970,7 @@ impl IntPitchingProjection {
             age: 0,
             year: 0,
             reliability: 0.0,
-            ip: 0.0,
+            ipouts: 0.0,
             w: 0.0,
             l: 0.0,
             sv: 0.0,
@@ -986,8 +988,8 @@ impl IntPitchingProjection {
     }
 
     pub fn regress(&mut self, proj: &Self) {
-        self.reliability = self.ip / (self.ip + proj.ip);
-        self.ip += proj.ip;
+        self.reliability = self.ipouts / (self.ipouts + proj.ipouts);
+        self.ipouts += proj.ipouts;
         self.w += proj.w;
         self.l += proj.l;
         self.sv += proj.sv;
@@ -1004,7 +1006,7 @@ impl IntPitchingProjection {
     }
 
     pub fn weighted_add(&mut self, season: &PitchingSeasonSummary, weight: f32) {
-        self.ip += season.ip as f32 * weight;
+        self.ipouts += season.ipouts as f32 * weight;
         self.w += season.w as f32 * weight;
         self.l += season.l as f32 * weight;
         self.sv += season.sv as f32 * weight;
@@ -1020,9 +1022,9 @@ impl IntPitchingProjection {
         self.bk += season.bk as f32 * weight;
     }
 
-    pub fn weighted_rate_add(&mut self, ip: u16, rates: &PitchingSeasonSummaryRates, weight: f32) {
-        let ip_f = ip as f32;
-        self.ip += ip_f * weight;
+    pub fn weighted_rate_add(&mut self, ipouts: u16, rates: &PitchingSeasonSummaryRates, weight: f32) {
+        let ip_f = ipouts as f32;
+        self.ipouts += ip_f * weight;
         self.w += ip_f * rates.w * weight;
         self.l += ip_f * rates.l * weight;
         self.sv += ip_f * rates.sv * weight;
@@ -1040,13 +1042,13 @@ impl IntPitchingProjection {
 
     pub fn prorate(&self, prorated_ip: u16) -> Self {
         let ip_f = prorated_ip as f32;
-        let ip_factor = ip_f / self.ip;
+        let ip_factor = ip_f / self.ipouts;
         IntPitchingProjection {
             playerid: self.playerid.clone(),
             age: 0,
             year: self.year,
             reliability: self.reliability,
-            ip: ip_f,
+            ipouts: ip_f,
             w: self.w * ip_factor,
             l: self.l * ip_factor,
             sv: self.sv * ip_factor,
@@ -1068,7 +1070,7 @@ impl IntPitchingProjection {
     }
 
     pub fn age_adjust(&mut self, amount: f32) {
-        self.ip *= amount;
+        self.ipouts *= amount;
         self.w *= amount;
         self.l *= amount;
         self.sv *= amount;
@@ -1085,7 +1087,9 @@ impl IntPitchingProjection {
     }
 
     pub fn finalize(self) -> PitchingProjection {
-        let final_ip = self.ip.round();
+        // Internally using outs so turn that back into innings for the projection.
+        let final_ip = self.ipouts / 3.0;
+        let final_ip = final_ip.round();
         PitchingProjection {
             playerid: self.playerid,
             age: self.age,

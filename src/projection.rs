@@ -26,8 +26,9 @@ impl Capuchin {
             batter_weights: batter_weights,
             pitcher_weights: pitcher_weights,
             batter_regress: batter_regress,
-            starter_regress: starter_regress,
-            reliever_regress: reliever_regress,
+            // Multiply by three because internally using outs rather than IP.
+            starter_regress: starter_regress * 3,
+            reliever_regress: reliever_regress * 3,
             people: None,
             players: databank::Players::new(),
             batting_league_totals: BTreeMap::new(),
@@ -195,7 +196,7 @@ impl Capuchin {
             let mut projected_ip = 200.0;
             for (season_year, season) in &pitcher_seasons {
                 let season_year = *season_year;
-                let season_ip = *season.ip() as u16;
+                let season_ip = *season.ipouts() as u16;
                 projected_ip += match year - season_year {
                     1 => 0.5 * season_ip as f32,
                     2 => 0.1 * season_ip as f32,
