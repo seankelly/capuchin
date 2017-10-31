@@ -8,10 +8,13 @@ import sys
 from collections import defaultdict
 
 
+SKIP_COLUMNS = {'nameFirst', 'nameLast', 'playerID', 'lgID'}
+
 def load_projection(file_path, playerid_column=0):
     projection = {}
     headers = []
     skipped_header = False
+    post_playerid_pop = 0
     with open(file_path) as fd:
         reader = csv.reader(fd)
         for row in reader:
@@ -20,6 +23,8 @@ def load_projection(file_path, playerid_column=0):
                 for i in range(playerid_column):
                     row.pop(0)
                 playerid = row.pop(0)
+                for i in range(post_playerid_pop):
+                    row.pop(0)
                 pre_stats = [int(stat) for stat in row[:2]]
                 stats = [float(stat) for stat in row[2:]]
                 projection[playerid] = pre_stats + stats
@@ -29,6 +34,11 @@ def load_projection(file_path, playerid_column=0):
                     row.pop(0)
                 # Pop the player id too.
                 row.pop(0)
+                for column in row:
+                    if column in SKIP_COLUMNS:
+                        post_playerid_pop += 1
+                    else:
+                        break
                 headers = row
     return headers, projection
 
