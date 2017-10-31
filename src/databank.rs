@@ -894,12 +894,17 @@ impl IntBattingProjection {
     }
 
     pub fn finalize(self) -> BattingProjection {
+        let pa = self.pa.round();
+        let bb = self.bb.round();
+        let hbp = self.hbp.round();
+        let sf = self.sf.round();
+        let sh = self.sh.round();
         BattingProjection {
             playerid: self.playerid,
             age: self.age,
             year: self.year,
             reliability: self.reliability,
-            pa: self.pa.round(),
+            pa: pa,
             r: self.r.round(),
             h: self.h.round(),
             double: self.double.round(),
@@ -908,14 +913,14 @@ impl IntBattingProjection {
             rbi: self.rbi.round(),
             sb: self.sb.round(),
             cs: self.cs.round(),
-            bb: self.bb.round(),
+            bb: bb,
             so: self.so.round(),
             ibb: self.ibb.round(),
-            hbp: self.hbp.round(),
-            sh: self.sh.round(),
-            sf: self.sf.round(),
+            hbp: hbp,
+            sh: sh,
+            sf: sf,
             gidp: self.gidp.round(),
-            ab: self.pa - (self.bb + self.hbp + self.sf + self.sh),
+            ab: pa - (bb + hbp + sf + sh),
         }
     }
 }
