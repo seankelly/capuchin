@@ -19,9 +19,10 @@ pub struct Player {
 }
 
 enum PlayerType {
-    Unknown,
+    NoAppearances,
     Batter,
     Pitcher,
+    Unknown,
 }
 
 #[derive(Deserialize)]
@@ -429,28 +430,37 @@ impl Player {
     }
 
     fn player_type(&self, year: u16) -> PlayerType {
-        let default = &0;
-        let year_pa = self.pa.get(&year).unwrap_or(default);
-        let year_ipouts = self.ipouts.get(&year).unwrap_or(default);
+        let year_pa = self.pa.get(&year);
         // Convert outs recorded into IP. If only one or two outs were recorded that season, still
         // map that to one IP so it compares better with the PA.
-        let year_ip = if *year_ipouts >= 3 { *year_ipouts / 3 }
-                      else if *year_ipouts > 0 { 1 }
-                      else { 0 };
+        let year_ip = self.ipouts.get(&year)
+            .map(|ipouts| {
+                if *ipouts >= 3 { *ipouts / 3 }
+                else if *ipouts > 0 { 1 }
+                else { 0 }
+            });
 
-        if *year_pa > year_ip {
-            return PlayerType::Batter;
-        }
-        else if *year_pa < year_ip {
-            return PlayerType::Pitcher;
-        }
-        else {
-            return PlayerType::Unknown;
+        match (year_pa, year_ip) {
+            (Some(pa), Some(ip)) => {
+                if *pa > ip {
+                    PlayerType::Batter
+                }
+                else if *pa < ip {
+                    PlayerType::Pitcher
+                }
+                else {
+                    PlayerType::Unknown
+                }
+            },
+            (Some(_), None) => PlayerType::Batter,
+            (None, Some(_)) => PlayerType::Batter,
+            (None, None) => PlayerType::NoAppearances,
         }
     }
 
     fn is_batter(&self, year: u16) -> bool {
         match self.player_type(year) {
+            PlayerType::NoAppearances => false,
             PlayerType::Batter => true,
             PlayerType::Pitcher => false,
             PlayerType::Unknown => true,
@@ -459,6 +469,7 @@ impl Player {
 
     fn is_pitcher(&self, year: u16) -> bool {
         match self.player_type(year) {
+            PlayerType::NoAppearances => false,
             PlayerType::Batter => false,
             PlayerType::Pitcher => true,
             PlayerType::Unknown => true,
