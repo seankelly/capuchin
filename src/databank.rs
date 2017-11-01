@@ -444,8 +444,7 @@ impl Player {
         let year_ip = self.ipouts.get(&year)
             .map(|ipouts| {
                 if *ipouts >= 3 { *ipouts / 3 }
-                else if *ipouts > 0 { 1 }
-                else { 0 }
+                else { 1 }
             });
 
         match (year_pa, year_ip) {
