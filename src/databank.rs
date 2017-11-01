@@ -384,8 +384,7 @@ impl Players {
     /// Remove players playing out of position. This counts batters pitching and pitchers batting.
     pub fn remove_out_of_position_players(&mut self) {
         let keep: Vec<bool> = self.batting.iter()
-            .map(|season| self.players.get(&season.playerid)
-                            .map_or(true, |player| player.is_batter(season.yearid)))
+            .map(|season| self.player_is_batter(&season))
             .collect();
         let mut idx = 0;
         self.batting.retain(|_| {
@@ -395,8 +394,7 @@ impl Players {
         });
 
         let keep: Vec<bool> = self.pitching.iter()
-            .map(|season| self.players.get(&season.playerid)
-                            .map_or(true, |player| player.is_pitcher(season.yearid)))
+            .map(|season| self.player_is_pitcher(&season))
             .collect();
         let mut idx = 0;
         self.pitching.retain(|_| {
@@ -404,6 +402,16 @@ impl Players {
             idx += 1;
             keep[cur_idx]
         });
+    }
+
+    fn player_is_batter(&self, season: &BattingSeason) -> bool {
+        self.players.get(&season.playerid)
+            .map_or(true, |player| player.is_batter(season.yearid))
+    }
+
+    fn player_is_pitcher(&self, season: &PitchingSeason) -> bool {
+        self.players.get(&season.playerid)
+            .map_or(true, |player| player.is_pitcher(season.yearid))
     }
 }
 
