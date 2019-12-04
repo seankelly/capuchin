@@ -615,24 +615,24 @@ impl BattingSeasonSummary {
     }
 
     pub fn mut_add_season(&mut self, season: &BattingSeason) {
-        self.g += season.g.into();
-        self.pa += season.pa.into();
-        self.ab += season.ab.into();
-        self.r += season.r.into();
-        self.h += season.h.into();
-        self.double += season.double.into();
-        self.triple += season.triple.into();
-        self.hr += season.hr.into();
-        self.rbi += season.rbi.into();
-        self.sb += season.sb.into();
-        self.cs += season.cs.into();
-        self.bb += season.bb.into();
-        self.so += season.so.into();
-        self.ibb += season.ibb.into();
-        self.hbp += season.hbp.into();
-        self.sh += season.sh.into();
-        self.sf += season.sf.into();
-        self.gidp += season.gidp.into();
+        self.g += season.g as u32;
+        self.pa += season.pa as u32;
+        self.ab += season.ab as u32;
+        self.r += season.r as u32;
+        self.h += season.h as u32;
+        self.double += season.double as u32;
+        self.triple += season.triple as u32;
+        self.hr += season.hr as u32;
+        self.rbi += season.rbi as u32;
+        self.sb += season.sb as u32;
+        self.cs += season.cs as u32;
+        self.bb += season.bb as u32;
+        self.so += season.so as u32;
+        self.ibb += season.ibb as u32;
+        self.hbp += season.hbp as u32;
+        self.sh += season.sh as u32;
+        self.sf += season.sf as u32;
+        self.gidp += season.gidp as u32;
     }
 }
 
@@ -680,20 +680,20 @@ impl PitchingSeasonSummary {
     }
 
     pub fn mut_add_season(&mut self, season: &PitchingSeason) {
-        self.ipouts += season.ipouts.into();
-        self.w += season.w.into();
-        self.l += season.l.into();
-        self.sv += season.sv.into();
-        self.h += season.h.into();
-        self.r += season.r.into();
-        self.er += season.er.into();
-        self.hr += season.hr.into();
-        self.so += season.so.into();
-        self.bb += season.bb.into();
-        self.ibb += season.ibb.into();
-        self.hbp += season.hbp.into();
-        self.wp += season.wp.into();
-        self.bk += season.bk.into();
+        self.ipouts += season.ipouts as u32;
+        self.w += season.w as u32;
+        self.l += season.l as u32;
+        self.sv += season.sv as u32;
+        self.h += season.h as u32;
+        self.r += season.r as u32;
+        self.er += season.er as u32;
+        self.hr += season.hr as u32;
+        self.so += season.so as u32;
+        self.bb += season.bb as u32;
+        self.ibb += season.ibb as u32;
+        self.hbp += season.hbp as u32;
+        self.wp += season.wp as u32;
+        self.bk += season.bk as u32;
     }
 }
 
