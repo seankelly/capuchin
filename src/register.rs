@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::Path;
+use std::io::Read;
 
 use csv;
 use serde::Deserialize;
@@ -61,26 +61,22 @@ pub struct PeopleRegister {
 }
 
 impl People {
-    pub fn new() -> Self {
-        People {
-            people: Vec::new(),
-            bbref_idx: HashMap::new(),
-        }
-    }
+    pub fn from_register<R: Read>(register: R) -> Result<Self, csv::Error> {
+        let mut reader = csv::Reader::from_reader(register);
+        let mut people = Vec::new();
+        let mut bbref_idx = HashMap::new();
 
-    pub fn load_register(&mut self, people_csv: &Path) -> Result<(), csv::Error> {
-        let mut rdr = csv::Reader::from_path(people_csv)?;
-
-        for result in rdr.deserialize() {
+        for result in reader.deserialize() {
             let person: PeopleRegister = result?;
-            let idx = self.people.len();
+            let idx = people.len();
             if let Some(ref bbrefid) = person.key_bbref {
-                self.bbref_idx.insert(bbrefid.clone(), idx);
+                bbref_idx.insert(bbrefid.clone(), idx);
             }
-            self.people.push(person);
+            people.push(person);
         }
 
-        Ok(())
+        let people = People { people, bbref_idx };
+        Ok(people)
     }
 
     pub fn find_by_bbref(&self, key_bbref: &str) -> Option<&PeopleRegister> {

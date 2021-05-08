@@ -1,5 +1,6 @@
 #![recursion_limit = "1024"]
 
+use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
 use std::process::exit;
@@ -120,13 +121,15 @@ fn main() {
     );
 
     // Is the register available? Load it.
-    if let Some(register) = matches.value_of("register") {
-        let mut people = register::People::new();
-        if let Err(e) = people.load_register(Path::new(register)) {
-            println!("Unable to load player register, skipping: {}", e);
-        }
-        else {
-            capuchin.load_register(people);
+    if let Some(register_path) = matches.value_of("register") {
+        let register_file = File::open(register_path).expect("Unable to open register file");
+        match register::People::from_register(register_file) {
+            Ok(people) => {
+                capuchin.load_register(people);
+            }
+            Err(err) => {
+                println!("Unable to load player register, skipping: {}", err);
+            }
         }
     }
 
