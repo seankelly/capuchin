@@ -386,22 +386,14 @@ impl Players {
         let keep: Vec<bool> = self.batting.iter()
             .map(|season| self.player_is_batter(&season))
             .collect();
-        let mut idx = 0;
-        self.batting.retain(|_| {
-            let cur_idx = idx;
-            idx += 1;
-            keep[cur_idx]
-        });
+        let mut iter = keep.iter();
+        self.batting.retain(|_| *iter.next().unwrap());
 
         let keep: Vec<bool> = self.pitching.iter()
             .map(|season| self.player_is_pitcher(&season))
             .collect();
-        let mut idx = 0;
-        self.pitching.retain(|_| {
-            let cur_idx = idx;
-            idx += 1;
-            keep[cur_idx]
-        });
+        let mut iter = keep.iter();
+        self.pitching.retain(|_| *iter.next().unwrap());
     }
 
     fn player_is_batter(&self, season: &BattingSeason) -> bool {
