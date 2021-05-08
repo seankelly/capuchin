@@ -1,26 +1,11 @@
 #![recursion_limit = "1024"]
 
-extern crate clap;
-extern crate csv;
-#[macro_use]
-extern crate error_chain;
-#[macro_use]
-extern crate serde_derive;
-
-use clap::{Arg, App};
 use std::path::Path;
 use std::str::FromStr;
 use std::process::exit;
 
-mod errors {
-    use csv;
+use clap::{Arg, App};
 
-    error_chain! {
-        foreign_links {
-            Io(csv::Error);
-        }
-    }
-}
 
 mod databank;
 mod projection;

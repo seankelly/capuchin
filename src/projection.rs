@@ -2,9 +2,10 @@ use std::collections::HashMap;
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use errors;
-use register;
-use databank;
+
+use crate::register;
+use crate::databank;
+
 
 pub struct Capuchin {
     peak_age: u8,
@@ -40,11 +41,11 @@ impl Capuchin {
         self.people = Some(people);
     }
 
-    pub fn load_batting(&mut self, batting_csv: &Path) -> errors::Result<()> {
+    pub fn load_batting(&mut self, batting_csv: &Path) -> Result<(), csv::Error> {
         self.players.load_batting(batting_csv)
     }
 
-    pub fn load_pitching(&mut self, pitching_csv: &Path) -> errors::Result<()> {
+    pub fn load_pitching(&mut self, pitching_csv: &Path) -> Result<(), csv::Error> {
         self.players.load_pitching(pitching_csv)
     }
     /// Remove players playing out of position. This counts batters pitching and pitchers batting.

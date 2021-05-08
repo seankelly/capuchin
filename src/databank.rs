@@ -4,8 +4,8 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use csv;
+use serde::{Deserialize, Serialize};
 
-use errors;
 
 pub struct Players {
     players: HashMap<String, Player>,
@@ -341,7 +341,7 @@ impl Players {
         }
     }
 
-    pub fn load_batting(&mut self, batting_csv: &Path) -> errors::Result<()> {
+    pub fn load_batting(&mut self, batting_csv: &Path) -> Result<(), csv::Error> {
         let mut rdr = csv::Reader::from_path(batting_csv)?;
         for record in rdr.deserialize() {
             let record: RawBattingSeason = record?;
@@ -361,7 +361,7 @@ impl Players {
             .collect()
     }
 
-    pub fn load_pitching(&mut self, pitching_csv: &Path) -> errors::Result<()> {
+    pub fn load_pitching(&mut self, pitching_csv: &Path) -> Result<(), csv::Error> {
         let mut rdr = csv::Reader::from_path(pitching_csv)?;
         for record in rdr.deserialize() {
             let record: RawPitchingSeason = record?;
@@ -1158,7 +1158,7 @@ impl PartialEq for PitchingProjection {
     }
 }
 
-pub fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> errors::Result<()> {
+pub fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16) -> Result<(), csv::Error> {
     let output_file = format!("BattingCapuchin{}.csv", year);
     let output_path = Path::new(&output_file);
     let mut wtr = csv::Writer::from_path(&output_path)?;
@@ -1170,7 +1170,7 @@ pub fn write_batting_projection(projections: &Vec<BattingProjection>, year: u16)
     Ok(())
 }
 
-pub fn write_pitching_projection(projections: &Vec<PitchingProjection>, year: u16) -> errors::Result<()> {
+pub fn write_pitching_projection(projections: &Vec<PitchingProjection>, year: u16) -> Result<(), csv::Error> {
     let output_file = format!("PitchingCapuchin{}.csv", year);
     let output_path = Path::new(&output_file);
     let mut wtr = csv::Writer::from_path(&output_path)?;

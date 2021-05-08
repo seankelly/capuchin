@@ -2,10 +2,9 @@
 name = "capuchin"
 version = "0.2.0"
 authors = ["Sean Kelly <code@katron.org>"]
+edition = "2018"
 
 [dependencies]
 clap = "2.19.0"
 csv = "1.1"
-error-chain = "0.10.0"
-serde = "1.0.8"
-serde_derive = "1.0.8"
+serde = { version = "1.0.8", features = ["derive"] }

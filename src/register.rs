@@ -1,10 +1,9 @@
-
 use std::collections::HashMap;
 use std::path::Path;
 
-use errors;
-
 use csv;
+use serde::Deserialize;
+
 
 pub struct People {
     people: Vec<PeopleRegister>,
@@ -69,7 +68,7 @@ impl People {
         }
     }
 
-    pub fn load_register(&mut self, people_csv: &Path) -> errors::Result<()> {
+    pub fn load_register(&mut self, people_csv: &Path) -> Result<(), csv::Error> {
         let mut rdr = csv::Reader::from_path(people_csv)?;
 
         for result in rdr.deserialize() {
