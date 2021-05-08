@@ -64,9 +64,9 @@ impl Capuchin {
         // Combine each player's split seasons into a single season summary.
         let mut batters = HashMap::new();
         for season in &past_seasons {
-            let mut player = batters.entry(season.playerid())
+            let player = batters.entry(season.playerid())
                 .or_insert(BTreeMap::new());
-            let mut summary = player.entry(season.yearid())
+            let summary = player.entry(season.yearid())
                 .or_insert(databank::BattingSeasonSummary::new());
             summary.mut_add_season(season);
         }
@@ -157,9 +157,9 @@ impl Capuchin {
         // Combine each player's split seasons into a single season summary.
         let mut pitchers = HashMap::new();
         for season in &past_seasons {
-            let mut player = pitchers.entry(season.playerid())
+            let player = pitchers.entry(season.playerid())
                 .or_insert(BTreeMap::new());
-            let mut summary = player.entry(season.yearid())
+            let summary = player.entry(season.yearid())
                 .or_insert(databank::PitchingSeasonSummary::new());
             summary.mut_add_season(season);
         }

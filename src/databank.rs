@@ -346,7 +346,7 @@ impl Players {
         for record in rdr.deserialize() {
             let record: RawBattingSeason = record?;
             let record = BattingSeason::from(record);
-            let mut player = self.players.entry(record.playerid.clone())
+            let player = self.players.entry(record.playerid.clone())
                 .or_insert(Player::new());
             player.add_pa(&record);
             self.batting.push(record);
@@ -366,7 +366,7 @@ impl Players {
         for record in rdr.deserialize() {
             let record: RawPitchingSeason = record?;
             let record = PitchingSeason::from(record);
-            let mut player = self.players.entry(record.playerid.clone())
+            let player = self.players.entry(record.playerid.clone())
                 .or_insert(Player::new());
             player.add_ip(&record);
             self.pitching.push(record);
@@ -426,14 +426,14 @@ impl Player {
     fn add_ip(&mut self, record: &PitchingSeason) {
         let year = record.yearid;
         let ipouts = record.ipouts;
-        let mut season_ipouts = self.ipouts.entry(year).or_insert(0);
+        let season_ipouts = self.ipouts.entry(year).or_insert(0);
         *season_ipouts += ipouts;
     }
 
     fn add_pa(&mut self, record: &BattingSeason) {
         let year = record.yearid;
         let pa = record.pa;
-        let mut season_pa = self.pa.entry(year).or_insert(0);
+        let season_pa = self.pa.entry(year).or_insert(0);
         *season_pa += pa;
     }
 
