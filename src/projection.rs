@@ -213,7 +213,8 @@ impl Capuchin {
             }
 
             let projected_ip = projected_ip as u16;
-            let prorated_league_mean = pitcher_league_mean.prorate(self.starter_regress);
+            let regress_amount = self.starter_regress;
+            let prorated_league_mean = pitcher_league_mean.prorate(regress_amount);
             // Merge weighted player and league totals to regress the player.
             weighted_pitcher.regress(&prorated_league_mean);
 
