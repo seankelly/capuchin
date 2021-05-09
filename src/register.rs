@@ -35,9 +35,9 @@ pub struct PeopleRegister {
     name_nick: Option<String>,
     */
     birth_year: Option<u16>,
+    /*
     birth_month: Option<u8>,
     birth_day: Option<u8>,
-    /*
     death_year: Option<String>,
     death_month: Option<String>,
     death_day: Option<String>,
@@ -85,7 +85,9 @@ impl People {
 }
 
 impl PeopleRegister {
-    pub fn get_age(&self, year: u16) -> Option<u8> {
-        self.birth_year.and_then(|birth| Some((year - birth) as u8))
+    // MLB's season age is the age of a player on June 30. Tangotiger thinks that is silly so uses
+    // the simpler method of whatever their age is by the end of the year.
+    pub fn get_age(&self, season: u16) -> Option<u8> {
+        self.birth_year.and_then(|birth| Some((season - birth) as u8))
     }
 }
