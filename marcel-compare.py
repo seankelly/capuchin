@@ -88,11 +88,18 @@ def compare(headers, marcel, new_proj):
         print(f"{stat}\t{rmse:8.5}\t{stddev:8.5}\t{variance:8.5}")
 
 
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('marcel', help="Marcel projection file")
+    parser.add_argument('other', help="Other projection file")
+    args = parser.parse_args()
+    return args
+
+
 def main(args):
-    if len(args) != 3:
-        sys.exit(1)
-    marcel_file = args[1]
-    new_file = args[2]
+    args = options()
+    marcel_file = args.marcel
+    new_file = args.other
     print("Comparing %s to %s" % (marcel_file, new_file))
 
     marcel_headers, marcel = load_projection(marcel_file, playerid_column=2)
