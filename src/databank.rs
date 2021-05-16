@@ -322,6 +322,7 @@ pub struct PitchingProjection {
     h: f32,
     r: f32,
     er: f32,
+    bsrer: f32,
     era: f32,
     hr: f32,
     so: f32,
@@ -1105,6 +1106,7 @@ impl IntPitchingProjection {
         // Internally using outs so turn that back into innings for the projection.
         let final_ip = self.ipouts / 3.0;
         let final_ip = final_ip.round();
+        let bsrer = self.calculate_baseruns();
         PitchingProjection {
             playerid: self.playerid,
             age: self.age,
@@ -1117,6 +1119,7 @@ impl IntPitchingProjection {
             h: self.h.round(),
             r: self.r.round(),
             er: self.er.round(),
+            bsrer: bsrer,
             // Ideally round the ERA to two digits of precision.
             era: self.er * 9.0 / final_ip,
             hr: self.hr.round(),
@@ -1127,6 +1130,17 @@ impl IntPitchingProjection {
             wp: self.wp.round(),
             bk: self.bk.round(),
         }
+    }
+
+    // Calculate base runs estimate of earned runs.
+    fn calculate_baseruns(&self) -> f32 {
+        let a = self.h + self.bb - self.hr;
+        let b = (1.4 * (1.12 * self.h + 4.0 * self.hr) - 0.6 * self.h - 3.0 * self.hr + 0.1 * self.bb) * 1.1;
+        // This is 3 * IP but we already have the number of outs.
+        let c = self.ipouts;
+        let d = self.hr;
+        let baseruns = (a * b) / (b + c) + d;
+        baseruns.round()
     }
 }
 
