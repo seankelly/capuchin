@@ -1120,8 +1120,9 @@ impl IntPitchingProjection {
             r: self.r.round(),
             er: self.er.round(),
             bsrer: bsrer,
+            // 50-50 split between projected earned runs and Base Runs estimation of earned runs.
             // Ideally round the ERA to two digits of precision.
-            era: self.er * 9.0 / final_ip,
+            era: (self.er + bsrer) * 9.0 / (2.0 * final_ip),
             hr: self.hr.round(),
             so: self.so.round(),
             bb: self.bb.round(),
