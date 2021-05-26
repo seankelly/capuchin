@@ -102,9 +102,9 @@ struct RawPitchingSeason {
     */
     w: u8,
     l: u8,
-    /*
     g: u8,
     gs: u8,
+    /*
     cg: u8,
     sho: u8,
     */
@@ -142,6 +142,8 @@ pub struct PitchingSeason {
     ipouts: u16,
     w: u8,
     l: u8,
+    g: u8,
+    gs: u8,
     sv: u8,
     h: u16,
     r: u16,
@@ -182,6 +184,8 @@ pub struct PitchingSeasonSummary {
     ipouts: u32,
     w: u32,
     l: u32,
+    g: u32,
+    gs: u32,
     sv: u32,
     h: u32,
     r: u32,
@@ -512,6 +516,8 @@ impl From<RawPitchingSeason> for PitchingSeason {
             yearid: csv.yearid,
             w: csv.w,
             l: csv.l,
+            g: csv.g,
+            gs: csv.gs,
             sv: csv.sv,
             ipouts: csv.ipouts,
             h: csv.h,
@@ -635,6 +641,8 @@ impl PitchingSeasonSummary {
             ipouts: 0,
             w: 0,
             l: 0,
+            g: 0,
+            gs: 0,
             sv: 0,
             h: 0,
             r: 0,
@@ -653,11 +661,17 @@ impl PitchingSeasonSummary {
         &self.ipouts
     }
 
+    pub fn is_reliever(&self) -> bool {
+        (self.g - self.gs) > self.gs
+    }
+
     pub fn add_season(&self, season: &PitchingSeason) -> Self {
         PitchingSeasonSummary {
             ipouts: self.ipouts + season.ipouts as u32,
             w: self.w + season.w as u32,
             l: self.l + season.l as u32,
+            g: self.g + season.g as u32,
+            gs: self.gs + season.gs as u32,
             sv: self.sv + season.sv as u32,
             h: self.h + season.h as u32,
             r: self.r + season.r as u32,
@@ -677,6 +691,8 @@ impl PitchingSeasonSummary {
         self.w += season.w as u32;
         self.l += season.l as u32;
         self.sv += season.sv as u32;
+        self.g += season.g as u32;
+        self.gs += season.gs as u32;
         self.h += season.h as u32;
         self.r += season.r as u32;
         self.er += season.er as u32;

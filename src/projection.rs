@@ -195,6 +195,8 @@ impl Capuchin {
             // What the league did with the same IPs, weighted the same.
             let mut pitcher_league_mean = databank::IntPitchingProjection::league();
             let mut projected_ip = 200.0;
+            let mut reliever_seasons = 0;
+            let mut starter_seasons = 0;
             for (season_year, season) in &pitcher_seasons {
                 let season_year = *season_year;
                 let season_ip = *season.ipouts() as u16;
@@ -207,13 +209,24 @@ impl Capuchin {
                 let weight = weights_map[weight_idx];
                 weighted_pitcher.weighted_add(season, weight);
 
+                if season.is_reliever() {
+                    reliever_seasons += 1;
+                }
+                else {
+                    starter_seasons += 1;
+                }
+
                 let league_rate = self.pitching_league_totals.get(&season_year)
                     .expect("Expected to get a rate for this year.");
                 pitcher_league_mean.weighted_rate_add(season_ip, league_rate, weight);
             }
 
             let projected_ip = projected_ip as u16;
-            let regress_amount = self.starter_regress;
+            let regress_amount = if starter_seasons >= reliever_seasons {
+                self.starter_regress
+            } else {
+                self.reliever_regress
+            };
             let prorated_league_mean = pitcher_league_mean.prorate(regress_amount);
             // Merge weighted player and league totals to regress the player.
             weighted_pitcher.regress(&prorated_league_mean);
